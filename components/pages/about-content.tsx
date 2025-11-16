@@ -4,6 +4,7 @@ import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { TextReveal } from "../text-reveal"
+import { SkillFlipCard } from "../skill-flip-card"
 import { motion, useReducedMotion } from "framer-motion"
 import { useMemo } from "react"
 
@@ -205,7 +206,7 @@ export default function AboutContent() {
           </div>
         </motion.div>
 
-        {/* Skills Section */}
+        {/* Skills Section - Flip Cards */}
         <motion.div className="mb-24">
           <motion.h2
             className="text-3xl font-bold mb-8 text-white text-center"
@@ -214,62 +215,30 @@ export default function AboutContent() {
             Tech Stack
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <motion.div {...fadeUpProps(0.1)}>
-              <Card className="h-full bg-gradient-to-br from-purple-500/5 to-transparent border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 group hover:shadow-lg hover:shadow-purple-500/10">
-              <CardContent className="p-6 h-full flex flex-col">
-                <h3 className="font-bold mb-4 text-purple-400 group-hover:text-purple-300 transition-colors text-sm uppercase tracking-wider">Frontend</h3>
-                <div className="flex flex-wrap gap-2 flex-1">
-                  {["HTML", "CSS", "JavaScript", "TypeScript", "React", "Next.js", "Vite", "Tailwind CSS", "shadcn/ui", "p5.js"].map((skill) => (
-                    <Badge key={skill} variant="secondary" className="bg-white/5 hover:bg-purple-500/20 transition-colors">
-                      {skill}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-            </motion.div>
-            <motion.div {...fadeUpProps(0.15)}>
-            <Card className="h-full bg-gradient-to-br from-blue-500/5 to-transparent border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 group hover:shadow-lg hover:shadow-blue-500/10">
-              <CardContent className="p-6 h-full flex flex-col">
-                <h3 className="font-bold mb-4 text-blue-400 group-hover:text-blue-300 transition-colors text-sm uppercase tracking-wider">Backend & Services</h3>
-                <div className="flex flex-wrap gap-2 flex-1">
-                  {["Firebase Auth", "Firestore", "Node.js", "REST APIs", "Vercel", "Netlify"].map((skill) => (
-                    <Badge key={skill} variant="secondary" className="bg-white/5 hover:bg-blue-500/20 transition-colors">
-                      {skill}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-            </motion.div>
-            <motion.div {...fadeUpProps(0.2)}>
-            <Card className="h-full bg-gradient-to-br from-green-500/5 to-transparent border-green-500/20 hover:border-green-500/40 transition-all duration-300 group hover:shadow-lg hover:shadow-green-500/10">
-              <CardContent className="p-6 h-full flex flex-col">
-                <h3 className="font-bold mb-4 text-green-400 group-hover:text-green-300 transition-colors text-sm uppercase tracking-wider">Tools & Deployment</h3>
-                <div className="flex flex-wrap gap-2 flex-1">
-                  {["Git", "GitHub", "Version Control", "Claude Code", "Figma UI/UX"].map((skill) => (
-                    <Badge key={skill} variant="secondary" className="bg-white/5 hover:bg-green-500/20 transition-colors">
-                      {skill}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-            </motion.div>
-            <motion.div {...fadeUpProps(0.25)}>
-            <Card className="h-full bg-gradient-to-br from-orange-500/5 to-transparent border-orange-500/20 hover:border-orange-500/40 transition-all duration-300 group hover:shadow-lg hover:shadow-orange-500/10">
-              <CardContent className="p-6 h-full flex flex-col">
-                <h3 className="font-bold mb-4 text-orange-400 group-hover:text-orange-300 transition-colors text-sm uppercase tracking-wider">Creative Tech</h3>
-                <div className="flex flex-wrap gap-2 flex-1">
-                  {["React Native", "C++ (HISE/JUCE)", "LUA - KONTAKT DSP"].map((skill) => (
-                    <Badge key={skill} variant="secondary" className="bg-white/5 hover:bg-orange-500/20 transition-colors">
-                      {skill}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-            </motion.div>
+            <SkillFlipCard
+              title="Frontend"
+              skills={["HTML", "CSS", "JavaScript", "TypeScript", "React", "Next.js", "Vite", "Tailwind CSS", "shadcn/ui", "p5.js"]}
+              color="purple"
+              delay={0.1}
+            />
+            <SkillFlipCard
+              title="Backend & Services"
+              skills={["Firebase Auth", "Firestore", "Node.js", "REST APIs", "Vercel", "Netlify"]}
+              color="blue"
+              delay={0.15}
+            />
+            <SkillFlipCard
+              title="Tools & Deployment"
+              skills={["Git", "GitHub", "Version Control", "Claude Code", "Figma UI/UX"]}
+              color="green"
+              delay={0.2}
+            />
+            <SkillFlipCard
+              title="Creative Tech"
+              skills={["React Native", "C++ (HISE/JUCE)", "LUA - KONTAKT DSP"]}
+              color="orange"
+              delay={0.25}
+            />
           </div>
         </motion.div>
 
