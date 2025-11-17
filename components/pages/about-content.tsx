@@ -214,7 +214,47 @@ export default function AboutContent() {
           >
             Tech Stack
           </motion.h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+          {/* Mobile: Horizontal Swiper */}
+          <div className="md:hidden overflow-x-auto pb-4 -mx-4 px-4">
+            <div className="flex gap-4 snap-x snap-mandatory">
+              <div className="flex-shrink-0 w-[85vw] snap-center">
+                <SkillFlipCard
+                  title="Frontend"
+                  skills={["HTML", "CSS", "JavaScript", "TypeScript", "React", "Next.js", "Vite", "Tailwind CSS", "shadcn/ui", "p5.js"]}
+                  color="purple"
+                  delay={0.1}
+                />
+              </div>
+              <div className="flex-shrink-0 w-[85vw] snap-center">
+                <SkillFlipCard
+                  title="Backend & Services"
+                  skills={["Firebase Auth", "Firestore", "Node.js", "REST APIs", "Vercel", "Netlify"]}
+                  color="blue"
+                  delay={0.15}
+                />
+              </div>
+              <div className="flex-shrink-0 w-[85vw] snap-center">
+                <SkillFlipCard
+                  title="Tools & Deployment"
+                  skills={["Git", "GitHub", "Version Control", "Claude Code", "Figma UI/UX"]}
+                  color="green"
+                  delay={0.2}
+                />
+              </div>
+              <div className="flex-shrink-0 w-[85vw] snap-center">
+                <SkillFlipCard
+                  title="Creative Tech"
+                  skills={["React Native", "C++ (HISE/JUCE)", "LUA - KONTAKT DSP"]}
+                  color="orange"
+                  delay={0.25}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop: Grid with Flip Cards */}
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <SkillFlipCard
               title="Frontend"
               skills={["HTML", "CSS", "JavaScript", "TypeScript", "React", "Next.js", "Vite", "Tailwind CSS", "shadcn/ui", "p5.js"]}

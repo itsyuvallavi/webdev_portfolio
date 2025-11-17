@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -18,6 +18,14 @@ interface ScreenshotsCarouselProps {
 export function ScreenshotsCarousel({ screenshots, projectTitle }: ScreenshotsCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const cardsRef = useRef<HTMLDivElement>(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -75,6 +83,51 @@ export function ScreenshotsCarousel({ screenshots, projectTitle }: ScreenshotsCa
     return () => ctx.revert()
   }, [screenshots])
 
+  // Mobile: Simple horizontal swiper
+  if (isMobile) {
+    return (
+      <section className="relative w-full py-12">
+        <div className="mb-8 text-center">
+          <h2 className="text-3xl font-bold text-white">Screenshots</h2>
+          <p className="text-sm text-gray-500 font-mono mt-2">← Swipe to view →</p>
+        </div>
+
+        {/* Mobile: Horizontal Swiper */}
+        <div className="overflow-x-auto pb-4 -mx-4 px-4">
+          <div className="flex gap-4 snap-x snap-mandatory">
+            {screenshots.map((screenshot, index) => (
+              <div
+                key={index}
+                className="flex-shrink-0 w-[90vw] snap-center"
+              >
+                <div className="relative w-full aspect-video rounded-2xl overflow-hidden ring-1 ring-purple-500/20 shadow-2xl shadow-purple-500/10">
+                  <Image
+                    src={screenshot || "/placeholder.svg"}
+                    alt={`${projectTitle} screenshot ${index + 1}`}
+                    fill
+                    className="object-cover"
+                    sizes="90vw"
+                  />
+
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+                  {/* Screenshot number */}
+                  <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-sm px-3 py-2 rounded-full border border-white/10">
+                    <span className="text-sm font-mono text-white">
+                      {index + 1} / {screenshots.length}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // Desktop: Scroll-triggered stacked animation
   return (
     <section
       ref={containerRef}
@@ -94,9 +147,9 @@ export function ScreenshotsCarousel({ screenshots, projectTitle }: ScreenshotsCa
         {screenshots.map((screenshot, index) => (
           <div
             key={index}
-            className="screenshot-card absolute left-1/2 -translate-x-1/2 w-[95%] md:w-[90%] h-[70vh] rounded-3xl overflow-hidden ring-1 ring-purple-500/20 shadow-2xl shadow-purple-500/10"
+            className="screenshot-card absolute left-1/2 -translate-x-1/2 w-[90%] h-[70vh] rounded-3xl overflow-hidden ring-1 ring-purple-500/20 shadow-2xl shadow-purple-500/10"
             style={{
-              top: `${index * 40}px`, // Offset each card by 40px
+              top: `${index * 40}px`, // 40px offset on desktop
               zIndex: index + 1, // Higher index = higher z-index (next card on top)
             }}
           >
@@ -105,7 +158,7 @@ export function ScreenshotsCarousel({ screenshots, projectTitle }: ScreenshotsCa
               alt={`${projectTitle} screenshot ${index + 1}`}
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 85vw, 80vw"
+              sizes="80vw"
             />
 
             {/* Gradient overlay */}

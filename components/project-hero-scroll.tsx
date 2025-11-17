@@ -73,7 +73,7 @@ export function ProjectHeroScroll({ image, title, description, alt }: ProjectHer
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[100vh] flex items-start justify-center pt-20 overflow-hidden -mb-16"
+      className="relative w-full h-auto md:h-[100vh] flex items-start justify-center pt-8 md:pt-20 overflow-hidden mb-0 md:-mb-16"
     >
       {/* Image Container with Zoom Effect */}
       <div
@@ -95,11 +95,11 @@ export function ProjectHeroScroll({ image, title, description, alt }: ProjectHer
         {/* Description Overlay - Bottom Left */}
         <div
           ref={overlayRef}
-          className="absolute bottom-6 left-6 md:bottom-12 md:left-12 max-w-md opacity-0"
+          className="absolute bottom-4 left-4 right-4 md:bottom-12 md:left-12 md:right-auto max-w-md opacity-0"
         >
           {/* Minimal Text Box */}
-          <div className="bg-black/40 backdrop-blur-sm px-4 py-3 md:px-6 md:py-4 rounded-lg border border-white/10">
-            <p className="text-xs md:text-sm lg:text-base text-gray-200 leading-relaxed">
+          <div className="bg-black/60 backdrop-blur-sm px-3 py-2 md:px-6 md:py-4 rounded-lg border border-white/10">
+            <p className="text-xs md:text-sm lg:text-base text-gray-200 leading-relaxed line-clamp-3 md:line-clamp-none">
               {description}
             </p>
           </div>

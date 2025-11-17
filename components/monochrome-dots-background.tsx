@@ -44,7 +44,7 @@ export function MonochromeDotsBackground() {
         vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
 
         // Base wave parameters
-        float layerSpeed = 1.5 + uWaveLayer * 0.3;
+        float layerSpeed = 2.0 + uWaveLayer * 0.3;
         float layerFreq = 0.008 + uWaveLayer * 0.002;
 
         // Storm effect: increase speed dramatically
@@ -80,7 +80,7 @@ export function MonochromeDotsBackground() {
         gl_PointSize = max(size, 1.5);
 
         // Storm effect: brighter particles
-        float baseAlpha = 0.30 + uWaveLayer * 0.07;
+        float baseAlpha = 0.25 + uWaveLayer * 0.07;
         float stormAlphaBoost = uStormIntensity * 0.25; // Add up to 25% more opacity
         vAlpha = baseAlpha + (pulse + 1.0) * baseAlpha * 0.55 + stormAlphaBoost;
 
@@ -152,12 +152,15 @@ export function MonochromeDotsBackground() {
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
-      antialias: !isMobile,
+      antialias: true,
       powerPreference: "high-performance",
-      alpha: false
+      alpha: false,
+      stencil: false,
+      depth: false,
+      preserveDrawingBuffer: false
     })
     renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2))
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
     // Calculate max distance for gradient normalization
     const originX = -window.innerWidth / 2
@@ -190,7 +193,7 @@ export function MonochromeDotsBackground() {
     layers.forEach((config) => {
       const spacing = config.spacing
       // Increase buffer to ensure full screen coverage (especially during storm movement)
-      const buffer = 200 // Larger buffer for storm effect horizontal movement
+      const buffer = 500 // Larger buffer for storm effect horizontal movement
       const cols = Math.ceil((window.innerWidth + buffer * 2) / spacing)
       const rows = Math.ceil((window.innerHeight + buffer * 2) / spacing)
       const particleCount = cols * rows
@@ -242,6 +245,7 @@ export function MonochromeDotsBackground() {
       const material = new THREE.ShaderMaterial({
         vertexShader,
         fragmentShader,
+        // frustumCulled: true,
         uniforms: {
           uTime: { value: 0 },
           uTexture: { value: createCircleTexture() },
@@ -257,6 +261,7 @@ export function MonochromeDotsBackground() {
 
       const particles = new THREE.Points(geometry, material)
       scene.add(particles)
+      // particles.frustumCulled = false // Disable on the mesh object instead
       particleSystems.push({ particles, material })
     })
 
@@ -269,52 +274,84 @@ export function MonochromeDotsBackground() {
 
     window.addEventListener("resize", handleResize)
 
-    // Animation loop with performance optimizations
+    // Animation loop with time-based updates for consistent speed
     let animationFrameId: number
-    let lastTime = 0
-    const targetFPS = isMobile ? 30 : 60
-    const frameInterval = 1000 / targetFPS
+    let lastFrameTime = performance.now()
+    let isAnimating = true
 
     function animate(currentTime: number) {
+      // Stop if cleanup was called
+      if (!isAnimating) return
+
       animationFrameId = requestAnimationFrame(animate)
 
       // Skip frame if not visible (tab is hidden)
       if (!isVisible) return
 
-      // Throttle to target FPS
-      const deltaTime = currentTime - lastTime
-      if (deltaTime < frameInterval) return
+      // Calculate actual time delta for consistent animation speed
+      const deltaTime = (currentTime - lastFrameTime) / 1000 // Convert to seconds
+      lastFrameTime = currentTime
 
-      lastTime = currentTime - (deltaTime % frameInterval)
+      // Cap delta time to prevent huge jumps (e.g., when tab becomes visible again)
+      const cappedDelta = Math.min(deltaTime, 0.1)
 
       // Get current storm intensity from ref (to avoid closure issues)
       const stormIntensity = stormIntensityRef.current
 
       // Update time and storm effect for all particle systems
-      const timeIncrement = isMobile ? 0.02 : 0.016
+      // Time-based animation ensures consistent speed at any frame rate
+      // Multiply by speed factor for visible animation
+      const animationSpeed = 1.5
       particleSystems.forEach((system) => {
-        system.material.uniforms.uTime.value += timeIncrement
+        system.material.uniforms.uTime.value += cappedDelta * animationSpeed
         system.material.uniforms.uStormIntensity.value = stormIntensity
       })
 
       renderer.render(scene, camera)
     }
 
-    animate(0)
+    animate(performance.now())
 
     // Cleanup
     return () => {
+      // Stop animation loop
+      isAnimating = false
+      cancelAnimationFrame(animationFrameId)
+
+      // Remove event listeners
       window.removeEventListener("resize", handleResize)
       document.removeEventListener("visibilitychange", handleVisibilityChange)
-      cancelAnimationFrame(animationFrameId)
+
+      // Dispose all resources properly
       particleSystems.forEach((system) => {
+        // Dispose texture
+        if (system.material.uniforms.uTexture.value) {
+          system.material.uniforms.uTexture.value.dispose()
+        }
+        // Dispose geometry and material
         system.particles.geometry.dispose()
         system.material.dispose()
+        // Remove from scene
+        scene.remove(system.particles)
       })
+
+      // Clear and dispose renderer
+      renderer.renderLists.dispose()
       renderer.dispose()
       scene.clear()
     }
   }, [])
 
-  return <canvas ref={canvasRef} className="fixed inset-0 w-full h-full -z-10" />
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 w-full h-full -z-10"
+      style={{
+        willChange: 'transform',
+        transform: 'translateZ(0)',
+        backfaceVisibility: 'hidden',
+        perspective: 2000
+      }}
+    />
+  )
 }

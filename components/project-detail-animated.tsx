@@ -137,8 +137,8 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
       />
 
       {/* Project Details */}
-      <div className="max-w-4xl mx-auto space-y-12">
-        <motion.div className="grid md:grid-cols-2 gap-6" {...fadeUpProps(0.15)}>
+      <div className="max-w-4xl mx-auto space-y-12 mt-12 md:mt-0">
+        {/* <motion.div className="grid md:grid-cols-2 gap-6" {...fadeUpProps(0.15)}>
           <Card className="bg-gradient-to-br from-purple-500/5 to-transparent border-purple-500/20">
             <CardContent className="p-6">
               <motion.h2 className="text-sm font-bold text-purple-400 mb-2 uppercase tracking-wider" {...fadeUpProps(0.2)}>
@@ -159,7 +159,7 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
               </motion.p>
             </CardContent>
           </Card>
-        </motion.div>
+        </motion.div> */}
 
         <motion.section className="space-y-4" {...fadeUpProps(0.2)}>
           <h2 className="text-3xl font-bold text-white">The Problem</h2>
@@ -178,7 +178,7 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
 
       {/* Project Navigation */}
       <motion.nav
-        className="max-w-4xl mx-auto pt-12 border-t border-purple-500/10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+        className="max-w-4xl mx-auto pt-12 border-t border-purple-500/10 flex flex-row items-center justify-between gap-4"
         {...fadeUpProps(0.35)}
       >
         {prevProject ? (
