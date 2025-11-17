@@ -30,8 +30,8 @@ export function useSandstormTransition({
     const startTime = Date.now()
     const halfDuration = duration / 2
 
-    // Easing function (ease-in-out)
-    const easeInOutQuart = (t: number) => (t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t)
+    // Smoother easing function (ease-in-out cubic)
+    const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
 
     // Animation loop
     const animate = () => {
@@ -42,10 +42,10 @@ export function useSandstormTransition({
       let intensity: number
       if (progress < 0.5) {
         // Build up (0 → 1)
-        intensity = easeInOutQuart(progress * 2)
+        intensity = easeInOutCubic(progress * 2)
       } else {
         // Settle down (1 → 0)
-        intensity = easeInOutQuart(1 - (progress - 0.5) * 2)
+        intensity = easeInOutCubic(1 - (progress - 0.5) * 2)
       }
 
       setStormControls({ isActive: true, intensity })

@@ -26,7 +26,7 @@ export default function HomePage() {
       ref={sectionRef}
       className={cn(
         "relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col justify-between py-20",
-        "transition-opacity duration-300",
+        "transition-opacity duration-1000 ease-out",
         stormControls.isActive ? "opacity-0" : "opacity-100"
       )}
     >
