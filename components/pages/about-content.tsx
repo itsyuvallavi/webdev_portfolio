@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { TextReveal } from "../text-reveal"
 import { SkillFlipCard } from "../skill-flip-card"
+import { CursorCard } from "../cursor-card"
 import { motion, useReducedMotion } from "framer-motion"
 import { useMemo } from "react"
 
@@ -296,37 +297,7 @@ export default function AboutContent() {
                 key={exp.title}
                 {...(index % 2 === 0 ? slideInLeftProps(0.1 + index * 0.05) : slideInRightProps(0.1 + index * 0.05))}
               >
-                <Card className={`h-full bg-gradient-to-br border transition-all duration-300 hover:shadow-lg ${
-                  exp.isCreative
-                    ? "from-orange-500/5 to-transparent border-orange-500/20 hover:border-orange-500/40 hover:from-orange-500/10"
-                    : "from-white/5 to-transparent border-white/10 hover:border-purple-500/30 hover:from-purple-500/5"
-                }`}>
-                  <CardContent className="p-6">
-                    <div className="mb-3">
-                      <h3 className="text-xl font-bold text-white mb-1">{exp.title}</h3>
-                      <p className={`text-sm font-medium ${exp.isCreative ? "text-orange-400" : "text-purple-400"}`}>
-                        {exp.company}
-                      </p>
-                    </div>
-                    <p className="text-xs text-gray-500 mb-4">{exp.period}</p>
-                    <p className="text-sm text-gray-400 leading-relaxed mb-4">{exp.description}</p>
-                    <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
-                      {exp.technologies.map((tech) => (
-                        <Badge
-                          key={tech}
-                          variant="secondary"
-                          className={`text-xs ${
-                            exp.isCreative
-                              ? "bg-orange-500/10 text-orange-300 border-orange-500/20"
-                              : "bg-purple-500/10 text-purple-300 border-purple-500/20"
-                          }`}
-                        >
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                <CursorCard experience={exp} />
               </motion.div>
             ))}
           </div>

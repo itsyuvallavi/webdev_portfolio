@@ -80,9 +80,9 @@ export function MonochromeDotsBackground() {
         gl_PointSize = max(size, 1.5);
 
         // Storm effect: brighter particles
-        float baseAlpha = 0.25 + uWaveLayer * 0.07;
-        float stormAlphaBoost = uStormIntensity * 0.25; // Add up to 25% more opacity
-        vAlpha = baseAlpha + (pulse + 1.0) * baseAlpha * 0.55 + stormAlphaBoost;
+        float baseAlpha = 0.35 + uWaveLayer * 0.07;
+        float stormAlphaBoost = uStormIntensity * 0.35; // Add up to 35% more opacity
+        vAlpha = baseAlpha + (pulse + 1.5) * baseAlpha * 0.55 + stormAlphaBoost;
 
         // Pass normalized distance for color gradient
         vDistanceRatio = clamp(distance / uMaxDistance, 0.0, 1.0);

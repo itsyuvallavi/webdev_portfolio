@@ -79,6 +79,7 @@ export function ProjectHeroScroll({ image, title, description, alt }: ProjectHer
       <div
         ref={imageRef}
         className="relative w-full max-w-7xl mx-auto aspect-video rounded-2xl overflow-hidden ring-1 ring-purple-500/20 shadow-2xl shadow-purple-500/10 mb-0"
+        style={{ isolation: 'isolate' }}
       >
         <Image
           src={image || "/placeholder.svg"}
@@ -90,16 +91,16 @@ export function ProjectHeroScroll({ image, title, description, alt }: ProjectHer
         />
 
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
 
         {/* Description Overlay - Bottom Left */}
         <div
           ref={overlayRef}
-          className="absolute bottom-4 left-4 right-4 md:bottom-12 md:left-12 md:right-auto max-w-md opacity-0"
+          className="absolute bottom-2 left-2 right-2 md:bottom-12 md:left-12 md:right-auto max-w-[95%] md:max-w-md opacity-0"
         >
           {/* Minimal Text Box */}
-          <div className="bg-black/60 backdrop-blur-sm px-3 py-2 md:px-6 md:py-4 rounded-lg border border-white/10">
-            <p className="text-xs md:text-sm lg:text-base text-gray-200 leading-relaxed line-clamp-3 md:line-clamp-none">
+          <div className="bg-black/80 backdrop-blur-sm px-2 py-1.5 md:px-6 md:py-4 rounded-lg border border-white/10 overflow-hidden">
+            <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-gray-200 leading-tight md:leading-relaxed line-clamp-4 md:line-clamp-none break-words">
               {description}
             </p>
           </div>

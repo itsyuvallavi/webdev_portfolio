@@ -18,14 +18,13 @@ export const projects: Project[] = [
   {
     slug: "nomadai",
     title: "NOMADAI",
-    description: "AI-powered travel itinerary generator with real-time data integration and Firebase backend.",
+    description: "AI-powered travel itinerary generator with real-time data integration and Firebase backend. (Alpha - In Development)",
     longDescription:
-      "Full-featured web application that generates personalized travel itineraries using GPT-4o-mini, integrating multiple APIs to import real-time data. Built with modern architecture focusing on clean code organization and optimal performance.",
+      "Full-featured web application that generates personalized travel itineraries using GPT-4o-mini, integrating multiple APIs to import real-time data. Built with modern architecture focusing on clean code organization and optimal performance. Note: This project is currently in alpha development and some features may not work as expected.",
     image: "/nomadai/1.webp",
-    tags: ["TypeScript", "Next.js", "Tailwind CSS", "shadcn/ui", "Firebase", "GPT-4o-mini"],
+    tags: ["TypeScript", "Next.js", "Tailwind CSS", "shadcn/ui", "Firebase", "Chat GPT"],
     category: "Full Stack",
-    demoUrl: "https://nomadai.example.com",
-    githubUrl: "https://github.com/yourusername/nomadai",
+    demoUrl: "https://studio--nomadoldrepair-86680360-86245.us-central1.hosted.app/",
     role: "Full Stack Developer",
     problem:
       "Travelers needed a streamlined way to plan trips with personalized recommendations based on their preferences, budget, and real-time availability.",

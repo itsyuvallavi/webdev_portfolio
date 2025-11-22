@@ -80,8 +80,8 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
       </motion.div>
 
       {/* Project Header */}
-      <motion.header className="max-w-4xl space-y-6" {...fadeUpAnimateProps(0.05)}>
-        <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight">{project.title}</h1>
+      <motion.header className="max-w-4xl space-y-6 overflow-hidden" {...fadeUpAnimateProps(0.05)}>
+        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight break-words">{project.title}</h1>
         <motion.div
           className="flex flex-wrap gap-2"
           {...(shouldReduceMotion
@@ -104,10 +104,10 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
             </motion.div>
           ))}
         </motion.div>
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           {project.demoUrl && (
             <motion.div whileHover={shouldReduceMotion ? undefined : { y: -2, scale: 1.02 }} transition={{ duration: 0.2 }}>
-              <Button asChild className="bg-gray-700 hover:bg-gray-600 text-gray-400 opacity-50">
+              <Button asChild className="bg-purple-600 hover:bg-purple-700 text-white">
                 <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="mr-2 h-4 w-4" />
                   Live Demo
@@ -117,13 +117,21 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
           )}
           {project.githubUrl && (
             <motion.div whileHover={shouldReduceMotion ? undefined : { y: -2, scale: 1.02 }} transition={{ duration: 0.2 }}>
-              <Button asChild variant="outline" className="border-gray-600 hover:bg-gray-800 hover:border-gray-500 text-gray-400 opacity-50">
+              <Button asChild variant="outline" className="border-purple-500/30 hover:bg-purple-500/10 hover:border-purple-500/50 text-white">
                 <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
                   <Github className="mr-2 h-4 w-4" />
                   View Code
                 </a>
               </Button>
             </motion.div>
+          )}
+          {(project.description.includes("Alpha") || project.description.includes("In Development")) && (
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="bg-yellow-500/10 text-yellow-400 border-yellow-500/30">
+                ⚠️ Alpha Version
+              </Badge>
+              <span className="text-sm text-gray-400">Some features may not work as expected</span>
+            </div>
           )}
         </div>
       </motion.header>
@@ -161,14 +169,14 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
           </Card>
         </motion.div> */}
 
-        <motion.section className="space-y-4" {...fadeUpProps(0.2)}>
-          <h2 className="text-3xl font-bold text-white">The Problem</h2>
-          <p className="text-gray-400 leading-relaxed text-lg">{project.problem}</p>
+        <motion.section className="space-y-4 overflow-hidden" {...fadeUpProps(0.2)}>
+          <h2 className="text-2xl md:text-3xl font-bold text-white break-words">The Problem</h2>
+          <p className="text-sm md:text-base lg:text-lg text-gray-400 leading-relaxed break-words">{project.problem}</p>
         </motion.section>
 
-        <motion.section className="space-y-4" {...fadeUpProps(0.25)}>
-          <h2 className="text-3xl font-bold text-white">The Solution</h2>
-          <p className="text-gray-400 leading-relaxed text-lg">{project.solution}</p>
+        <motion.section className="space-y-4 overflow-hidden" {...fadeUpProps(0.25)}>
+          <h2 className="text-2xl md:text-3xl font-bold text-white break-words">The Solution</h2>
+          <p className="text-sm md:text-base lg:text-lg text-gray-400 leading-relaxed break-words">{project.solution}</p>
         </motion.section>
 
       </div>

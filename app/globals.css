@@ -123,6 +123,23 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Prevent text overflow on low-resolution screens - only for paragraphs */
+  p, li, span {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  /* Headers should wrap but not break words */
+  h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: normal;
+    word-wrap: normal;
+  }
+
+  /* Fix for older browsers - ensure proper box-sizing */
+  * {
+    box-sizing: border-box;
+  }
 }
 
 @keyframes gradient {

@@ -100,7 +100,7 @@ export function ScreenshotsCarousel({ screenshots, projectTitle }: ScreenshotsCa
                 key={index}
                 className="flex-shrink-0 w-[90vw] snap-center"
               >
-                <div className="relative w-full aspect-video rounded-2xl overflow-hidden ring-1 ring-purple-500/20 shadow-2xl shadow-purple-500/10">
+                <div className="relative w-full aspect-video rounded-2xl overflow-hidden ring-2 ring-white/20 border border-gray-800 shadow-2xl shadow-black/50">
                   <Image
                     src={screenshot || "/placeholder.svg"}
                     alt={`${projectTitle} screenshot ${index + 1}`}
@@ -147,7 +147,7 @@ export function ScreenshotsCarousel({ screenshots, projectTitle }: ScreenshotsCa
         {screenshots.map((screenshot, index) => (
           <div
             key={index}
-            className="screenshot-card absolute left-1/2 -translate-x-1/2 w-[90%] h-[70vh] rounded-3xl overflow-hidden ring-1 ring-purple-500/20 shadow-2xl shadow-purple-500/10"
+            className="screenshot-card absolute left-1/2 -translate-x-1/2 w-[90%] h-[70vh] rounded-3xl overflow-hidden ring-2 ring-white/20 border border-gray-800 shadow-2xl shadow-black/50"
             style={{
               top: `${index * 40}px`, // 40px offset on desktop
               zIndex: index + 1, // Higher index = higher z-index (next card on top)
