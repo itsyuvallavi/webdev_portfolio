@@ -8,6 +8,7 @@ import { CommandMenu } from "@/components/command-menu"
 import { MonochromeDotsBackground } from "@/components/monochrome-dots-background"
 import { SandstormProvider } from "@/components/transitions/sandstorm-provider"
 import { RouterNavigation } from "@/components/router-navigation"
+import { SocialSidebar } from "@/components/social-sidebar"
 import { Suspense } from "react"
 import "./globals.css"
 
@@ -35,6 +36,7 @@ export default function RootLayout({
           <SandstormProvider>
             <MonochromeDotsBackground />
             <RouterNavigation />
+            <SocialSidebar />
             <div className="relative z-10">
               {children}
             </div>

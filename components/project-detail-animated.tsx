@@ -169,12 +169,12 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
           </Card>
         </motion.div> */}
 
-        <motion.section className="space-y-4 overflow-hidden" {...fadeUpProps(0.2)}>
+        <motion.section className="space-y-4 overflow-hidden px-4" {...fadeUpProps(0.2)}>
           <h2 className="text-2xl md:text-3xl font-bold text-white break-words">The Problem</h2>
           <p className="text-sm md:text-base lg:text-lg text-gray-400 leading-relaxed break-words">{project.problem}</p>
         </motion.section>
 
-        <motion.section className="space-y-4 overflow-hidden" {...fadeUpProps(0.25)}>
+        <motion.section className="space-y-4 overflow-hidden px-4" {...fadeUpProps(0.25)}>
           <h2 className="text-2xl md:text-3xl font-bold text-white break-words">The Solution</h2>
           <p className="text-sm md:text-base lg:text-lg text-gray-400 leading-relaxed break-words">{project.solution}</p>
         </motion.section>

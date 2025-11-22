@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { Home, FolderOpen, User, Mail, Github, Linkedin, Twitter } from "lucide-react"
+import { Home, FolderOpen, User, Mail, Github, Linkedin, Send } from "lucide-react"
 import {
   CommandDialog,
   CommandEmpty,
@@ -14,7 +14,18 @@ import {
 
 export function CommandMenu() {
   const [open, setOpen] = React.useState(false)
+  const [isMobile, setIsMobile] = React.useState(false)
   const router = useRouter()
+
+  // Detect mobile device
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -45,11 +56,29 @@ export function CommandMenu() {
   }, [])
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder="Type a command or search..." />
-      <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Navigation">
+    <CommandDialog
+      open={open}
+      onOpenChange={setOpen}
+      className="backdrop-blur-xl bg-black/80 border-2 border-purple-500/30 shadow-2xl shadow-purple-500/20"
+    >
+      <div className="relative">
+        {/* Animated gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 opacity-50 animate-gradient" />
+
+        <div className="relative">
+          <CommandInput
+            placeholder={isMobile ? "Select an option below..." : "Type a command or search..."}
+            autoFocus={!isMobile}
+            readOnly={isMobile}
+          />
+          <CommandList>
+            <CommandEmpty>
+              <div className="py-6 text-center">
+                <p className="text-sm text-gray-400">No results found.</p>
+                <p className="text-xs text-gray-600 mt-1">Try searching for navigation or social</p>
+              </div>
+            </CommandEmpty>
+            <CommandGroup heading="Navigation">
           <CommandItem onSelect={() => runCommand(() => router.push("/"))}>
             <Home className="mr-2 h-4 w-4" />
             Home
@@ -68,20 +97,22 @@ export function CommandMenu() {
           </CommandItem>
         </CommandGroup>
         <CommandGroup heading="Social">
-          <CommandItem onSelect={() => runCommand(() => window.open("https://github.com/yourusername", "_blank"))}>
+          <CommandItem onSelect={() => runCommand(() => window.open("https://github.com/itsyuvallavi", "_blank"))}>
             <Github className="mr-2 h-4 w-4" />
             GitHub
           </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => window.open("https://linkedin.com/in/yourusername", "_blank"))}>
+          <CommandItem onSelect={() => runCommand(() => window.open("https://www.linkedin.com/in/yuval-lavi-4b9338180/", "_blank"))}>
             <Linkedin className="mr-2 h-4 w-4" />
             LinkedIn
           </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => window.open("https://twitter.com/yourusername", "_blank"))}>
-            <Twitter className="mr-2 h-4 w-4" />
-            Twitter
+          <CommandItem onSelect={() => runCommand(() => window.open("https://t.me/itsyuvallavi", "_blank"))}>
+            <Send className="mr-2 h-4 w-4" />
+            Telegram
           </CommandItem>
         </CommandGroup>
-      </CommandList>
+          </CommandList>
+        </div>
+      </div>
     </CommandDialog>
   )
 }
