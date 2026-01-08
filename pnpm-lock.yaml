@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@emotion/is-prop-valid':
-        specifier: latest
+        specifier: 1.4.0
         version: 1.4.0
       '@hookform/resolvers':
         specifier: ^3.10.0
@@ -99,7 +99,7 @@ importers:
         specifier: ^0.181.0
         version: 0.181.0
       '@vercel/analytics':
-        specifier: latest
+        specifier: 1.5.0
         version: 1.5.0(next@15.5.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)
       autoprefixer:
         specifier: ^10.4.20
@@ -120,10 +120,10 @@ importers:
         specifier: 8.5.1
         version: 8.5.1(react@19.2.1)
       framer-motion:
-        specifier: latest
+        specifier: 12.23.24
         version: 12.23.24(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       geist:
-        specifier: latest
+        specifier: 1.5.1
         version: 1.5.1(next@15.5.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))
       gsap:
         specifier: ^3.12.5
@@ -138,7 +138,7 @@ importers:
         specifier: 15.5.7
         version: 15.5.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       next-themes:
-        specifier: latest
+        specifier: 0.4.6
         version: 0.4.6(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react:
         specifier: ^19.2.1
@@ -168,7 +168,7 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@4.1.17)
       three:
-        specifier: latest
+        specifier: 0.181.1
         version: 0.181.1
       vaul:
         specifier: ^0.9.9
