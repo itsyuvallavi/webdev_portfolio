@@ -1,10 +1,12 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { ScanLine } from "lucide-react"
+import { Menu } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 
 const links = [
   { id: "home", path: "/", label: "HOME", number: "01" },
@@ -15,11 +17,16 @@ const links = [
 
 export function RouterNavigation() {
   const pathname = usePathname()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const isActive = (path: string) => {
     if (path === "/" && pathname === "/") return true
     if (path !== "/" && pathname?.startsWith(path)) return true
     return false
+  }
+
+  const handleLinkClick = () => {
+    setMobileMenuOpen(false)
   }
 
   return (
@@ -57,20 +64,41 @@ export function RouterNavigation() {
             ))}
           </div>
 
-          {/* Mobile Command Menu Trigger */}
+          {/* Mobile Navigation Menu */}
           <div className="md:hidden">
-            <Button
-              variant="ghost"
-              size="icon-lg"
-              onClick={() => {
-                if (typeof window !== 'undefined' && (window as any).__openCommandMenu) {
-                  (window as any).__openCommandMenu()
-                }
-              }}
-              aria-label="Open command menu"
-            >
-              <ScanLine className="size-7" />
-            </Button>
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon-lg"
+                  aria-label="Open navigation menu"
+                >
+                  <Menu className="size-7" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[250px] bg-black border-purple-500/20">
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                <nav className="flex flex-col gap-4 mt-8">
+                  {links.map((link) => (
+                    <Link
+                      key={link.id}
+                      href={link.path}
+                      onClick={handleLinkClick}
+                      className={cn(
+                        "text-base font-mono transition-colors px-4 py-2 rounded-md",
+                        isActive(link.path)
+                          ? "text-white bg-purple-500/10"
+                          : "text-gray-400 hover:text-white hover:bg-purple-500/5",
+                      )}
+                      aria-label={`Navigate to ${link.label} page`}
+                    >
+                      <span className="text-gray-500">{link.number} / </span>
+                      {link.label}
+                    </Link>
+                  ))}
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
           
         </div>

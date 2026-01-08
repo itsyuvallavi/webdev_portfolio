@@ -67,8 +67,6 @@ export function ScreenshotsCarousel({ screenshots, projectTitle }: ScreenshotsCa
         const startScroll = initialDelay + (index - 1) * scrollPerCard
         const endScroll = initialDelay + index * scrollPerCard
 
-        console.log(`Card ${index} will slide in from ${startScroll}vh to ${endScroll}vh`)
-
         // Create timeline for independent fade + slide control
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -102,7 +100,7 @@ export function ScreenshotsCarousel({ screenshots, projectTitle }: ScreenshotsCa
   // Mobile: Simple horizontal swiper
   if (isMobile) {
     return (
-      <section className="relative w-full py-12">
+      <section className="relative w-full py-12 pb-16">
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold text-white">Screenshots</h2>
           <p className="text-sm text-gray-500 font-mono mt-2">← Swipe to view →</p>
@@ -162,7 +160,7 @@ export function ScreenshotsCarousel({ screenshots, projectTitle }: ScreenshotsCa
   return (
     <section
       ref={containerRef}
-      className="relative w-full pt-20 pb-4"
+      className="relative w-full pt-20"
       style={{ minHeight: `${(screenshots.length - 1) * 100}vh` }}
     >
       <div className="mb-12 text-center">

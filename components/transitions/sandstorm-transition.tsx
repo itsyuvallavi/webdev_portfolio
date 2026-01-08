@@ -22,8 +22,6 @@ export function useSandstormTransition({
   const triggerStorm = useCallback(() => {
     if (isAnimatingRef.current) return // Prevent double trigger
 
-    console.log("🌪️ Sandstorm: Triggering transition to", targetPath)
-
     isAnimatingRef.current = true
     setStormControls({ isActive: true, intensity: 0 })
 
@@ -52,7 +50,6 @@ export function useSandstormTransition({
 
       // Navigate at 50% mark
       if (elapsed >= halfDuration && elapsed < halfDuration + 100) {
-        console.log("🔄 Sandstorm: Navigating to", targetPath)
         router.push(targetPath)
       }
 
@@ -60,7 +57,6 @@ export function useSandstormTransition({
         requestAnimationFrame(animate)
       } else {
         // Complete
-        console.log("✅ Sandstorm: Transition complete")
         setStormControls({ isActive: false, intensity: 0 })
         isAnimatingRef.current = false
         onComplete?.()

@@ -145,7 +145,7 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
       />
 
       {/* Project Details */}
-      <div className="max-w-4xl mx-auto space-y-12 mt-12 md:mt-0">
+      <div className="max-w-4xl mx-auto space-y-12 mt-24 md:mt-32 mb-16 md:mb-24">
         {/* <motion.div className="grid md:grid-cols-2 gap-6" {...fadeUpProps(0.15)}>
           <Card className="bg-gradient-to-br from-purple-500/5 to-transparent border-purple-500/20">
             <CardContent className="p-6">
@@ -182,11 +182,13 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
       </div>
 
       {/* Screenshots Carousel with Horizontal Scroll */}
-      <ScreenshotsCarousel screenshots={project.screenshots} projectTitle={project.title} />
+      <div className="my-16 md:my-24">
+        <ScreenshotsCarousel screenshots={project.screenshots} projectTitle={project.title} />
+      </div>
 
       {/* Project Navigation */}
       <motion.nav
-        className="max-w-4xl mx-auto pt-12 border-t border-purple-500/10 flex flex-row items-center justify-between gap-4"
+        className="max-w-4xl mx-auto mt-8 md:mt-12 pt-8 md:pt-10 pb-16 md:pb-20 border-t border-purple-500/10 flex flex-row items-center justify-between gap-4"
         {...fadeUpProps(0.35)}
       >
         {prevProject ? (

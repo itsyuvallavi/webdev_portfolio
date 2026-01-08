@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { projects } from "@/lib/data"
 import { ProjectDetailAnimated } from "@/components/project-detail-animated"
@@ -12,6 +13,34 @@ export function generateStaticParams() {
   return projects.map((project) => ({
     slug: project.slug,
   }))
+}
+
+export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
+  const { slug } = await params
+  const project = projects.find((p) => p.slug === slug)
+
+  if (!project) {
+    return {
+      title: "Project Not Found | Yuval Lavi",
+    }
+  }
+
+  return {
+    title: `${project.title} | Projects | Yuval Lavi`,
+    description: project.description,
+    openGraph: {
+      title: project.title,
+      description: project.description,
+      images: project.image ? [{ url: project.image }] : undefined,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description: project.description,
+      images: project.image ? [project.image] : undefined,
+    },
+  }
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
