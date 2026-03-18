@@ -122,7 +122,7 @@ export function ScreenshotsCarousel({ screenshots, projectTitle }: ScreenshotsCa
                     src={screenshot || "/placeholder.svg"}
                     alt={`${projectTitle} screenshot ${index + 1}`}
                     fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="object-cover transition-transform duration-300"
                     sizes="90vw"
                   />
 
@@ -187,7 +187,7 @@ export function ScreenshotsCarousel({ screenshots, projectTitle }: ScreenshotsCa
               src={screenshot || "/placeholder.svg"}
               alt={`${projectTitle} screenshot ${index + 1}`}
               fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className="object-cover transition-transform duration-300"
               sizes="80vw"
             />
 

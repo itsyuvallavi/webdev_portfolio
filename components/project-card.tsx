@@ -12,7 +12,7 @@ interface ProjectCardProps {
 export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Link href={`/projects/${project.slug}`} className="block h-full">
-      <Card className="group h-full overflow-hidden transition-all bg-gradient-to-br from-white/5 to-transparent border-white/10 hover:border-purple-500/30 hover:from-purple-500/5 hover:shadow-2xl hover:shadow-purple-500/10 hover:-translate-y-2">
+      <Card className="group h-full overflow-hidden transition-all bg-gradient-to-br from-white/5 to-transparent border-white/10 hover:border-purple-500/30 hover:from-purple-500/5 hover:shadow-2xl hover:shadow-purple-500/10">
         <CardHeader className="p-0">
           <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-purple-500/10 to-transparent">
             <Image

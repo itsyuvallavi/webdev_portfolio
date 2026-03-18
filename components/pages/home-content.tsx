@@ -25,7 +25,7 @@ export default function HomePage() {
     <section
       ref={sectionRef}
       className={cn(
-        "relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col justify-between py-20",
+        "relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col justify-between py-20 overflow-hidden",
         "transition-opacity duration-1000 ease-out",
         stormControls.isActive ? "opacity-0" : "opacity-100"
       )}
@@ -33,7 +33,7 @@ export default function HomePage() {
         {/* Hero Content */}
         <div className="flex-1 flex flex-col justify-center max-w-4xl">
         <div className="space-y-4 text-center md:text-left">
-          <h1 className="text-[3.5rem] xs:text-[4.5rem] sm:text-[6rem] md:text-[12rem] lg:text-[14rem] font-black leading-none tracking-tighter">
+          <h1 className="text-[2.75rem] xs:text-[3.75rem] sm:text-[5rem] md:text-[8rem] lg:text-[10rem] xl:text-[12rem] font-black leading-none tracking-tighter">
             <TextReveal text="CREATIVE" className="block text-white" />
             <TextReveal
               text="DEVELOPER"

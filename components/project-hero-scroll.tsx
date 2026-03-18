@@ -89,7 +89,7 @@ export function ProjectHeroScroll({ image, title, description, alt }: ProjectHer
           src={image || "/placeholder.svg"}
           alt={alt}
           fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          className="object-cover transition-transform duration-300"
           sizes="100vw"
           priority
         />
