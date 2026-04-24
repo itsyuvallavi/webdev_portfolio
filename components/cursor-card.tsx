@@ -2,6 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 
 interface Experience {
   period: string
@@ -17,39 +18,48 @@ interface CursorCardProps {
 }
 
 export function CursorCard({ experience }: CursorCardProps) {
+  const creative = experience.isCreative === true
+
   return (
     <Card
-      className={`h-full bg-gradient-to-br border transition-all duration-300 hover:shadow-lg relative overflow-hidden ${
-        experience.isCreative
-          ? "from-orange-500/5 to-transparent border-orange-500/20 hover:border-orange-500/40"
-          : "from-white/5 to-transparent border-white/10 hover:border-purple-500/30"
-      }`}
+      className={cn(
+        "relative h-full overflow-hidden border bg-zinc-950/95 bg-gradient-to-br from-white/[0.05] to-transparent text-zinc-50 shadow-lg shadow-black/35 transition-[box-shadow,border-color,transform] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-xl active:scale-[0.99]",
+        creative
+          ? "border-zinc-700/80 hover:border-amber-500/40"
+          : "border-zinc-700/80 hover:border-teal-500/40",
+      )}
     >
       <CardContent className="p-6">
-          <div className="mb-3">
-            <h3 className="text-xl font-bold text-white mb-1">{experience.title}</h3>
-            <p className={`text-sm font-medium ${experience.isCreative ? "text-orange-400" : "text-purple-400"}`}>
-              {experience.company}
-            </p>
-          </div>
-          <p className="text-xs text-gray-500 mb-4">{experience.period}</p>
-          <p className="text-sm text-gray-400 leading-relaxed mb-4">{experience.description}</p>
-          <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
-            {experience.technologies.map((tech) => (
-              <Badge
-                key={tech}
-                variant="secondary"
-                className={`text-xs ${
-                  experience.isCreative
-                    ? "bg-orange-500/10 text-orange-300 border-orange-500/20"
-                    : "bg-purple-500/10 text-purple-300 border-purple-500/20"
-                }`}
-              >
-                {tech}
-              </Badge>
-            ))}
-          </div>
-        </CardContent>
+        <div className="mb-3">
+          <h3 className="mb-1 text-xl font-semibold tracking-tight text-zinc-50">{experience.title}</h3>
+          <p
+            className={cn(
+              "text-sm font-medium",
+              creative ? "text-amber-400/95" : "text-teal-400/95",
+            )}
+          >
+            {experience.company}
+          </p>
+        </div>
+        <p className="mb-4 text-xs text-zinc-500">{experience.period}</p>
+        <p className="mb-4 text-sm leading-relaxed text-zinc-300">{experience.description}</p>
+        <div className="flex flex-wrap gap-1.5 border-t border-zinc-800/80 pt-3">
+          {experience.technologies.map((tech) => (
+            <Badge
+              key={tech}
+              variant="secondary"
+              className={cn(
+                "text-xs",
+                creative
+                  ? "border-amber-500/30 bg-amber-500/15 text-amber-100/90"
+                  : "border-teal-500/25 bg-teal-500/12 text-teal-100/90",
+              )}
+            >
+              {tech}
+            </Badge>
+          ))}
+        </div>
+      </CardContent>
     </Card>
   )
 }

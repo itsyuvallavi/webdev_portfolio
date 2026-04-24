@@ -3,7 +3,8 @@ import type React from "react"
 
 export const metadata: Metadata = {
   title: "Contact | Yuval Lavi",
-  description: "Get in touch with me to discuss new projects and opportunities. I typically respond within 24-48 hours during business days.",
+  description:
+    "Email, phone, LinkedIn, or Telegram — or use the form. I usually reply within a day or two on business days.",
 }
 
 export default function ContactLayout({

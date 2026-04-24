@@ -1,218 +1,204 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useId, useRef, useState } from "react"
 import Image from "next/image"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { motion, useReducedMotion } from "framer-motion"
+import { Maximize2 } from "lucide-react"
 import { ImageLightbox } from "@/components/image-lightbox"
-
-// Register GSAP plugin
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger)
-}
+import { cn } from "@/lib/utils"
 
 interface ScreenshotsCarouselProps {
   screenshots: string[]
   projectTitle: string
+  /** Live site URL — shown in the browser chrome when present */
+  demoUrl?: string
+  slug: string
+  /** Short context per screen (case-study style); index aligns with screenshots */
+  screenshotCaptions?: string[]
 }
 
-export function ScreenshotsCarousel({ screenshots, projectTitle }: ScreenshotsCarouselProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const cardsRef = useRef<HTMLDivElement>(null)
-  const [isMobile, setIsMobile] = useState(false)
-  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+function chromeUrl(demoUrl: string | undefined, slug: string) {
+  if (demoUrl) {
+    try {
+      const u = new URL(demoUrl)
+      return u.hostname + u.pathname.replace(/\/$/, "") || u.hostname
+    } catch {
+      return demoUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")
+    }
+  }
+  return `${slug}.app`
+}
 
-  const handleImageClick = (index: number) => {
-    setCurrentImageIndex(index)
-    setIsLightboxOpen(true)
+export function ScreenshotsCarousel({
+  screenshots,
+  projectTitle,
+  demoUrl,
+  slug,
+  screenshotCaptions,
+}: ScreenshotsCarouselProps) {
+  const id = useId()
+  const prefersReducedMotion = useReducedMotion()
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(0)
+  const sectionRefs = useRef<(HTMLElement | null)[]>([])
+
+  const scrollToIndex = useCallback((index: number) => {
+    sectionRefs.current[index]?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }, [])
+
+  const openLightbox = (index: number) => {
+    setActiveIndex(index)
+    setLightboxOpen(true)
   }
 
   const handleNext = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % screenshots.length)
+    setActiveIndex((i) => (i + 1) % screenshots.length)
   }
 
   const handlePrev = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + screenshots.length) % screenshots.length)
+    setActiveIndex((i) => (i - 1 + screenshots.length) % screenshots.length)
   }
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+  const captionFor = (i: number) => screenshotCaptions?.[i]?.trim()
 
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (prefersReducedMotion || !cardsRef.current) return
+  if (screenshots.length === 0) return null
 
-    const ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray<HTMLElement>(".screenshot-card")
-
-      // Set initial states: first card visible, rest invisible
-      cards.forEach((card, index) => {
-        gsap.set(card, {
-          opacity: index === 0 ? 1 : 0,
-        })
-      })
-
-      const scrollPerCard = 450 // vh per card - keep it reasonable
-      const initialDelay = 0
-
-      // Fade in each next card on top of the previous ones
-      cards.forEach((card, index) => {
-        if (index === 0) return // Skip first card (already visible)
-
-        const startScroll = initialDelay + (index - 1) * scrollPerCard
-        const endScroll = initialDelay + index * scrollPerCard
-
-        // Create timeline for independent fade + slide control
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: cardsRef.current,
-            start: `top+=${startScroll}vh top`,
-            end: `top+=${endScroll}vh top`,
-            scrub: 3,
-            id: `card-${index}`,
-          }
-        })
-
-        // Quick fade in (first 25% of scroll range)
-        tl.fromTo(card,
-          { opacity: 0 },
-          { opacity: 1, duration: 0.25, ease: "power2.out" },
-          0
-        )
-
-        // Slide up throughout entire scroll range
-        tl.fromTo(card,
-          { yPercent: 15 },
-          { yPercent: 0, duration: 1, ease: "power1.inOut" },
-          0
-        )
-      })
-    }, cardsRef)
-
-    return () => ctx.revert()
-  }, [screenshots])
-
-  // Mobile: Simple horizontal swiper
-  if (isMobile) {
-    return (
-      <section className="relative w-full py-12 pb-16">
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold text-white">Screenshots</h2>
-          <p className="text-sm text-gray-500 font-mono mt-2">← Swipe to view →</p>
-        </div>
-
-        {/* Mobile: Horizontal Swiper */}
-        <div className="overflow-x-auto pb-4 -mx-4 px-4">
-          <div className="flex gap-4 snap-x snap-mandatory">
-            {screenshots.map((screenshot, index) => (
-              <div
-                key={index}
-                className="flex-shrink-0 w-[90vw] snap-center"
-              >
-                <div
-                  className="relative w-full aspect-video rounded-2xl overflow-hidden ring-2 ring-white/20 border border-gray-800 shadow-2xl shadow-black/50 cursor-pointer group"
-                  onClick={() => handleImageClick(index)}
-                >
-                  <Image
-                    src={screenshot || "/placeholder.svg"}
-                    alt={`${projectTitle} screenshot ${index + 1}`}
-                    fill
-                    className="object-cover transition-transform duration-300"
-                    sizes="90vw"
-                  />
-
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-                  {/* Screenshot number */}
-                  <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-sm px-3 py-2 rounded-full border border-white/10">
-                    <span className="text-sm font-mono text-white">
-                      {index + 1} / {screenshots.length}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Image Lightbox */}
-        <ImageLightbox
-          src={screenshots[currentImageIndex] || "/placeholder.svg"}
-          alt={`${projectTitle} screenshot ${currentImageIndex + 1}`}
-          isOpen={isLightboxOpen}
-          onClose={() => setIsLightboxOpen(false)}
-          onNext={handleNext}
-          onPrev={handlePrev}
-          currentIndex={currentImageIndex}
-          totalImages={screenshots.length}
-        />
-      </section>
-    )
-  }
-
-  // Desktop: Scroll-triggered stacked animation
   return (
     <section
-      ref={containerRef}
-      className="relative w-full pt-20"
-      style={{ minHeight: `${(screenshots.length - 1) * 100}vh` }}
+      className="relative w-full"
+      aria-labelledby={`${id}-gallery-heading`}
     >
-      <div className="mb-12 text-center">
-        <h2 className="text-3xl font-bold text-white">Screenshots</h2>
-        <p className="text-sm text-gray-500 font-mono mt-2">↓ Scroll to reveal</p>
+      <div className="mx-auto max-w-3xl px-4 text-left md:px-6">
+        <h2
+          id={`${id}-gallery-heading`}
+          className="text-2xl font-semibold tracking-tight text-zinc-50 md:text-3xl"
+        >
+          Product gallery
+        </h2>
+        <p className="mt-3 max-w-xl text-pretty text-sm leading-relaxed text-zinc-400 md:text-base">
+          Key screens from the build, framed for context.{" "}
+          <span className="text-zinc-500">Open any shot for full size.</span>
+        </p>
       </div>
 
-      {/* Stacked Cards Container */}
-      <div
-        ref={cardsRef}
-        className="sticky top-20 h-[70vh] mx-auto max-w-5xl flex items-center justify-center"
+      {/* Jump links — common pattern in long-form case studies */}
+      <nav
+        className="mx-auto mt-8 flex max-w-3xl flex-wrap justify-start gap-2 px-4 md:px-6"
+        aria-label="Jump to screen"
       >
-        {screenshots.map((screenshot, index) => (
-          <div
-            key={index}
-            className="screenshot-card absolute left-1/2 -translate-x-1/2 w-[90%] h-[70vh] rounded-3xl overflow-hidden ring-2 ring-white/20 border border-gray-800 shadow-2xl shadow-black/50 cursor-pointer group"
-            style={{
-              top: `${index * 40}px`, // 40px offset on desktop
-              zIndex: index + 1, // Higher index = higher z-index (next card on top)
-            }}
-            onClick={() => handleImageClick(index)}
+        {screenshots.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => scrollToIndex(i)}
+            className={cn(
+              "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+              "border-zinc-600 bg-zinc-900/80 text-zinc-300 hover:border-teal-500/45 hover:bg-teal-500/10 hover:text-white",
+            )}
           >
-            <Image
-              src={screenshot || "/placeholder.svg"}
-              alt={`${projectTitle} screenshot ${index + 1}`}
-              fill
-              className="object-cover transition-transform duration-300"
-              sizes="80vw"
-            />
-
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-            {/* Screenshot number */}
-            <div className="absolute bottom-6 left-6 bg-black/60 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10">
-              <span className="text-sm font-mono text-white">
-                {index + 1} / {screenshots.length}
-              </span>
-            </div>
-          </div>
+            {captionFor(i) ? `View ${i + 1}` : `Screen ${i + 1}`}
+          </button>
         ))}
+      </nav>
+
+      <div className="mx-auto mt-14 max-w-4xl space-y-16 md:space-y-24 md:px-4">
+        {screenshots.map((src, index) => {
+          const caption = captionFor(index)
+          return (
+            <motion.article
+              key={`${src}-${index}`}
+              ref={(el) => {
+                sectionRefs.current[index] = el
+              }}
+              id={`${id}-shot-${index}`}
+              {...(prefersReducedMotion
+                ? {}
+                : {
+                    initial: { opacity: 0, y: 28 },
+                    whileInView: { opacity: 1, y: 0 },
+                    viewport: { once: true, margin: "-12% 0px" },
+                    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+                  })}
+              className="scroll-mt-28"
+            >
+              <div className="mb-4 flex flex-col gap-1 px-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+                <p className="text-xs font-semibold uppercase tracking-wider text-teal-400/90">
+                  Figure {index + 1}
+                  {caption ? <span className="sr-only"> — {caption}</span> : null}
+                </p>
+                {caption ? (
+                  <p className="text-sm font-medium leading-snug text-zinc-200 sm:max-w-md sm:text-right">
+                    {caption}
+                  </p>
+                ) : (
+                  <p className="text-sm text-zinc-500 sm:text-right">Interface detail</p>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => openLightbox(index)}
+                className="group relative block w-full cursor-zoom-in text-left outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                aria-label={`Open full size: ${projectTitle} — screen ${index + 1}`}
+              >
+                {/* Browser chrome — portfolio / case-study convention */}
+                <div className="overflow-hidden rounded-t-xl border border-b-0 border-zinc-700/90 bg-zinc-900/95">
+                  <div className="flex items-center gap-3 px-3 py-2.5 sm:px-4">
+                    <span className="flex gap-1.5" aria-hidden>
+                      <span className="size-3 rounded-full bg-red-500/70" />
+                      <span className="size-3 rounded-full bg-amber-400/70" />
+                      <span className="size-3 rounded-full bg-emerald-500/70" />
+                    </span>
+                    <div className="min-w-0 flex-1 rounded-md border border-zinc-800 bg-zinc-950/90 px-3 py-1.5 text-left">
+                      <span className="block truncate font-mono text-[11px] text-zinc-500 sm:text-xs">
+                        <span className="text-zinc-600">https://</span>
+                        {chromeUrl(demoUrl, slug)}
+                      </span>
+                    </div>
+                    <Maximize2
+                      className="size-4 shrink-0 text-zinc-600 transition-colors group-hover:text-teal-400"
+                      aria-hidden
+                    />
+                  </div>
+                </div>
+
+                <div
+                  className={cn(
+                    "relative overflow-hidden rounded-b-xl border border-zinc-700/90 bg-zinc-950",
+                    "shadow-[0_24px_64px_-12px_rgba(0,0,0,0.65)] ring-1 ring-inset ring-white/[0.06]",
+                    "transition-[box-shadow,transform] duration-300 group-hover:shadow-teal-950/35",
+                    prefersReducedMotion ? "" : "group-hover:-translate-y-0.5",
+                  )}
+                >
+                  <div className="w-full bg-zinc-950">
+                    <Image
+                      src={src || "/placeholder.svg"}
+                      alt={
+                        caption
+                          ? `${projectTitle}: ${caption}`
+                          : `${projectTitle} — product screen ${index + 1}`
+                      }
+                      width={1920}
+                      height={1080}
+                      className="h-auto w-full object-contain object-top"
+                      sizes="(max-width: 768px) 100vw, 896px"
+                    />
+                  </div>
+                </div>
+              </button>
+            </motion.article>
+          )
+        })}
       </div>
 
-      {/* Image Lightbox */}
       <ImageLightbox
-        src={screenshots[currentImageIndex] || "/placeholder.svg"}
-        alt={`${projectTitle} screenshot ${currentImageIndex + 1}`}
-        isOpen={isLightboxOpen}
-        onClose={() => setIsLightboxOpen(false)}
+        src={screenshots[activeIndex] || "/placeholder.svg"}
+        alt={`${projectTitle} screenshot ${activeIndex + 1}`}
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
         onNext={handleNext}
         onPrev={handlePrev}
-        currentIndex={currentImageIndex}
+        currentIndex={activeIndex}
         totalImages={screenshots.length}
       />
     </section>

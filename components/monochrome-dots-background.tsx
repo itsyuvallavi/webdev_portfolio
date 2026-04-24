@@ -6,13 +6,7 @@ import { useSandstormContext } from "./transitions/sandstorm-provider"
 
 export function MonochromeDotsBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const { stormControls } = useSandstormContext()
-  const stormIntensityRef = useRef(0)
-
-  // Update ref whenever storm intensity changes
-  useEffect(() => {
-    stormIntensityRef.current = stormControls?.intensity || 0
-  }, [stormControls])
+  const { stormIntensityRef } = useSandstormContext()
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -47,8 +41,11 @@ export function MonochromeDotsBackground() {
         float layerSpeed = 2.0 + uWaveLayer * 0.3;
         float layerFreq = 0.008 + uWaveLayer * 0.002;
 
-        // Storm effect: increase speed dramatically
-        float stormSpeedMultiplier = 1.0 + uStormIntensity * 4.0; // 1x to 5x
+        // Storm easing — softer onset/offset than raw linear intensity
+        float storm = smoothstep(0.0, 1.0, uStormIntensity);
+        storm = pow(storm, 0.85);
+
+        float stormSpeedMultiplier = 1.0 + storm * 3.0;
         layerSpeed *= stormSpeedMultiplier;
 
         float wave1 = sin(distance * layerFreq - uTime * layerSpeed + delay);
@@ -59,29 +56,24 @@ export function MonochromeDotsBackground() {
         float pulse = (wave1 * 0.4 + wave2 * 0.3 + wave3 * 0.2 + wave4 * 0.1);
 
         // Storm effect: add horizontal turbulent movement (sandstorm sweeping horizontally)
-        if (uStormIntensity > 0.0) {
-          // Create turbulent horizontal movement
-          float turbulence = sin(position.y * 0.005 + uTime * 2.0) *
-                             cos(distance * 0.01 + uTime * 1.5);
+        if (storm > 0.001) {
+          float turbulence = sin(position.y * 0.004 + uTime * 1.65) *
+                             cos(distance * 0.009 + uTime * 1.25);
 
-          // Move particles horizontally (left to right sweep)
-          float horizontalOffset = uStormIntensity * turbulence * 300.0;
+          float horizontalOffset = storm * turbulence * 220.0;
           mvPosition.x += horizontalOffset;
 
-          // Add subtle vertical turbulence too
-          float verticalTurbulence = cos(position.x * 0.003 + uTime * 2.5);
-          mvPosition.y += uStormIntensity * verticalTurbulence * 100.0;
+          float verticalTurbulence = cos(position.x * 0.0025 + uTime * 2.1);
+          mvPosition.y += storm * verticalTurbulence * 72.0;
         }
 
-        // Storm effect: larger particles during storm
         float baseSize = 2.35 + uWaveLayer * 0.55;
-        float stormSizeBoost = uStormIntensity * 1.5; // Add up to 1.5 to size
+        float stormSizeBoost = storm * 1.15;
         float size = baseSize + pulse * 2.25 + stormSizeBoost;
         gl_PointSize = max(size, 1.5);
 
-        // Storm effect: brighter particles
         float baseAlpha = 0.35 + uWaveLayer * 0.07;
-        float stormAlphaBoost = uStormIntensity * 0.35; // Add up to 35% more opacity
+        float stormAlphaBoost = storm * 0.22;
         vAlpha = baseAlpha + (pulse + 1.5) * baseAlpha * 0.55 + stormAlphaBoost;
 
         // Pass normalized distance for color gradient

@@ -10,53 +10,63 @@ interface UseSandstormTransitionOptions {
   onComplete?: () => void
 }
 
+/** Gentler than cubic — less snap at peak and endpoints */
+function easeInOutQuint(t: number) {
+  return t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2
+}
+
 export function useSandstormTransition({
   targetPath,
-  duration = 3000,
+  duration = 3200,
   onComplete,
 }: UseSandstormTransitionOptions) {
   const router = useRouter()
-  const { stormControls, setStormControls } = useSandstormContext()
+  const { setStormControls, stormIntensityRef, stormActiveRef } = useSandstormContext()
   const isAnimatingRef = useRef(false)
+  const lastUiSyncRef = useRef(0)
 
   const triggerStorm = useCallback(() => {
-    if (isAnimatingRef.current) return // Prevent double trigger
+    if (isAnimatingRef.current) return
 
     isAnimatingRef.current = true
+    stormIntensityRef.current = 0
+    stormActiveRef.current = true
     setStormControls({ isActive: true, intensity: 0 })
 
-    const startTime = Date.now()
+    const startTime = performance.now()
     const halfDuration = duration / 2
+    let navigated = false
 
-    // Smoother easing function (ease-in-out cubic)
-    const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
-
-    // Animation loop
-    const animate = () => {
-      const elapsed = Date.now() - startTime
+    const animate = (now: number) => {
+      const elapsed = now - startTime
       const progress = Math.min(elapsed / duration, 1)
 
-      // Calculate intensity (0 → 1 → 0)
       let intensity: number
       if (progress < 0.5) {
-        // Build up (0 → 1)
-        intensity = easeInOutCubic(progress * 2)
+        intensity = easeInOutQuint(progress * 2)
       } else {
-        // Settle down (1 → 0)
-        intensity = easeInOutCubic(1 - (progress - 0.5) * 2)
+        intensity = easeInOutQuint(1 - (progress - 0.5) * 2)
       }
 
-      setStormControls({ isActive: true, intensity })
+      // WebGL + rAF readers: zero React batching delay
+      stormIntensityRef.current = intensity
 
-      // Navigate at 50% mark
-      if (elapsed >= halfDuration && elapsed < halfDuration + 100) {
+      // Throttle React state (~20Hz) for any component that still reads stormControls.intensity
+      if (now - lastUiSyncRef.current > 48) {
+        lastUiSyncRef.current = now
+        setStormControls({ isActive: true, intensity })
+      }
+
+      if (!navigated && elapsed >= halfDuration) {
+        navigated = true
         router.push(targetPath)
       }
 
       if (progress < 1) {
         requestAnimationFrame(animate)
       } else {
-        // Complete
+        stormIntensityRef.current = 0
+        stormActiveRef.current = false
         setStormControls({ isActive: false, intensity: 0 })
         isAnimatingRef.current = false
         onComplete?.()
@@ -64,7 +74,7 @@ export function useSandstormTransition({
     }
 
     requestAnimationFrame(animate)
-  }, [targetPath, duration, router, onComplete, setStormControls])
+  }, [targetPath, duration, router, onComplete, setStormControls, stormIntensityRef, stormActiveRef])
 
   return {
     triggerStorm,

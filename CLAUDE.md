@@ -59,7 +59,7 @@ components/
 ├── ui/                       # shadcn/ui components (57 components)
 ├── navigation.tsx            # Top navigation with page state
 ├── page-transition.tsx       # Animation wrapper for page changes
-├── three-particle-wave.tsx   # Three.js background effect
+├── monochrome-dots-background.tsx  # Three.js full-viewport particle wave (see docs)
 ├── command-menu.tsx          # Keyboard shortcut menu
 └── theme-provider.tsx        # next-themes integration
 ```
@@ -99,7 +99,7 @@ These should be re-enabled before production deployment.
 ## Key Technical Notes
 
 - All page components should be client components (`"use client"`) due to the interactive navigation pattern
-- The main background effect (`ThreeParticleWave`) renders behind all content
+- The main background effect (`MonochromeDotsBackground` in `components/monochrome-dots-background.tsx`) renders behind all content (`fixed`, negative z-index); site content uses `relative z-10`. Full implementation notes, shaders, and AI porting steps: `docs/monochrome-particle-background-ai-tutorial.md`
 - Navigation bar has backdrop blur and fixed positioning
 - Framer Motion used for smooth page transitions
 - Command menu (Cmd+K) available globally for keyboard navigation

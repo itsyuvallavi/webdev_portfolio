@@ -3,7 +3,7 @@
 import { useMemo, useEffect } from "react"
 import { motion, useReducedMotion } from "framer-motion"
 import Link from "next/link"
-import { ArrowLeft, ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react"
+import { AlertTriangle, ArrowLeft, ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -71,7 +71,7 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
           })}
     >
       <motion.div {...fadeUpAnimateProps(0)}>
-        <Button asChild variant="ghost" className="mb-8 hover:bg-purple-500/10 hover:text-purple-400">
+        <Button asChild variant="ghost" className="mb-8 hover:bg-teal-500/10 hover:text-teal-300">
           <Link href="/projects">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Projects
@@ -81,7 +81,9 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
 
       {/* Project Header */}
       <motion.header className="max-w-4xl space-y-6 overflow-hidden" {...fadeUpAnimateProps(0.05)}>
-        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight break-words">{project.title}</h1>
+        <h1 className="break-words text-3xl font-semibold tracking-tighter text-white sm:text-5xl md:text-6xl lg:text-7xl">
+          {project.title}
+        </h1>
         <motion.div
           className="flex flex-wrap gap-2"
           {...(shouldReduceMotion
@@ -100,14 +102,14 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
               key={tag}
               {...(shouldReduceMotion ? {} : { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 } })}
             >
-              <Badge variant="secondary" className="bg-purple-500/10 text-purple-300 border-purple-500/20">{tag}</Badge>
+              <Badge variant="secondary" className="border-teal-500/25 bg-teal-500/10 text-teal-200">{tag}</Badge>
             </motion.div>
           ))}
         </motion.div>
         <div className="flex flex-wrap items-center gap-4">
           {project.demoUrl && (
-            <motion.div whileHover={shouldReduceMotion ? undefined : { y: -2, scale: 1.02 }} transition={{ duration: 0.2 }}>
-              <Button asChild className="bg-purple-600 hover:bg-purple-700 text-white">
+            <motion.div whileHover={shouldReduceMotion ? undefined : { y: -2 }} transition={{ duration: 0.2 }}>
+              <Button asChild className="bg-teal-600 text-white hover:bg-teal-500">
                 <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="mr-2 h-4 w-4" />
                   Live Demo
@@ -116,8 +118,8 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
             </motion.div>
           )}
           {project.githubUrl && (
-            <motion.div whileHover={shouldReduceMotion ? undefined : { y: -2, scale: 1.02 }} transition={{ duration: 0.2 }}>
-              <Button asChild variant="outline" className="border-purple-500/30 hover:bg-purple-500/10 hover:border-purple-500/50 text-white">
+            <motion.div whileHover={shouldReduceMotion ? undefined : { y: -2 }} transition={{ duration: 0.2 }}>
+              <Button asChild variant="outline" className="border-teal-500/35 text-white hover:border-teal-400/55 hover:bg-teal-500/10">
                 <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
                   <Github className="mr-2 h-4 w-4" />
                   View Code
@@ -126,11 +128,12 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
             </motion.div>
           )}
           {(project.description.includes("Alpha") || project.description.includes("In Development")) && (
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="bg-yellow-500/10 text-yellow-400 border-yellow-500/30">
-                ⚠️ Alpha Version
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="outline" className="gap-1 border-amber-500/35 bg-amber-500/10 text-amber-200">
+                <AlertTriangle className="size-3.5 shrink-0" strokeWidth={1.5} aria-hidden />
+                Alpha
               </Badge>
-              <span className="text-sm text-gray-400">Some features may not work as expected</span>
+              <span className="text-sm text-zinc-500">Some features may not work as expected.</span>
             </div>
           )}
         </div>
@@ -170,35 +173,41 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
         </motion.div> */}
 
         <motion.section className="space-y-4 overflow-hidden px-4" {...fadeUpProps(0.2)}>
-          <h2 className="text-2xl md:text-3xl font-bold text-white break-words">The Problem</h2>
+          <h2 className="text-2xl font-semibold tracking-tight text-white break-words md:text-3xl">Problem</h2>
           <p className="text-sm md:text-base lg:text-lg text-gray-400 leading-relaxed break-words">{project.problem}</p>
         </motion.section>
 
         <motion.section className="space-y-4 overflow-hidden px-4" {...fadeUpProps(0.25)}>
-          <h2 className="text-2xl md:text-3xl font-bold text-white break-words">The Solution</h2>
+          <h2 className="text-2xl font-semibold tracking-tight text-white break-words md:text-3xl">Solution</h2>
           <p className="text-sm md:text-base lg:text-lg text-gray-400 leading-relaxed break-words">{project.solution}</p>
         </motion.section>
 
       </div>
 
-      {/* Screenshots Carousel with Horizontal Scroll */}
+      {/* Product gallery (case-study style frames + lightbox) */}
       <div className="my-16 md:my-24">
-        <ScreenshotsCarousel screenshots={project.screenshots} projectTitle={project.title} />
+        <ScreenshotsCarousel
+          screenshots={project.screenshots}
+          projectTitle={project.title}
+          demoUrl={project.demoUrl}
+          slug={project.slug}
+          screenshotCaptions={project.screenshotCaptions}
+        />
       </div>
 
       {/* Project Navigation */}
       <motion.nav
-        className="max-w-4xl mx-auto mt-8 md:mt-12 pt-8 md:pt-10 pb-16 md:pb-20 border-t border-purple-500/10 flex flex-row items-center justify-between gap-4"
+        className="mx-auto mt-8 flex max-w-4xl flex-row items-center justify-between gap-4 border-t border-teal-500/10 pb-16 pt-8 md:mt-12 md:pb-20 md:pt-10"
         {...fadeUpProps(0.35)}
       >
         {prevProject ? (
           <motion.div whileHover={shouldReduceMotion ? undefined : { x: -4 }} transition={{ duration: 0.2 }}>
-            <Button asChild variant="ghost" className="group hover:bg-purple-500/10 hover:text-purple-400">
+            <Button asChild variant="ghost" className="group hover:bg-teal-500/10 hover:text-teal-300">
               <Link href={`/projects/${prevProject.slug}`}>
                 <ChevronLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
                 <div className="text-left">
-                  <div className="text-xs text-gray-500">Previous</div>
-                  <div className="text-white group-hover:text-purple-400 transition-colors">{prevProject.title}</div>
+                  <div className="text-xs text-zinc-500">Previous</div>
+                  <div className="text-white transition-colors group-hover:text-teal-200">{prevProject.title}</div>
                 </div>
               </Link>
             </Button>
@@ -208,11 +217,11 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
         )}
         {nextProject ? (
           <motion.div whileHover={shouldReduceMotion ? undefined : { x: 4 }} transition={{ duration: 0.2 }}>
-            <Button asChild variant="ghost" className="group hover:bg-purple-500/10 hover:text-purple-400">
+            <Button asChild variant="ghost" className="group hover:bg-teal-500/10 hover:text-teal-300">
               <Link href={`/projects/${nextProject.slug}`}>
                 <div className="text-right">
-                  <div className="text-xs text-gray-500">Next</div>
-                  <div className="text-white group-hover:text-purple-400 transition-colors">{nextProject.title}</div>
+                  <div className="text-xs text-zinc-500">Next</div>
+                  <div className="text-white transition-colors group-hover:text-teal-200">{nextProject.title}</div>
                 </div>
                 <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
