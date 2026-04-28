@@ -22,6 +22,8 @@ export type MonochromeParticlePreviewProps = {
   density?: number
   pointSize?: number
   opacity?: number
+  /** Orthographic zoom: 1 = fit container; larger zooms in (center crop). */
+  zoom?: number
   className?: string
   style?: CSSProperties
 }
@@ -128,11 +130,14 @@ export function MonochromeParticlePreview({
   density = 1,
   pointSize = 1,
   opacity = 1,
+  zoom = 1,
   className,
   style,
 }: MonochromeParticlePreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const zoomRef = useRef(1)
+  zoomRef.current = clampMultiplier(zoom, 1, 0.25, 4)
   const [dims, setDims] = useState({ w: 0, h: 0 })
 
   useLayoutEffect(() => {
@@ -201,15 +206,23 @@ export function MonochromeParticlePreview({
     scene.background = new THREE.Color(0x000000)
 
     const edgeBuffer = Math.min(500, Math.max(120, Math.round(Math.min(w, h) * 0.35)))
-    // Ortho maps world units 1:1 to the particle grid; avoids perspective “see past” side gutters.
-    // Slight pinch (<1) zooms in a hair so discrete grid + float math never leaves empty strips at edges.
-    const pinch = 0.987
-    const hx = (w / 2 + edgeBuffer) * pinch
-    const hy = (h / 2 + edgeBuffer) * pinch
-    const camera = new THREE.OrthographicCamera(-hx, hx, hy, -hy, 0.1, 5000)
+
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 5000)
     camera.position.set(0, 0, 500)
     camera.lookAt(0, 0, 0)
-    camera.updateProjectionMatrix()
+
+    const applyOrthoZoom = () => {
+      const z = zoomRef.current
+      const hx = (w / 2 + edgeBuffer) / z
+      const hy = (h / 2 + edgeBuffer) / z
+      camera.left = -hx
+      camera.right = hx
+      camera.top = hy
+      camera.bottom = -hy
+      camera.updateProjectionMatrix()
+    }
+
+    applyOrthoZoom()
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
@@ -314,6 +327,7 @@ export function MonochromeParticlePreview({
       })
 
       const particles = new THREE.Points(geometry, material)
+      particles.frustumCulled = false
       scene.add(particles)
       particleSystems.push({ particles, material })
     })
@@ -336,6 +350,7 @@ export function MonochromeParticlePreview({
         system.material.uniforms.uTime.value += cappedDelta * speedMultiplier
       })
 
+      applyOrthoZoom()
       renderer.render(scene, camera)
     }
 

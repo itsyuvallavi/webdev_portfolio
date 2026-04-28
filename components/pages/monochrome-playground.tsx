@@ -20,6 +20,7 @@ const DEFAULT = {
   density: 1,
   pointSize: 1,
   opacity: 1,
+  zoom: 1,
 }
 
 const COLOR_PALETTES: { id: string; label: string; colors: { start: string; mid: string; end: string } }[] = [
@@ -212,6 +213,7 @@ export function MonochromePlayground() {
   const [density, setDensity] = useState(DEFAULT.density)
   const [pointSize, setPointSize] = useState(DEFAULT.pointSize)
   const [opacity, setOpacity] = useState(DEFAULT.opacity)
+  const [zoom, setZoom] = useState(DEFAULT.zoom)
   const [copiedJson, setCopiedJson] = useState(false)
   const [copiedInstall, setCopiedInstall] = useState(false)
 
@@ -223,8 +225,9 @@ export function MonochromePlayground() {
       density,
       pointSize,
       opacity,
+      zoom,
     }),
-    [colors, speed, direction, density, pointSize, opacity],
+    [colors, speed, direction, density, pointSize, opacity, zoom],
   )
 
   const copyJson = useCallback(async () => {
@@ -254,6 +257,7 @@ export function MonochromePlayground() {
     setDensity(DEFAULT.density)
     setPointSize(DEFAULT.pointSize)
     setOpacity(DEFAULT.opacity)
+    setZoom(DEFAULT.zoom)
   }, [])
 
   return (
@@ -322,6 +326,7 @@ export function MonochromePlayground() {
                 density={density}
                 pointSize={pointSize}
                 opacity={opacity}
+                zoom={zoom}
                 className="relative h-full min-h-[240px] w-full min-w-0 sm:min-h-[280px] lg:min-h-0"
               />
             </div>
@@ -432,6 +437,16 @@ export function MonochromePlayground() {
                 step={0.05}
                 value={opacity}
                 onChange={setOpacity}
+              />
+              <RangeRow
+                id="zoom"
+                label="Zoom"
+                hint="Orthographic crop — larger = tighter view (no geometry rebuild)"
+                min={1}
+                max={2.5}
+                step={0.05}
+                value={zoom}
+                onChange={setZoom}
               />
             </div>
                   </div>
