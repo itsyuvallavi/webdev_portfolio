@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef } from "react"
+import Link from "next/link"
 import { motion, useReducedMotion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import { TextReveal } from "../text-reveal"
@@ -77,22 +78,60 @@ export default function HomePage() {
           initial={reduceMotion ? undefined : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...springTransition, delay: 0.45 }}
-          className="mb-8 flex justify-center"
+          className="mb-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
         >
           <button
             type="button"
             onClick={handleLinkClick}
             className={cn(
-              "group inline-flex items-center gap-3 rounded-lg border border-teal-500/40 bg-teal-500/10 px-5 py-3 text-sm font-medium text-teal-100",
-              "shadow-[0_16px_40px_-20px_rgba(20,184,166,0.35)] transition-[background-color,border-color,transform,box-shadow,color] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
-              "hover:border-teal-400/55 hover:bg-teal-500/20 hover:text-white active:scale-[0.98]",
+              "group inline-flex min-h-14 w-full max-w-[260px] items-center justify-between gap-3 rounded-lg border border-teal-500/35 bg-zinc-950/70 px-4 py-2.5 text-left sm:w-[220px]",
+              "font-mono text-[10px] uppercase tracking-[0.22em] text-teal-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_40px_-24px_rgba(20,184,166,0.45)] backdrop-blur-sm",
+              "transition-[background-color,border-color,transform,color] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
+              "hover:-translate-y-0.5 hover:border-teal-400/55 hover:bg-teal-500/[0.08] hover:text-white active:translate-y-0",
             )}
           >
-            <span>Explore work</span>
-            <span className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] transition-[transform,border-color,background-color] group-hover:translate-x-0.5 group-hover:border-teal-500/35 group-hover:bg-teal-500/15">
+            <span className="flex flex-col gap-0.5">
+              <span className="text-teal-50">Explore work</span>
+              <span className="text-[9px] tracking-[0.18em] text-teal-200/50 group-hover:text-teal-100/70">
+                Selected projects
+              </span>
+            </span>
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-full border border-teal-300/20 bg-teal-500/[0.08] text-teal-100 transition-[transform,border-color,background-color] group-hover:translate-x-0.5 group-hover:border-teal-300/40 group-hover:bg-teal-500/15">
               <ArrowRight className="size-4" strokeWidth={1.5} aria-hidden />
             </span>
           </button>
+
+          <Link
+            href="/monochrome"
+            aria-label="Open monochrome particle playground"
+            className={cn(
+              "group inline-flex min-h-14 w-full max-w-[260px] items-center gap-3 rounded-lg border border-white/15 bg-zinc-950/70 px-4 py-2.5 text-left sm:w-[220px]",
+              "font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-400 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-sm",
+              "transition-[background-color,border-color,transform,color] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
+              "hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/[0.06] hover:text-zinc-100 active:translate-y-0",
+            )}
+          >
+            <span
+              className="grid size-8 grid-cols-3 grid-rows-3 gap-0.5 rounded-full border border-white/10 bg-black/40 p-2"
+              aria-hidden
+            >
+              {Array.from({ length: 9 }).map((_, index) => (
+                <span
+                  key={index}
+                  className={cn(
+                    "size-1 rounded-full bg-zinc-500/70 transition-colors duration-300 group-hover:bg-zinc-100",
+                    index % 2 === 0 && "bg-zinc-300/80",
+                  )}
+                />
+              ))}
+            </span>
+            <span className="flex flex-col gap-0.5">
+              <span className="text-zinc-100">Mono lab</span>
+              <span className="text-[9px] tracking-[0.18em] text-zinc-500 group-hover:text-zinc-300">
+                Particle playground
+              </span>
+            </span>
+          </Link>
         </motion.div>
 
         <motion.div
@@ -102,11 +141,10 @@ export default function HomePage() {
           className="mx-auto max-w-md border-t border-zinc-800/80 pt-8 text-center md:ml-auto md:mr-0 md:text-right"
         >
           <p className="mb-3 text-pretty text-xs leading-relaxed text-zinc-500 sm:text-sm">
-            I build web apps with Next.js, React, and TypeScript, mostly with Firebase or Postgres on the backend.
-            Before that I composed for film and built audio tools — same attention to timing and detail, different
-            medium.
+            I design and build production-ready web applications with Next.js, React, and TypeScript, with a focus on
+            polished interfaces, reliable architecture, and thoughtful user experience.
           </p>
-          <p className="font-mono text-xs text-zinc-600">Yuval Lavi — Los Angeles</p>
+          <p className="font-mono text-xs text-zinc-600">Yuval Lavi — Lisbon</p>
         </motion.div>
       </div>
     </section>

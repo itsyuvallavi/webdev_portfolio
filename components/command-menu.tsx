@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { Home, FolderOpen, User, Mail, Github, Linkedin, Send } from "lucide-react"
+import { Home, FolderOpen, User, Mail, Github, Linkedin, Send, Sparkles } from "lucide-react"
 import {
   CommandDialog,
   CommandEmpty,
@@ -94,6 +94,10 @@ export function CommandMenu() {
           <CommandItem onSelect={() => runCommand(() => router.push("/contact"))}>
             <Mail className="mr-2 h-4 w-4" />
             Contact
+          </CommandItem>
+          <CommandItem onSelect={() => runCommand(() => router.push("/monochrome"))}>
+            <Sparkles className="mr-2 h-4 w-4" />
+            Monochrome particle
           </CommandItem>
         </CommandGroup>
         <CommandGroup heading="Social">

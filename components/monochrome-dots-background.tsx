@@ -26,6 +26,7 @@ export function MonochromeDotsBackground() {
     const vertexShader = `
       #define PI 3.1415926535897932384626433832795
       uniform float uTime;
+      uniform float uStormTime;
       uniform float uWaveLayer;
       uniform float uMaxDistance;
       uniform float uStormIntensity;  // 0-1, storm effect intensity
@@ -45,9 +46,6 @@ export function MonochromeDotsBackground() {
         float storm = smoothstep(0.0, 1.0, uStormIntensity);
         storm = pow(storm, 0.85);
 
-        float stormSpeedMultiplier = 1.0 + storm * 3.0;
-        layerSpeed *= stormSpeedMultiplier;
-
         float wave1 = sin(distance * layerFreq - uTime * layerSpeed + delay);
         float wave2 = sin(distance * (layerFreq * 1.5) - uTime * (layerSpeed * 1.2) + delay * 0.7);
         float wave3 = sin(distance * (layerFreq * 0.6) - uTime * (layerSpeed * 0.8) + delay * 1.3);
@@ -57,14 +55,14 @@ export function MonochromeDotsBackground() {
 
         // Storm effect: add horizontal turbulent movement (sandstorm sweeping horizontally)
         if (storm > 0.001) {
-          float turbulence = sin(position.y * 0.004 + uTime * 1.65) *
-                             cos(distance * 0.009 + uTime * 1.25);
+          float turbulence = sin(position.y * 0.004 + uStormTime * 1.65) *
+                             cos(distance * 0.009 + uStormTime * 1.25);
 
-          float horizontalOffset = storm * turbulence * 220.0;
+          float horizontalOffset = storm * turbulence * 170.0;
           mvPosition.x += horizontalOffset;
 
-          float verticalTurbulence = cos(position.x * 0.0025 + uTime * 2.1);
-          mvPosition.y += storm * verticalTurbulence * 72.0;
+          float verticalTurbulence = cos(position.x * 0.0025 + uStormTime * 1.9);
+          mvPosition.y += storm * verticalTurbulence * 48.0;
         }
 
         float baseSize = 2.35 + uWaveLayer * 0.55;
@@ -240,6 +238,7 @@ export function MonochromeDotsBackground() {
         // frustumCulled: true,
         uniforms: {
           uTime: { value: 0 },
+          uStormTime: { value: 0 },
           uTexture: { value: createCircleTexture() },
           uWaveLayer: { value: config.layer },
           uMaxDistance: { value: maxDistance },
@@ -269,6 +268,8 @@ export function MonochromeDotsBackground() {
     // Animation loop with time-based updates for consistent speed
     let animationFrameId: number
     let lastFrameTime = performance.now()
+    let smoothedStormIntensity = 0
+    let stormTime = 0
     let isAnimating = true
 
     function animate(currentTime: number) {
@@ -287,8 +288,14 @@ export function MonochromeDotsBackground() {
       // Cap delta time to prevent huge jumps (e.g., when tab becomes visible again)
       const cappedDelta = Math.min(deltaTime, 0.1)
 
-      // Get current storm intensity from ref (to avoid closure issues)
-      const stormIntensity = stormIntensityRef.current
+      // Smooth the cross-thread handoff from React's transition rAF into WebGL.
+      const targetStormIntensity = stormIntensityRef.current
+      const smoothing = 1 - Math.exp(-cappedDelta * 10)
+      smoothedStormIntensity += (targetStormIntensity - smoothedStormIntensity) * smoothing
+      if (smoothedStormIntensity < 0.001 && targetStormIntensity === 0) {
+        smoothedStormIntensity = 0
+      }
+      stormTime += cappedDelta * (0.35 + smoothedStormIntensity * 2.2)
 
       // Update time and storm effect for all particle systems
       // Time-based animation ensures consistent speed at any frame rate
@@ -296,7 +303,8 @@ export function MonochromeDotsBackground() {
       const animationSpeed = 1.5
       particleSystems.forEach((system) => {
         system.material.uniforms.uTime.value += cappedDelta * animationSpeed
-        system.material.uniforms.uStormIntensity.value = stormIntensity
+        system.material.uniforms.uStormTime.value = stormTime
+        system.material.uniforms.uStormIntensity.value = smoothedStormIntensity
       })
 
       renderer.render(scene, camera)

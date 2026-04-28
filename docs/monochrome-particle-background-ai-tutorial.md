@@ -243,4 +243,4 @@ After implementation:
 
 ## 9. Summary
 
-The effect is **not** a CSS gradient; it is **custom GLSL** on **THREE.Points** with a **procedural sprite texture**, **multi-layer grid**, and **optional storm uniforms** fed from React context. To make AI tools reproduce it reliably, give them **this document** plus **either** the real source file **or** a explicit standalone variant without `SandstormProvider`. Cursor users should prefer a **project skill** under `.cursor/skills/`; Claude Code users should extend `**CLAUDE.md`** and reference `**@docs/...**` and `**@components/...**` in prompts.
+The effect is **not** a CSS gradient; it is **custom GLSL** on **THREE.Points** with a **procedural sprite texture**, **multi-layer grid**, and **optional storm uniforms** fed from React context. To make AI tools reproduce it reliably, give them **this document** plus **either** the real source file **or** a explicit standalone variant without `SandstormProvider`. Cursor users should prefer a **project skill** under `.cursor/skills/`; Claude Code users should extend `**CLAUDE.md`** and reference `**@docs/...`** and `**@components/...`** in prompts.

@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { CommandMenu } from "@/components/command-menu"
 import { MonochromeDotsBackground } from "@/components/monochrome-dots-background"
+import { ConditionalSiteBackground } from "@/components/conditional-site-background"
 import { SandstormProvider } from "@/components/transitions/sandstorm-provider"
 import { RouterNavigation } from "@/components/router-navigation"
 import { SocialSidebar } from "@/components/social-sidebar"
@@ -13,6 +14,7 @@ import { Suspense } from "react"
 import "./globals.css"
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.yuvallavi.com"),
   title: "Yuval Lavi - Full-Stack Developer",
   description: "Full-Stack Web Developer with creative roots in film composition. Proficient with Next.js, React, TypeScript, and Firebase.",
 }
@@ -40,7 +42,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SandstormProvider>
-            <MonochromeDotsBackground />
+            <Suspense fallback={<MonochromeDotsBackground />}>
+              <ConditionalSiteBackground />
+            </Suspense>
             <RouterNavigation />
             <SocialSidebar />
             <div className="relative z-10">

@@ -13,6 +13,7 @@ const links = [
   { id: "about", path: "/about", label: "ABOUT", number: "02" },
   { id: "projects", path: "/projects", label: "PROJECTS", number: "03" },
   { id: "contact", path: "/contact", label: "CONTACT", number: "04" },
+  { id: "monochrome", path: "/monochrome", label: "MONO", number: "05" },
 ]
 
 export function RouterNavigation() {
@@ -21,6 +22,7 @@ export function RouterNavigation() {
 
   const isActive = (path: string) => {
     if (path === "/" && pathname === "/") return true
+    if (path === "/monochrome") return pathname === "/monochrome"
     if (path !== "/" && pathname?.startsWith(path)) return true
     return false
   }

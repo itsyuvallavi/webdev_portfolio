@@ -144,5 +144,3 @@ export const projects: Project[] = [
   },
   */
 ]
-
-export const categories = ["All", "Full Stack", "Frontend"]
