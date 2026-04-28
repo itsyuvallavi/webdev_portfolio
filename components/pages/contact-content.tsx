@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import { Globe, Linkedin, Mail, Phone, Send } from "lucide-react"
+import { Globe, Linkedin, Mail, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -143,7 +143,7 @@ export default function ContactContent() {
             <div>
               <h2 className="text-xl font-semibold tracking-tight text-white md:text-2xl">Direct lines</h2>
               <p className="mt-3 max-w-md text-pretty text-sm leading-relaxed text-zinc-400 md:text-base">
-                Prefer email or a quick call — same details I give clients before a kickoff.
+                Prefer email or LinkedIn — same details I give clients before a kickoff.
               </p>
             </div>
             <div className="flex flex-col gap-3">
@@ -157,16 +157,7 @@ export default function ContactContent() {
               <span className="text-sm font-medium">info@yuvallavi.com</span>
             </a>
             <a
-              href="tel:+18188603168"
-              className="group flex items-center gap-3 rounded-lg py-1 text-zinc-400 transition-colors hover:text-teal-200"
-            >
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-zinc-500 transition-[border-color,background-color,color] group-hover:border-teal-500/35 group-hover:bg-teal-500/10 group-hover:text-teal-200">
-                <Phone className="size-4" strokeWidth={1.5} />
-              </span>
-              <span className="text-sm font-medium">+1 (818) 860-3168</span>
-            </a>
-            <a
-              href="https://www.linkedin.com/in/yuval-lavi-4b9338180/"
+              href="https://www.linkedin.com/in/yuvallavi-dev/"
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center gap-3 rounded-lg py-1 text-zinc-400 transition-colors hover:text-teal-200"
@@ -174,7 +165,7 @@ export default function ContactContent() {
               <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-zinc-500 transition-[border-color,background-color,color] group-hover:border-teal-500/35 group-hover:bg-teal-500/10 group-hover:text-teal-200">
                 <Linkedin className="size-4" strokeWidth={1.5} />
               </span>
-              <span className="text-sm font-medium">linkedin.com/in/yuval-lavi</span>
+              <span className="text-sm font-medium">linkedin.com/in/yuvallavi-dev</span>
             </a>
             <a
               href="https://www.yuvallavi.com"

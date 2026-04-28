@@ -174,7 +174,7 @@ Private - All rights reserved
 
 - **Email**: info@yuvallavi.com
 - **Website**: [yuvallavi.com](https://www.yuvallavi.com)
-- **LinkedIn**: [yuval-lavi](https://www.linkedin.com/in/yuval-lavi-4b9338180/)
+- **LinkedIn**: [yuvallavi-dev](https://www.linkedin.com/in/yuvallavi-dev/)
 
 ---
 

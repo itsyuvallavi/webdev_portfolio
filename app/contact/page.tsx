@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import { motion, useReducedMotion } from "framer-motion"
-import { Globe, Linkedin, Mail, Phone, Send } from "lucide-react"
+import { Globe, Linkedin, Mail, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -189,7 +189,7 @@ export default function ContactPage() {
               <div>
                 <h2 className="text-xl font-semibold tracking-tight text-white md:text-2xl">Direct lines</h2>
                 <p className="mt-3 max-w-md text-pretty text-sm leading-relaxed text-zinc-400 md:text-base">
-                  Prefer email or a quick call — same details I give clients before a kickoff.
+                  Prefer email or LinkedIn — same details I give clients before a kickoff.
                 </p>
               </div>
 
@@ -199,10 +199,9 @@ export default function ContactPage() {
                   "info@yuvallavi.com",
                   <Mail className="size-4" strokeWidth={1.5} />,
                 )}
-                {linkRow("tel:+18188603168", "+1 (818) 860-3168", <Phone className="size-4" strokeWidth={1.5} />)}
                 {linkRow(
-                  "https://www.linkedin.com/in/yuval-lavi-4b9338180/",
-                  "linkedin.com/in/yuval-lavi",
+                  "https://www.linkedin.com/in/yuvallavi-dev/",
+                  "linkedin.com/in/yuvallavi-dev",
                   <Linkedin className="size-4" strokeWidth={1.5} />,
                   true,
                 )}

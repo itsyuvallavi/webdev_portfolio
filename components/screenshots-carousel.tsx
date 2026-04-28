@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useId, useRef, useState } from "react"
+import { useId, useState } from "react"
 import Image from "next/image"
 import { motion, useReducedMotion } from "framer-motion"
 import { Maximize2 } from "lucide-react"
@@ -40,11 +40,6 @@ export function ScreenshotsCarousel({
   const prefersReducedMotion = useReducedMotion()
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
-  const sectionRefs = useRef<(HTMLElement | null)[]>([])
-
-  const scrollToIndex = useCallback((index: number) => {
-    sectionRefs.current[index]?.scrollIntoView({ behavior: "smooth", block: "start" })
-  }, [])
 
   const openLightbox = (index: number) => {
     setActiveIndex(index)
@@ -81,35 +76,12 @@ export function ScreenshotsCarousel({
         </p>
       </div>
 
-      {/* Jump links — common pattern in long-form case studies */}
-      <nav
-        className="mx-auto mt-8 flex max-w-3xl flex-wrap justify-start gap-2 px-4 md:px-6"
-        aria-label="Jump to screen"
-      >
-        {screenshots.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            onClick={() => scrollToIndex(i)}
-            className={cn(
-              "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
-              "border-zinc-600 bg-zinc-900/80 text-zinc-300 hover:border-teal-500/45 hover:bg-teal-500/10 hover:text-white",
-            )}
-          >
-            {captionFor(i) ? `View ${i + 1}` : `Screen ${i + 1}`}
-          </button>
-        ))}
-      </nav>
-
       <div className="mx-auto mt-14 max-w-4xl space-y-16 md:space-y-24 md:px-4">
         {screenshots.map((src, index) => {
           const caption = captionFor(index)
           return (
             <motion.article
               key={`${src}-${index}`}
-              ref={(el) => {
-                sectionRefs.current[index] = el
-              }}
               id={`${id}-shot-${index}`}
               {...(prefersReducedMotion
                 ? {}
@@ -166,8 +138,7 @@ export function ScreenshotsCarousel({
                   className={cn(
                     "relative overflow-hidden rounded-b-xl border border-zinc-700/90 bg-zinc-950",
                     "shadow-[0_24px_64px_-12px_rgba(0,0,0,0.65)] ring-1 ring-inset ring-white/[0.06]",
-                    "transition-[box-shadow,transform] duration-300 group-hover:shadow-teal-950/35",
-                    prefersReducedMotion ? "" : "group-hover:-translate-y-0.5",
+                    "transition-[box-shadow] duration-300 group-hover:shadow-teal-950/35",
                   )}
                 >
                   <div className="w-full bg-zinc-950">

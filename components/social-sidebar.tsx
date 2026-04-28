@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 const socialLinks = [
   {
     name: "LinkedIn",
-    url: "https://www.linkedin.com/in/yuval-lavi-4b9338180/",
+    url: "https://www.linkedin.com/in/yuvallavi-dev/",
     icon: Linkedin,
   },
   {

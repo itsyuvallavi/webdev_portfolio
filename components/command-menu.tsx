@@ -91,13 +91,13 @@ export function CommandMenu() {
             <User className="mr-2 h-4 w-4" />
             About
           </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => router.push("/contact"))}>
-            <Mail className="mr-2 h-4 w-4" />
-            Contact
-          </CommandItem>
           <CommandItem onSelect={() => runCommand(() => router.push("/monochrome"))}>
             <Sparkles className="mr-2 h-4 w-4" />
             Monochrome particle
+          </CommandItem>
+          <CommandItem onSelect={() => runCommand(() => router.push("/contact"))}>
+            <Mail className="mr-2 h-4 w-4" />
+            Contact
           </CommandItem>
         </CommandGroup>
         <CommandGroup heading="Social">
@@ -105,7 +105,7 @@ export function CommandMenu() {
             <Github className="mr-2 h-4 w-4" />
             GitHub
           </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => window.open("https://www.linkedin.com/in/yuval-lavi-4b9338180/", "_blank"))}>
+          <CommandItem onSelect={() => runCommand(() => window.open("https://www.linkedin.com/in/yuvallavi-dev/", "_blank"))}>
             <Linkedin className="mr-2 h-4 w-4" />
             LinkedIn
           </CommandItem>

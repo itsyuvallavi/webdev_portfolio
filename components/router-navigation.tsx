@@ -12,8 +12,8 @@ const links = [
   { id: "home", path: "/", label: "HOME", number: "01" },
   { id: "about", path: "/about", label: "ABOUT", number: "02" },
   { id: "projects", path: "/projects", label: "PROJECTS", number: "03" },
-  { id: "contact", path: "/contact", label: "CONTACT", number: "04" },
-  { id: "monochrome", path: "/monochrome", label: "MONO", number: "05" },
+  { id: "monochrome", path: "/monochrome", label: "MONO", number: "04" },
+  { id: "contact", path: "/contact", label: "CONTACT", number: "05" },
 ]
 
 export function RouterNavigation() {
