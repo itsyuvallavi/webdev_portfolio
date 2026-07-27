@@ -1,5 +1,6 @@
 /** Append to Trackd image URLs when you replace files under `public/trackd` (busts next/image + browser cache). */
 const trackdImg = (n: 1 | 2 | 3) => `/trackd/${n}.png?v=2`
+const cipherQueryImg = (n: 1 | 2 | 3) => `/cipherquery/${n}.jpg`
 
 export interface Project {
   slug: string
@@ -20,6 +21,38 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  {
+    slug: "cipherquery",
+    title: "CipherQuery",
+    description:
+      "Encrypted evaluation layer for private structured data, with memory-only processing and one TEE-verified 0G request per evaluation.",
+    longDescription:
+      "CipherQuery lets buyers ask plain-language questions about a seller's private structured dataset without receiving the raw records. CSV, JSONL, NDJSON, and flat Parquet samples travel over encrypted transport, are parsed only in memory, and are evaluated through one private 0G request. Eight paid synthetic evaluations matched their known expected scores and returned TEE-verified execution metadata.",
+    image: cipherQueryImg(1),
+    tags: [
+      "TypeScript",
+      "Next.js",
+      "0G",
+      "Supabase",
+      "Private Compute",
+      "TEE",
+      "Vitest",
+    ],
+    category: "Full Stack",
+    demoUrl: "https://cipherquery.vercel.app",
+    githubUrl: "https://github.com/itsyuvallavi/blindsample",
+    role: "Full Stack Developer & Designer",
+    problem:
+      "Dataset buyers need evidence that private data can answer their questions, while sellers cannot safely expose the underlying rows. A useful evaluation also has to distinguish protected execution from whether the model's answer is accurate.",
+    solution:
+      "Built separate buyer and seller capability flows, bounded in-memory parsers for four file formats, one atomic 0G Private Computer request per evaluation, and strict fail-closed validation. TEE metadata confirms the protected execution path; accuracy is checked separately against known expected results. Raw datasets and raw 0G responses are intentionally not retained.",
+    screenshots: [cipherQueryImg(1), cipherQueryImg(2), cipherQueryImg(3)],
+    screenshotCaptions: [
+      "CipherQuery's public overview — private dataset questions in, TEE-verified answers out, with zero raw rows exposed to the buyer.",
+      "The documentation maps the workflow from plain-language buyer questions to a bounded seller sample and verified question-level results.",
+      "The 0G and TEE boundary is explicit: protected execution is verified separately from the accuracy of a model judgment.",
+    ],
+  },
   {
     slug: "trackd",
     title: "Trackd",
