@@ -1,5 +1,6 @@
 /** Append to Trackd image URLs when you replace files under `public/trackd` (busts next/image + browser cache). */
 const trackdImg = (n: 1 | 2 | 3) => `/trackd/${n}.png?v=2`
+const elgarImg = (n: 1 | 2 | 3) => `/elgar/${n}.png`
 const cipherQueryImg = (n: 1 | 2 | 3) => `/cipherquery/${n}.jpg`
 
 export interface Project {
@@ -54,6 +55,37 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "elgar",
+    title: "Elgar",
+    description:
+      "Local-first Rust agent harness with a controller-owned action lifecycle, permissioned shell and file operations, terminal TUI, and no-network regression checks.",
+    longDescription:
+      "Elgar is a local-first Rust agent harness built around a strict execution boundary: the controller owns truth, the model suggests, the user approves, the filesystem confirms, and the UI reports. The current v0.2 build includes a controller-backed action lifecycle, permissioned file and shell actions, terminal TUI rendering, LM Studio provider support, context accounting, and no-network smoke/performance checks.",
+    image: elgarImg(1),
+    tags: [
+      "Rust",
+      "CLI",
+      "Terminal UI",
+      "Agent Systems",
+      "Permission Model",
+      "LM Studio",
+      "Testing",
+    ],
+    category: "Developer Tools",
+    githubUrl: "https://github.com/itsyuvallavi/elgar-cli",
+    role: "Systems Developer",
+    problem:
+      "Agent tools can blur the line between model text and verified system state, especially when file writes or shell commands are involved. That makes local automation hard to trust.",
+    solution:
+      "Built a Rust controller that records proposed actions before execution, requires explicit approval for shell and filesystem work, verifies results after execution, and reports the state through both CLI and terminal TUI paths backed by no-network regression tests.",
+    screenshots: [elgarImg(1), elgarImg(2), elgarImg(3)],
+    screenshotCaptions: [
+      "Actual TUI startup and exit path from the local binary.",
+      "Actual TUI pending-action state before approval.",
+      "Actual TUI approval flow after the controller executes and verifies the shell command.",
+    ],
+  },
+  {
     slug: "trackd",
     title: "Trackd",
     description:
@@ -72,6 +104,7 @@ export const projects: Project[] = [
       "shadcn/ui",
     ],
     category: "Full Stack",
+    demoUrl: "https://trackd-eight.vercel.app/",
     role: "Full Stack Developer",
     problem:
       "Job seekers juggle spreadsheets, inboxes, and multiple sites — they lose track of where they applied, what stage each role is in, and which follow-ups matter next.",
@@ -110,8 +143,6 @@ export const projects: Project[] = [
     image: "/ebnflow/1.webp",
     tags: ["JavaScript", "React", "Vite", "Tailwind CSS", "EmailJS", "Netlify"],
     category: "Frontend",
-    demoUrl: "https://ebandflow.example.com",
-    githubUrl: "https://github.com/yourusername/ebandflow",
     role: "Frontend Developer & Designer",
     problem: "Marriage therapist needed a professional, calming web presence that reflected their practice's values while making it easy for potential clients to reach out.",
     solution: "Built a custom static site with Vite for optimal performance, Tailwind for cohesive styling, and EmailJS integration for seamless client communication. Ensured full responsiveness across all devices.",

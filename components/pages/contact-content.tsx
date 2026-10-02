@@ -30,9 +30,10 @@ export default function ContactContent() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const form = e.currentTarget
     setIsSubmitting(true)
 
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData(form)
     const data = {
       name: formData.get("name"),
       email: formData.get("email"),
@@ -48,22 +49,28 @@ export default function ContactContent() {
         body: JSON.stringify(data),
       })
 
-      const result = await response.json()
+      const result = await response.json().catch(() => null)
 
-      if (!response.ok) {
-        throw new Error(result.error || "Failed to send message")
+      if (!response.ok || result?.success !== true) {
+        throw new Error(
+          typeof result?.error === "string" && result.error.trim()
+            ? result.error
+            : "Your message could not be confirmed. Please try again or email info@yuvallavi.com directly.",
+        )
       }
 
+      form.reset()
       toast({
         title: "Message sent",
         description: "Thanks for the note. I usually reply within a day or two on business days.",
       })
-
-      e.currentTarget.reset()
     } catch (error) {
       toast({
-        title: "Something went wrong",
-        description: error instanceof Error ? error.message : "Could not send. Try again or email directly.",
+        title: "Message not confirmed",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Could not send. Please try again or email info@yuvallavi.com directly.",
         variant: "destructive",
       })
     } finally {
@@ -77,10 +84,10 @@ export default function ContactContent() {
         <span className="mb-5 inline-block rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-400">
           Contact
         </span>
-        <h1 className="text-4xl font-semibold tracking-tighter text-white sm:text-5xl md:text-6xl">Get in touch</h1>
+        <h1 className="text-4xl font-semibold tracking-tighter text-white sm:text-5xl md:text-6xl">Discuss your project</h1>
         <p className="mt-5 max-w-[65ch] text-pretty text-base leading-relaxed text-zinc-400">
-          New freelance builds, collaborations, or questions about past work — send a short note and I will respond
-          when I am back at the desk.
+          Tell me about your business, your current website or tools, and what you would like to improve.
+          A rough idea is enough to start a conversation.
         </p>
       </header>
 
@@ -115,8 +122,8 @@ export default function ContactContent() {
                   id="contact-message"
                   name="message"
                   required
-                  placeholder="Project scope, timeline, links — whatever helps."
-                  rows={4}
+                  placeholder="What does your business do? What website or tools do you use? What would you like to make easier?"
+                  rows={6}
                   className={cn(fieldClass, "min-h-[100px] resize-y")}
                 />
               </div>
@@ -141,15 +148,15 @@ export default function ContactContent() {
         <div className={panelOuter}>
           <div className={cn(panelInner, "flex flex-col space-y-8")}>
             <div>
-              <h2 className="text-xl font-semibold tracking-tight text-white md:text-2xl">Direct lines</h2>
+              <h2 className="text-xl font-semibold tracking-tight text-white md:text-2xl">Prefer a direct message?</h2>
               <p className="mt-3 max-w-md text-pretty text-sm leading-relaxed text-zinc-400 md:text-base">
-                Prefer email or LinkedIn — same details I give clients before a kickoff.
+                Email, LinkedIn, or Telegram work too. Share a link or describe the task you want to improve.
               </p>
             </div>
             <div className="flex flex-col gap-3">
             <a
               href="mailto:info@yuvallavi.com"
-              className="group flex items-center gap-3 rounded-lg py-1 text-zinc-400 transition-colors hover:text-teal-200"
+              className="group flex items-center gap-3 rounded-lg py-1 text-zinc-400 transition-colors hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-200"
             >
               <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-zinc-500 transition-[border-color,background-color,color] group-hover:border-teal-500/35 group-hover:bg-teal-500/10 group-hover:text-teal-200">
                 <Mail className="size-4" strokeWidth={1.5} />
@@ -160,7 +167,7 @@ export default function ContactContent() {
               href="https://www.linkedin.com/in/yuvallavi-dev/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-3 rounded-lg py-1 text-zinc-400 transition-colors hover:text-teal-200"
+              className="group flex items-center gap-3 rounded-lg py-1 text-zinc-400 transition-colors hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-200"
             >
               <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-zinc-500 transition-[border-color,background-color,color] group-hover:border-teal-500/35 group-hover:bg-teal-500/10 group-hover:text-teal-200">
                 <Linkedin className="size-4" strokeWidth={1.5} />
@@ -171,7 +178,7 @@ export default function ContactContent() {
               href="https://www.yuvallavi.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-3 rounded-lg py-1 text-zinc-400 transition-colors hover:text-teal-200"
+              className="group flex items-center gap-3 rounded-lg py-1 text-zinc-400 transition-colors hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-200"
             >
               <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-zinc-500 transition-[border-color,background-color,color] group-hover:border-teal-500/35 group-hover:bg-teal-500/10 group-hover:text-teal-200">
                 <Globe className="size-4" strokeWidth={1.5} />
@@ -182,7 +189,7 @@ export default function ContactContent() {
               href="https://t.me/itsyuvallavi"
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-3 rounded-lg py-1 text-zinc-400 transition-colors hover:text-teal-200"
+              className="group flex items-center gap-3 rounded-lg py-1 text-zinc-400 transition-colors hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-200"
             >
               <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-zinc-500 transition-[border-color,background-color,color] group-hover:border-teal-500/35 group-hover:bg-teal-500/10 group-hover:text-teal-200">
                 <svg className="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden xmlns="http://www.w3.org/2000/svg">

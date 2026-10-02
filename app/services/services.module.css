@@ -1,0 +1,51 @@
+.outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.45);
+}
+
+.progress {
+  position: fixed;
+  top: 5rem;
+  left: 0;
+  z-index: 40;
+  width: 100%;
+  height: 1px;
+  background: rgba(94, 234, 212, 0.65);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.16);
+  transform-origin: left;
+}
+
+.panel {
+  transition: border-color 240ms ease;
+}
+
+.action {
+  transition: color 200ms ease, border-color 200ms ease, background-color 200ms ease;
+}
+
+.arrow {
+  transition: transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .panel:hover {
+    border-color: rgba(94, 234, 212, 0.3);
+  }
+
+  .action:hover .arrow {
+    transform: translateX(3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow {
+    transition: none;
+    transform: none !important;
+  }
+}

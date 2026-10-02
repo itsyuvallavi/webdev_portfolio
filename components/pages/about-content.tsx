@@ -1,254 +1,168 @@
-"use client"
-
 import Image from "next/image"
-import { motion, useReducedMotion } from "framer-motion"
-import { useMemo } from "react"
-import { TextReveal } from "../text-reveal"
-import { SkillFlipCard } from "../skill-flip-card"
-import { CursorCard } from "../cursor-card"
-import { cn } from "@/lib/utils"
+import Link from "next/link"
+import { ArrowRight, ArrowUpRight } from "lucide-react"
+import { ServicesReveal as AboutReveal } from "@/components/services-motion"
 
-const springTransition = { type: "spring" as const, stiffness: 100, damping: 22 }
+const skillGroups = [
+  { title: "Frontend", skills: ["HTML", "CSS", "JavaScript", "TypeScript", "React", "Next.js", "Vite", "Tailwind CSS", "shadcn/ui", "p5.js"] },
+  { title: "Backend & Services", skills: ["Firebase Auth", "Firestore", "Node.js", "REST APIs", "Vercel", "Netlify"] },
+  { title: "Tools & Deployment", skills: ["Git", "GitHub", "Version Control", "Claude Code", "Figma UI/UX"] },
+  { title: "Creative Tech", skills: ["React Native", "C++ (HISE/JUCE)", "LUA - KONTAKT DSP"] },
+]
+
+const experiences = [
+  {
+    period: "2024 - Present",
+    title: "Freelance Web Developer",
+    company: "Independent | Los Angeles, CA",
+    description:
+      "Built professional service websites and enhanced an aerospace company's Squarespace site with custom JavaScript interactions. Developed web applications using Next.js, React, TypeScript, and Firebase.",
+    technologies: ["Next.js", "React", "TypeScript", "Firebase", "Tailwind CSS", "JavaScript", "Squarespace"],
+  },
+  {
+    period: "November 2024 - Present",
+    title: "Web Developer & Technical Operations",
+    company: "Sense & Sound | Los Angeles, CA",
+    description:
+      "Developed frontend and backend website features, built scripts for workflow automation, and updated design systems and interfaces.",
+    technologies: ["JavaScript", "HTML", "CSS", "Web Development", "UI/UX Design"],
+  },
+  {
+    period: "2023 - 2024",
+    title: "Full-Stack Development Projects",
+    company: "Personal Portfolio | Los Angeles, CA",
+    description:
+      "Built and deployed personal applications including NOMADAI, an AI travel itinerary generator with GPT-4 integration, alongside portfolio websites and responsive client sites.",
+    technologies: ["Next.js", "React", "TypeScript", "Firebase", "Vite", "shadcn/ui", "GPT-4"],
+  },
+  {
+    period: "2019 - 2024",
+    title: "Film Composer & Audio Developer",
+    company: "Creative Background | Los Angeles, CA",
+    description:
+      "Composed film and media scores, built audio plugins and virtual instruments, and engineered music at God Knows Studios and Backyard Industries. Studied Film Scoring at UCLA Extension and Music Production at Musicians Institute.",
+    technologies: ["C++", "HISE/JUCE", "LUA", "Kontakt DSP", "Logic Pro", "Pro Tools", "Audio Engineering"],
+    isCreative: true,
+  },
+]
 
 export default function AboutContent() {
-  const shouldReduceMotion = useReducedMotion()
-
-  const baseTransition = useMemo(
-    () => ({
-      duration: 0.6,
-      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
-    }),
-    [],
-  )
-
-  const fadeUpProps = (delay = 0) =>
-    shouldReduceMotion
-      ? {}
-      : {
-          initial: { opacity: 0, y: 28 },
-          whileInView: {
-            opacity: 1,
-            y: 0,
-            transition: { ...baseTransition, delay },
-          },
-          viewport: { once: true, margin: "-80px" as const },
-        }
-
-  const slideInLeftProps = (delay = 0) =>
-    shouldReduceMotion
-      ? {}
-      : {
-          initial: { opacity: 0, x: -32 },
-          whileInView: {
-            opacity: 1,
-            x: 0,
-            transition: { ...baseTransition, delay },
-          },
-          viewport: { once: true, margin: "-80px" as const },
-        }
-
-  const slideInRightProps = (delay = 0) =>
-    shouldReduceMotion
-      ? {}
-      : {
-          initial: { opacity: 0, x: 32 },
-          whileInView: {
-            opacity: 1,
-            x: 0,
-            transition: { ...baseTransition, delay },
-          },
-          viewport: { once: true, margin: "-80px" as const },
-        }
-
-  const experiences = [
-    {
-      period: "2024 - Present",
-      title: "Freelance Web Developer",
-      company: "Independent | Los Angeles, CA",
-      description:
-        "Built custom web applications for clients including AI-powered travel planning tools, professional service websites, and aerospace industry sites. Developed full-stack solutions using Next.js, React, TypeScript, and Firebase. Extended platform capabilities (Squarespace, custom frameworks) with JavaScript enhancements and custom animations.",
-      technologies: ["Next.js", "React", "TypeScript", "Firebase", "Tailwind CSS", "JavaScript", "Squarespace"],
-    },
-    {
-      period: "November 2024 - Present",
-      title: "Web Developer & Technical Operations",
-      company: "Sense & Sound | Los Angeles, CA",
-      description:
-        "Developed and maintained website features including frontend interfaces and backend functionality. Built and optimized scripts for automation and workflow improvements. Updated design systems and implemented UI/UX enhancements.",
-      technologies: ["JavaScript", "HTML", "CSS", "Web Development", "UI/UX Design"],
-    },
-    {
-      period: "2023 - 2024",
-      title: "Full-Stack Development Projects",
-      company: "Personal Portfolio | Los Angeles, CA",
-      description:
-        "Architected and deployed multiple full-featured web applications including NOMADAI (AI travel itinerary generator with GPT-4 integration), professional portfolio sites with custom design systems, and responsive client websites.",
-      technologies: ["Next.js", "React", "TypeScript", "Firebase", "Vite", "shadcn/ui", "GPT-4"],
-    },
-    {
-      period: "2019 - 2024",
-      title: "Film Composer & Audio Developer",
-      company: "Creative Background | Los Angeles, CA",
-      description:
-        "Composed original scores for film and media projects. Developed custom audio plugins and virtual instruments using C++, HISE, and LUA scripting. Engineered and produced music at professional studios including God Knows Studios and Backyard Industries. Studied Film Scoring at UCLA Extension and Music Production at Musicians Institute.",
-      technologies: ["C++", "HISE/JUCE", "LUA", "Kontakt DSP", "Logic Pro", "Pro Tools", "Audio Engineering"],
-      isCreative: true,
-    },
-  ]
-
   return (
-    <section className="relative z-10 mx-auto min-h-[100dvh] max-w-[1400px] px-4 pb-16 pt-28 sm:px-6 sm:pb-20 lg:px-8 lg:pb-20 lg:pt-32">
-      <header className="mb-12 max-w-3xl text-left lg:mb-16">
-        <motion.span
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...springTransition, delay: 0.05 }}
-          className="mb-4 inline-block rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-400"
-        >
-          About
-        </motion.span>
-
-        <h1 className="text-4xl font-semibold tracking-tighter text-white sm:text-5xl md:text-6xl lg:text-7xl lg:leading-[0.95]">
-          <TextReveal text="Creative meets code" className="block text-white" />
-        </h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...springTransition, delay: 0.18 }}
-          className="mt-5 max-w-[65ch] text-pretty text-base leading-relaxed text-zinc-400"
-        >
-          Film scoring and audio engineering first; full-stack web work now. I care about clarity, rhythm in layout,
-          and interfaces that feel intentional.
-        </motion.p>
+    <section className="relative z-10 mx-auto min-h-[100dvh] max-w-[1400px] px-4 pb-20 pt-32 sm:px-6 md:pl-24 md:pr-8 lg:pl-28 lg:pr-10">
+      <header className="grid items-center gap-10 pb-14 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.8fr)] md:gap-12 lg:gap-20 lg:pb-20">
+        <div>
+          <AboutReveal>
+            <span className="mb-6 inline-block rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 font-mono text-xs uppercase tracking-[0.2em] text-zinc-300">
+              About
+            </span>
+          </AboutReveal>
+          <h1 className="text-5xl font-black leading-none tracking-tighter text-white sm:text-6xl lg:text-7xl">
+            I&apos;m Yuval.
+          </h1>
+          <AboutReveal delay={0.06} className="mt-6">
+            <p className="max-w-lg text-balance text-2xl font-medium leading-tight tracking-tight text-zinc-100 sm:text-3xl lg:text-4xl">
+              I build websites and practical tools.
+            </p>
+            <p className="reading-surface mt-6 max-w-[55ch] p-4 text-pretty text-base leading-relaxed text-zinc-300 sm:text-lg">
+              I work with websites, automations, and custom tools for small businesses and independent professionals.
+              My background in film composition and audio engineering shapes how I think about detail, rhythm,
+              and how an interface feels.
+            </p>
+          </AboutReveal>
+        </div>
+        <AboutReveal delay={0.12} className="mx-auto w-full max-w-sm md:ml-auto md:mr-0">
+          <div className="rounded-[1.5rem] bg-gradient-to-b from-white/[0.14] to-white/[0.04] p-[3px] shadow-[0_28px_72px_-28px_rgba(0,0,0,0.88)] ring-1 ring-white/[0.07]">
+            <div className="relative aspect-[3/4] overflow-hidden rounded-[calc(1.5rem-3px)] bg-zinc-900">
+              <Image
+                src="/portrait.webp"
+                alt="Portrait of Yuval Lavi"
+                fill
+                className="object-cover"
+                sizes="(max-width: 767px) min(100vw, 384px), (max-width: 1279px) 35vw, 384px"
+                priority
+              />
+            </div>
+          </div>
+        </AboutReveal>
       </header>
 
-      <motion.div className="mb-14 lg:mb-20">
-        <div className="grid items-center gap-8 md:grid-cols-2 md:gap-10 lg:gap-12">
-          <motion.div className="relative" {...slideInLeftProps(0.08)}>
-            <div
-              className={cn(
-                "mx-auto w-full max-w-md rounded-[1.5rem] p-[3px]",
-                "bg-gradient-to-b from-white/[0.14] to-white/[0.04] ring-1 ring-white/[0.07]",
-                "shadow-[0_28px_72px_-28px_rgba(0,0,0,0.88)]",
-              )}
-            >
-              <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[calc(1.5rem-3px)] bg-zinc-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-                <Image
-                  src="/portrait.webp"
-                  alt="Portrait of Yuval Lavi"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  priority
-                />
-              </div>
-            </div>
+      <div className="reading-surface px-5 py-8 sm:px-8 sm:py-10 lg:px-10">
+        <section aria-labelledby="creative-background-title" className="grid gap-5 pb-10 md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-10 lg:pb-14">
+          <AboutReveal>
+            <p className="mb-4 font-mono text-xs text-teal-300/80">01 / Background</p>
+            <h2 id="creative-background-title" className="max-w-xs text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+              From the studio to the screen.
+            </h2>
+          </AboutReveal>
+          <AboutReveal delay={0.06} className="space-y-4 text-pretty leading-relaxed text-zinc-300">
+            <p>
+              Film composition and audio engineering taught me to listen closely, shape a story, and work within
+              technical constraints. Those habits carry into development: understanding what matters, making
+              deliberate choices, and paying attention to the details.
+            </p>
+            <p>
+              Today I build with Next.js, React, TypeScript, and Firebase. I bring that same attention to the way
+              a website reads, a tool works, and an interface moves.
+            </p>
+          </AboutReveal>
+        </section>
 
-            {!shouldReduceMotion && (
-              <>
-                <motion.div
-                  className="pointer-events-none absolute -right-4 -top-4 h-32 w-32 rounded-full bg-teal-500/20 blur-3xl"
-                  animate={{ scale: [1, 1.15, 1], opacity: [0.25, 0.4, 0.25] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <motion.div
-                  className="pointer-events-none absolute -bottom-6 -left-6 h-40 w-40 rounded-full bg-teal-600/15 blur-3xl"
-                  animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.35, 0.2] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-                />
-              </>
-            )}
-          </motion.div>
-
-          <motion.div className="space-y-5" {...slideInRightProps(0.12)}>
-            <h2 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">Background</h2>
-            <div className="space-y-3 text-pretty leading-relaxed text-zinc-400">
-              <p>
-                I started in{" "}
-                <span className="font-medium text-teal-300/90">film composition</span> and{" "}
-                <span className="font-medium text-teal-300/90">audio engineering</span>, learning how to shape emotion
-                and pacing. That carries over into how I think about product UI and motion.
-              </p>
-              <p>
-                Today I build mostly with{" "}
-                <span className="font-medium text-zinc-200">Next.js, React, TypeScript, and Firebase</span> — apps that
-                need to work reliably and read clearly on the screen.
-              </p>
-              <p>
-                Tight technical constraints, client timelines, and pixel-level polish all feel familiar from years in
-                the studio.
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      </motion.div>
-
-      <motion.div className="mb-14 lg:mb-20">
-        <motion.h2
-          className="mb-6 max-w-2xl text-left text-2xl font-semibold tracking-tight text-white md:text-3xl"
-          {...fadeUpProps(0)}
-        >
-          Tech stack
-        </motion.h2>
-
-        <div className="md:hidden -mx-4 overflow-x-auto pb-3 px-4">
-          <div className="flex snap-x snap-mandatory gap-3">
-            {[
-              { title: "Frontend", skills: ["HTML", "CSS", "JavaScript", "TypeScript", "React", "Next.js", "Vite", "Tailwind CSS", "shadcn/ui", "p5.js"], d: 0.1 },
-              { title: "Backend & Services", skills: ["Firebase Auth", "Firestore", "Node.js", "REST APIs", "Vercel", "Netlify"], d: 0.12 },
-              { title: "Tools & Deployment", skills: ["Git", "GitHub", "Version Control", "Claude Code", "Figma UI/UX"], d: 0.14 },
-              { title: "Creative Tech", skills: ["React Native", "C++ (HISE/JUCE)", "LUA - KONTAKT DSP"], d: 0.16 },
-            ].map((block) => (
-              <div key={block.title} className="w-[85vw] flex-shrink-0 snap-center">
-                <SkillFlipCard title={block.title} skills={block.skills} delay={block.d} />
-              </div>
+        <section aria-labelledby="skills-title" className="border-t border-white/15 py-10 lg:py-14">
+          <AboutReveal className="mb-8">
+            <p className="mb-4 font-mono text-xs text-teal-300/80">02 / Skills</p>
+            <h2 id="skills-title" className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">What I work with.</h2>
+          </AboutReveal>
+          <div className="grid gap-x-12 gap-y-8 md:grid-cols-2">
+            {skillGroups.map((group, index) => (
+              <AboutReveal key={group.title} delay={index * 0.04}>
+                <h3 className="mb-4 text-base font-medium text-zinc-100">{group.title}</h3>
+                <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm leading-relaxed text-zinc-400">
+                  {group.skills.map((skill) => <li key={skill}>{skill}</li>)}
+                </ul>
+              </AboutReveal>
             ))}
           </div>
-        </div>
+        </section>
 
-        <div className="hidden gap-4 md:grid md:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-          <SkillFlipCard
-            title="Frontend"
-            skills={["HTML", "CSS", "JavaScript", "TypeScript", "React", "Next.js", "Vite", "Tailwind CSS", "shadcn/ui", "p5.js"]}
-            delay={0.1}
-          />
-          <SkillFlipCard
-            title="Backend & Services"
-            skills={["Firebase Auth", "Firestore", "Node.js", "REST APIs", "Vercel", "Netlify"]}
-            delay={0.12}
-          />
-          <SkillFlipCard
-            title="Tools & Deployment"
-            skills={["Git", "GitHub", "Version Control", "Claude Code", "Figma UI/UX"]}
-            delay={0.14}
-          />
-          <SkillFlipCard
-            title="Creative Tech"
-            skills={["React Native", "C++ (HISE/JUCE)", "LUA - KONTAKT DSP"]}
-            delay={0.16}
-          />
-        </div>
-      </motion.div>
+        <section aria-labelledby="experience-title" className="border-t border-white/15 pt-10 lg:pt-14">
+          <AboutReveal className="mb-8">
+            <p className="mb-4 font-mono text-xs text-teal-300/80">03 / Experience</p>
+            <h2 id="experience-title" className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">Work along the way.</h2>
+          </AboutReveal>
+          <ol className="divide-y divide-white/10">
+            {experiences.map((experience, index) => (
+              <li key={experience.title} className="py-7 first:pt-0 last:pb-0">
+                <AboutReveal delay={index * 0.04} className="grid gap-3 md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-10">
+                  <p className="pt-1 font-mono text-xs leading-relaxed text-zinc-400">{experience.period}</p>
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-medium tracking-tight text-zinc-100 sm:text-xl">{experience.title}</h3>
+                    <p className="mt-2 text-sm text-teal-200/80">{experience.company}</p>
+                    <p className="mt-4 max-w-[65ch] text-pretty text-sm leading-relaxed text-zinc-400">{experience.description}</p>
+                    <ul aria-label={`Technologies used as ${experience.title}`} className="mt-4 flex flex-wrap gap-x-4 gap-y-2 font-mono text-xs leading-relaxed text-zinc-300">
+                      {experience.technologies.map((technology) => <li key={technology}>{technology}</li>)}
+                    </ul>
+                  </div>
+                </AboutReveal>
+              </li>
+            ))}
+          </ol>
+        </section>
+      </div>
 
-      <motion.div>
-        <motion.h2
-          className="mb-6 max-w-2xl text-left text-2xl font-semibold tracking-tight text-white md:text-3xl"
-          {...fadeUpProps(0)}
-        >
-          Recent work
-        </motion.h2>
-        <div className="grid gap-4 md:grid-cols-2 md:gap-5">
-          {experiences.map((exp, index) => (
-            <motion.div
-              key={exp.title}
-              {...(index % 2 === 0 ? slideInLeftProps(0.06 + index * 0.04) : slideInRightProps(0.06 + index * 0.04))}
-            >
-              <CursorCard experience={exp} />
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
+      <section aria-labelledby="about-contact-title" className="mt-14 flex flex-col items-start gap-6 border-t border-white/15 pt-8 lg:mt-20 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:pt-10">
+        <AboutReveal>
+          <h2 id="about-contact-title" className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">Have something in mind?</h2>
+          <p className="mt-3 max-w-lg text-pretty leading-relaxed text-zinc-400">Tell me what you want to build or improve. We can work out a useful first step.</p>
+        </AboutReveal>
+        <AboutReveal delay={0.06} className="flex shrink-0 flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-6">
+          <Link href="/contact" className="inline-flex min-h-12 items-center gap-3 rounded-lg border border-teal-500/35 bg-zinc-950/60 px-5 py-3 text-sm font-medium text-teal-100 transition-colors hover:border-teal-400/60 hover:bg-teal-500/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300">
+            Discuss your project <ArrowRight className="size-4" aria-hidden />
+          </Link>
+          <Link href="/projects" className="inline-flex min-h-11 items-center gap-2 rounded-sm text-sm text-zinc-300 transition-colors hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300">
+            Explore work <ArrowUpRight className="size-4" aria-hidden />
+          </Link>
+        </AboutReveal>
+      </section>
     </section>
   )
 }

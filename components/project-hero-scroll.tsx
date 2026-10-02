@@ -16,7 +16,7 @@ export function ProjectHeroScroll({ image, title, description, alt }: ProjectHer
 
   return (
     <div
-      className="relative mb-0 flex h-auto min-h-0 flex-col overflow-hidden pt-4 md:min-h-[100dvh] md:-mb-16 md:items-start md:justify-center md:pt-20"
+      className="relative mb-0 flex h-auto min-h-0 flex-col overflow-hidden pt-4 md:items-start md:justify-start md:pt-8"
     >
       {/* Image Container with Zoom Effect removed (per user request) */}
       <div

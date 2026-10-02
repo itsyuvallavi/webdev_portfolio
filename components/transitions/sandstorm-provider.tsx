@@ -18,6 +18,8 @@ export interface SandstormControls {
 interface SandstormContextType {
   stormControls: SandstormControls
   setStormControls: (controls: SandstormControls) => void
+  backgroundReady: boolean
+  setBackgroundReady: (ready: boolean) => void
   stormIntensityRef: MutableRefObject<number>
   stormActiveRef: MutableRefObject<boolean>
 }
@@ -27,6 +29,7 @@ const SandstormContext = createContext<SandstormContextType | undefined>(undefin
 export function SandstormProvider({ children }: { children: ReactNode }) {
   const stormIntensityRef = useRef(0)
   const stormActiveRef = useRef(false)
+  const [backgroundReady, setBackgroundReadyState] = useState(false)
   const [stormControls, setStormControlsState] = useState<SandstormControls>({
     isActive: false,
     intensity: 0,
@@ -37,10 +40,20 @@ export function SandstormProvider({ children }: { children: ReactNode }) {
     stormIntensityRef.current = controls.intensity
     setStormControlsState(controls)
   }, [])
+  const setBackgroundReady = useCallback((ready: boolean) => {
+    setBackgroundReadyState(ready)
+  }, [])
 
   return (
     <SandstormContext.Provider
-      value={{ stormControls, setStormControls, stormIntensityRef, stormActiveRef }}
+      value={{
+        stormControls,
+        setStormControls,
+        backgroundReady,
+        setBackgroundReady,
+        stormIntensityRef,
+        stormActiveRef,
+      }}
     >
       {children}
     </SandstormContext.Provider>

@@ -15,15 +15,11 @@ import { cn } from "@/lib/utils"
 const springTransition = { type: "spring" as const, stiffness: 100, damping: 22 }
 
 const fieldClass =
-  "border-zinc-700/90 bg-zinc-950/60 text-zinc-100 placeholder:text-zinc-600 focus-visible:border-teal-500/50 focus-visible:ring-teal-500/30"
+  "min-h-11 border-zinc-600 bg-zinc-950/60 text-zinc-100 placeholder:text-zinc-400 focus-visible:border-teal-300 focus-visible:ring-teal-300/30"
 
-const panelOuter = cn(
-  "rounded-[1.5rem] p-[3px]",
-  "bg-gradient-to-b from-white/[0.14] to-white/[0.04] ring-1 ring-white/[0.07]",
-  "shadow-[0_28px_72px_-32px_rgba(0,0,0,0.9)]",
-)
+const panelOuter = "content-surface"
 
-const panelInner = "rounded-[calc(1.5rem-3px)] bg-zinc-950/90 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] sm:p-8"
+const panelInner = "p-6 sm:p-8"
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -32,9 +28,10 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const form = e.currentTarget
     setIsSubmitting(true)
 
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData(form)
     const data = {
       name: formData.get("name"),
       email: formData.get("email"),
@@ -50,22 +47,28 @@ export default function ContactPage() {
         body: JSON.stringify(data),
       })
 
-      const result = await response.json()
+      const result = await response.json().catch(() => null)
 
-      if (!response.ok) {
-        throw new Error(result.error || "Failed to send message")
+      if (!response.ok || result?.success !== true) {
+        throw new Error(
+          typeof result?.error === "string" && result.error.trim()
+            ? result.error
+            : "Your message could not be confirmed. Please try again or email info@yuvallavi.com directly.",
+        )
       }
 
+      form.reset()
       toast({
         title: "Message sent",
         description: "Thanks for the note. I usually reply within a day or two on business days.",
       })
-
-      e.currentTarget.reset()
     } catch (error) {
       toast({
-        title: "Something went wrong",
-        description: error instanceof Error ? error.message : "Could not send. Try again or email directly.",
+        title: "Message not confirmed",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Could not send. Please try again or email info@yuvallavi.com directly.",
         variant: "destructive",
       })
     } finally {
@@ -79,7 +82,7 @@ export default function ContactPage() {
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       className={cn(
         "group flex items-center gap-3 rounded-lg py-1 text-zinc-400 transition-colors duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
-        "hover:text-teal-200",
+        "hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-200",
       )}
     >
       <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-zinc-500 transition-[border-color,background-color,color] group-hover:border-teal-500/35 group-hover:bg-teal-500/10 group-hover:text-teal-200">
@@ -91,13 +94,13 @@ export default function ContactPage() {
 
   return (
     <main className="relative z-10 min-h-[100dvh]">
-      <section className="mx-auto max-w-[1400px] px-4 pb-24 pt-32 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-[1400px] px-4 pb-20 pt-32 sm:px-6 md:pl-24 md:pr-8 lg:pl-28 lg:pr-10">
         <header className="mb-12 max-w-2xl text-left lg:mb-16">
           <motion.span
             initial={reduceMotion ? undefined : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...springTransition, delay: 0.05 }}
-            className="mb-5 inline-block rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-400"
+            className="mb-5 inline-block rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-zinc-300"
           >
             Contact
           </motion.span>
@@ -105,22 +108,22 @@ export default function ContactPage() {
             initial={reduceMotion ? undefined : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...springTransition, delay: 0.1 }}
-            className="text-4xl font-semibold tracking-tighter text-white sm:text-5xl md:text-6xl"
+            className="text-4xl font-semibold tracking-tighter text-white sm:text-5xl md:text-6xl lg:text-7xl lg:leading-[0.95]"
           >
-            Get in touch
+            Discuss your project
           </motion.h1>
           <motion.p
             initial={reduceMotion ? undefined : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...springTransition, delay: 0.16 }}
-            className="mt-5 max-w-[65ch] text-pretty text-base leading-relaxed text-zinc-400"
+            className="reading-surface mt-6 max-w-[65ch] p-4 text-pretty text-base leading-relaxed text-zinc-300"
           >
-            New freelance builds, collaborations, or questions about past work — send a short note and I will respond
-            when I am back at the desk.
+            Tell me about your business, your current website or tools, and what you would like to improve.
+            A rough idea is enough to start a conversation.
           </motion.p>
         </header>
 
-        <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
+        <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-8">
           <motion.div
             initial={reduceMotion ? undefined : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -156,15 +159,15 @@ export default function ContactPage() {
                     id="message"
                     name="message"
                     required
-                    placeholder="Project scope, timeline, links — whatever helps."
-                    rows={4}
+                    placeholder="What does your business do? What website or tools do you use? What would you like to make easier?"
+                    rows={6}
                     className={cn(fieldClass, "min-h-[100px] resize-y")}
                   />
                 </div>
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full rounded-lg bg-teal-600 text-white shadow-[0_16px_40px_-18px_rgba(20,184,166,0.45)] transition-[background-color,transform,box-shadow] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-teal-500 active:scale-[0.98] disabled:opacity-60"
+                  className="min-h-12 w-full rounded-lg bg-teal-300 text-zinc-950 transition-colors duration-200 hover:bg-teal-200 focus-visible:ring-teal-300 disabled:bg-zinc-700 disabled:text-zinc-200 disabled:opacity-100"
                 >
                   {isSubmitting ? (
                     "Sending…"
@@ -187,9 +190,9 @@ export default function ContactPage() {
           >
             <div className={cn(panelInner, "flex flex-col space-y-8")}>
               <div>
-                <h2 className="text-xl font-semibold tracking-tight text-white md:text-2xl">Direct lines</h2>
+                <h2 className="text-xl font-semibold tracking-tight text-white md:text-2xl">Prefer a direct message?</h2>
                 <p className="mt-3 max-w-md text-pretty text-sm leading-relaxed text-zinc-400 md:text-base">
-                  Prefer email or LinkedIn — same details I give clients before a kickoff.
+                  Email, LinkedIn, or Telegram work too. Share a link or describe the task you want to improve.
                 </p>
               </div>
 
@@ -223,7 +226,7 @@ export default function ContactPage() {
 
               <div className="border-t border-zinc-800/90 pt-6">
                 <h3 className="text-sm font-semibold text-zinc-200">Response time</h3>
-                <p className="mt-2 text-sm text-zinc-500">Usually within 24–48 hours on weekdays.</p>
+                <p className="mt-2 text-sm text-zinc-400">Usually within 24–48 hours on weekdays.</p>
               </div>
             </div>
           </motion.div>

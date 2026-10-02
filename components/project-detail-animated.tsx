@@ -148,7 +148,7 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
       />
 
       {/* Project Details */}
-      <div className="max-w-4xl mx-auto space-y-12 mt-24 md:mt-32 mb-16 md:mb-24">
+      <div className="mx-auto mb-16 mt-8 max-w-4xl space-y-12 md:mt-12 md:mb-24">
         {/* <motion.div className="grid md:grid-cols-2 gap-6" {...fadeUpProps(0.15)}>
           <Card className="bg-gradient-to-br from-purple-500/5 to-transparent border-purple-500/20">
             <CardContent className="p-6">

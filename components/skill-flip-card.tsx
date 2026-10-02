@@ -26,10 +26,6 @@ export function SkillFlipCard({ title, skills, delay = 0 }: SkillFlipCardProps) 
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
-  const handleMouseLeave = () => {
-    setTimeout(() => setIsFlipped(false), 800)
-  }
-
   if (isMobile) {
     return (
       <motion.div
@@ -68,8 +64,20 @@ export function SkillFlipCard({ title, skills, delay = 0 }: SkillFlipCardProps) 
     <motion.div
       className="h-[200px]"
       style={{ perspective: "1000px" }}
+      role="button"
+      tabIndex={0}
+      aria-expanded={isFlipped}
+      aria-label={`${title} skills`}
       onMouseEnter={() => setIsFlipped(true)}
-      onMouseLeave={handleMouseLeave}
+      onMouseLeave={() => setIsFlipped(false)}
+      onBlur={() => setIsFlipped(false)}
+      onClick={() => setIsFlipped(true)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault()
+          setIsFlipped((current) => !current)
+        }
+      }}
       initial={shouldReduceMotion ? {} : { opacity: 0, y: 30 }}
       whileInView={
         shouldReduceMotion
@@ -85,10 +93,11 @@ export function SkillFlipCard({ title, skills, delay = 0 }: SkillFlipCardProps) 
       <motion.div
         className="relative h-full w-full"
         style={{ transformStyle: "preserve-3d" }}
-        animate={shouldReduceMotion ? {} : { rotateX: isFlipped ? 180 : 0 }}
-        transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+        animate={{ rotateX: isFlipped ? 180 : 0 }}
+        transition={{ duration: shouldReduceMotion ? 0 : 1.4, ease: [0.16, 1, 0.3, 1] }}
       >
         <div
+          aria-hidden={isFlipped}
           className={cn("absolute inset-0 flex h-full w-full items-center justify-center", faceBase)}
           style={{ backfaceVisibility: "hidden" }}
         >
@@ -96,6 +105,7 @@ export function SkillFlipCard({ title, skills, delay = 0 }: SkillFlipCardProps) 
         </div>
 
         <div
+          aria-hidden={!isFlipped}
           className={cn("absolute inset-0 flex h-full w-full flex-col p-4", faceBase)}
           style={{
             backfaceVisibility: "hidden",
