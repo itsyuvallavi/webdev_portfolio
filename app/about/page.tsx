@@ -4,7 +4,7 @@ import AboutContent from "@/components/pages/about-content"
 export const metadata: Metadata = {
   title: "About | Yuval Lavi",
   description:
-    "Film scoring and audio engineering background, now full-stack with Next.js and TypeScript — how that shapes the way I build interfaces.",
+    "Meet Yuval Lavi: a developer with a background in film composition and audio engineering, building websites and practical tools for small businesses and independent professionals.",
 }
 
 export default function AboutPage() {

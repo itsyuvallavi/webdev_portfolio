@@ -12,6 +12,7 @@ const contactSchema = z.object({
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
 const RATE_LIMIT_WINDOW = 15 * 60 * 1000 // 15 minutes
 const MAX_REQUESTS = 5 // Max 5 requests per window
+const RESEND_API_URL = 'https://api.resend.com/emails'
 
 function checkRateLimit(ip: string): boolean {
   const now = Date.now()
@@ -44,41 +45,85 @@ export async function POST(request: NextRequest) {
     }
 
     // Parse and validate request body
-    const body = await request.json()
+    let body: unknown
+    try {
+      body = await request.json()
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON request body.' }, { status: 400 })
+    }
     const validatedData = contactSchema.parse(body)
 
-    // TODO: Integrate email service here
-    // Example with Resend (requires RESEND_API_KEY env var):
-    /*
-    import { Resend } from 'resend'
-    const resend = new Resend(process.env.RESEND_API_KEY)
-    
-    await resend.emails.send({
-      from: 'Portfolio Contact <onboarding@resend.dev>',
-      to: ['info@yuvallavi.com'],
-      replyTo: validatedData.email,
-      subject: `Contact Form: ${validatedData.name}`,
-      text: validatedData.message,
-      html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${validatedData.name}</p>
-        <p><strong>Email:</strong> ${validatedData.email}</p>
-        <p><strong>Message:</strong></p>
-        <p>${validatedData.message.replace(/\n/g, '<br>')}</p>
-      `,
-    })
-    */
+    const apiKey = process.env.RESEND_API_KEY?.trim()
+    const toEmail = process.env.CONTACT_TO_EMAIL?.trim()
+    const fromEmail = process.env.CONTACT_FROM_EMAIL?.trim()
 
-    // For now, log the submission in development only (in production, use email service above)
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Contact form submission:', {
-        name: validatedData.name,
-        email: validatedData.email,
-        message: validatedData.message,
-      })
+    if (!apiKey || !toEmail || !fromEmail) {
+      console.error('Contact form delivery is not configured')
+      return NextResponse.json(
+        { error: 'The contact form is temporarily unavailable. Please email info@yuvallavi.com directly.' },
+        { status: 503 }
+      )
     }
 
-    // Return success response
+    let resendResponse: Response
+
+    try {
+      resendResponse = await fetch(RESEND_API_URL, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        signal: AbortSignal.timeout(10_000),
+        body: JSON.stringify({
+          from: fromEmail,
+          to: [toEmail],
+          reply_to: validatedData.email,
+          subject: 'New portfolio contact submission',
+          text: [
+            'New portfolio contact submission',
+            '',
+            `Name: ${validatedData.name}`,
+            `Email: ${validatedData.email}`,
+            '',
+            'Message:',
+            validatedData.message,
+          ].join('\n'),
+        }),
+      })
+    } catch {
+      console.error('Contact form delivery request failed')
+      return NextResponse.json(
+        { error: 'Your message could not be delivered. Please try again or email info@yuvallavi.com directly.' },
+        { status: 502 }
+      )
+    }
+
+    if (!resendResponse.ok) {
+      console.error('Contact form delivery was rejected', { status: resendResponse.status })
+      return NextResponse.json(
+        { error: 'Your message could not be delivered. Please try again or email info@yuvallavi.com directly.' },
+        { status: 502 }
+      )
+    }
+
+    const resendResult: unknown = await resendResponse.json().catch(() => null)
+    const providerId =
+      typeof resendResult === 'object' &&
+      resendResult !== null &&
+      'id' in resendResult &&
+      typeof resendResult.id === 'string'
+        ? resendResult.id.trim()
+        : ''
+
+    if (!providerId) {
+      console.error('Contact form delivery returned no provider id')
+      return NextResponse.json(
+        { error: 'Your message could not be confirmed as delivered. Please email info@yuvallavi.com directly.' },
+        { status: 502 }
+      )
+    }
+
     return NextResponse.json(
       { success: true, message: 'Message sent successfully!' },
       { status: 200 }
@@ -91,11 +136,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.error('Contact form error:', error)
+    console.error('Contact form request failed')
     return NextResponse.json(
       { error: 'Failed to send message. Please try again later.' },
       { status: 500 }
     )
   }
 }
-

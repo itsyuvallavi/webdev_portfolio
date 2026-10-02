@@ -2,9 +2,9 @@ import type { Metadata } from "next"
 import ProjectsContent from "@/components/pages/projects-content"
 
 export const metadata: Metadata = {
-  title: "Projects | Yuval Lavi",
+  title: "Work | Yuval Lavi",
   description:
-    "Full-stack and frontend work: shipped apps, client sites, and experiments — with notes on problem, solution, and product screens.",
+    "Explore client websites and custom tools by Yuval Lavi, with examples of business websites, tracking tools, and the work behind them.",
 }
 
 export default function ProjectsPage() {

@@ -42,7 +42,7 @@ const vertexShader = `
   uniform float uOpacityMultiplier;
   uniform vec2 uFlowDirection;
   attribute float delay;
-  attribute float distance;
+  attribute float particleDist;
   varying float vAlpha;
   varying float vDistanceRatio;
 
@@ -56,9 +56,9 @@ const vertexShader = `
     float layerFreq = 0.008 + uWaveLayer * 0.002;
 
     float wave1 = sin(directionalDistance * layerFreq - uTime * layerSpeed + delay);
-    float wave2 = sin(distance * (layerFreq * 1.5) - uTime * (layerSpeed * 1.2) + delay * 0.7);
+    float wave2 = sin(particleDist * (layerFreq * 1.5) - uTime * (layerSpeed * 1.2) + delay * 0.7);
     float wave3 = sin(directionalDistance * (layerFreq * 0.6) - uTime * (layerSpeed * 0.8) + delay * 1.3);
-    float wave4 = cos(distance * (layerFreq * 1.8) - uTime * (layerSpeed * 0.7) + delay * 0.3);
+    float wave4 = cos(particleDist * (layerFreq * 1.8) - uTime * (layerSpeed * 0.7) + delay * 0.3);
 
     float pulse = wave1 * 0.4 + wave2 * 0.3 + wave3 * 0.2 + wave4 * 0.1;
 
@@ -68,7 +68,7 @@ const vertexShader = `
 
     float baseAlpha = 0.35 + uWaveLayer * 0.07;
     vAlpha = (baseAlpha + (pulse + 1.5) * baseAlpha * 0.55) * uOpacityMultiplier;
-    vDistanceRatio = clamp(distance / uMaxDistance, 0.0, 1.0);
+    vDistanceRatio = clamp(particleDist / uMaxDistance, 0.0, 1.0);
 
     gl_Position = projectionMatrix * mvPosition;
   }
@@ -130,15 +130,17 @@ export function MonochromeParticlePreview({
   density = 1,
   pointSize = 1,
   opacity = 1,
-  zoom = 1,
+  zoom = 1.9,
   className,
   style,
 }: MonochromeParticlePreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const zoomRef = useRef(1)
-  zoomRef.current = clampMultiplier(zoom, 1, 0.25, 4)
+  const renderPreviewRef = useRef<(() => void) | null>(null)
+  const rebuildPreviewRef = useRef<(() => void) | null>(null)
   const [dims, setDims] = useState({ w: 0, h: 0 })
+  const [webGlFailed, setWebGlFailed] = useState(false)
 
   useLayoutEffect(() => {
     const el = containerRef.current
@@ -160,11 +162,20 @@ export function MonochromeParticlePreview({
       setDims({ w, h })
     }
 
+    let measureFrame = 0
+    const scheduleMeasure = () => {
+      cancelAnimationFrame(measureFrame)
+      measureFrame = requestAnimationFrame(measure)
+    }
+
     measure()
-    requestAnimationFrame(measure)
-    const ro = new ResizeObserver(() => requestAnimationFrame(measure))
+    scheduleMeasure()
+    const ro = new ResizeObserver(scheduleMeasure)
     ro.observe(el)
-    return () => ro.disconnect()
+    return () => {
+      cancelAnimationFrame(measureFrame)
+      ro.disconnect()
+    }
   }, [])
 
   const resolvedColors = useMemo(
@@ -184,17 +195,40 @@ export function MonochromeParticlePreview({
     [direction?.x, direction?.y],
   )
 
+  const runtimeConfig = useMemo(
+    () => ({
+      colors: resolvedColors,
+      speed: clampMultiplier(speed, 1.5, 0.05, 10),
+      direction: flowDirection,
+      pointSize: clampMultiplier(pointSize, 1, 0.2, 5),
+      opacity: clampMultiplier(opacity, 1, 0, 3),
+      zoom: clampMultiplier(zoom, 1.9, 0.25, 4),
+      density: clampMultiplier(density, 1, 0.05, 3),
+    }),
+    [resolvedColors, speed, flowDirection, pointSize, opacity, zoom, density],
+  )
+  const runtimeConfigRef = useRef(runtimeConfig)
+  const previousDensityRef = useRef(runtimeConfig.density)
+
+  useEffect(() => {
+    runtimeConfigRef.current = runtimeConfig
+    zoomRef.current = runtimeConfig.zoom
+    const frame = requestAnimationFrame(() => renderPreviewRef.current?.())
+    return () => cancelAnimationFrame(frame)
+  }, [runtimeConfig])
+
+  useEffect(() => {
+    if (previousDensityRef.current === runtimeConfig.density) return
+    previousDensityRef.current = runtimeConfig.density
+    rebuildPreviewRef.current?.()
+  }, [runtimeConfig.density])
+
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas || dims.w < 32 || dims.h < 32) return
 
     const w = dims.w
     const h = dims.h
-    const speedMultiplier = clampMultiplier(speed, 1.5, 0.05, 10)
-    const densityMultiplier = clampMultiplier(density, 1, 0.05, 3)
-    const pointSizeMultiplier = clampMultiplier(pointSize, 1, 0.2, 5)
-    const opacityMultiplier = clampMultiplier(opacity, 1, 0, 3)
-
     let isVisible = true
     const handleVisibilityChange = () => {
       isVisible = !document.hidden
@@ -224,19 +258,27 @@ export function MonochromeParticlePreview({
 
     applyOrthoZoom()
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: true,
-      powerPreference: "high-performance",
-      alpha: false,
-      stencil: false,
-      depth: false,
-      preserveDrawingBuffer: false,
-    })
+    let renderer: THREE.WebGLRenderer
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        powerPreference: "high-performance",
+        alpha: false,
+        stencil: false,
+        depth: false,
+        preserveDrawingBuffer: false,
+      })
+      setWebGlFailed(false)
+    } catch {
+      setWebGlFailed(true)
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+      return
+    }
 
     const pr = Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 2)
     renderer.setPixelRatio(pr)
-    renderer.setSize(w, h, true)
+    renderer.setSize(w, h, false)
 
     const originX = -w / 2
     const originY = h / 2
@@ -264,77 +306,118 @@ export function MonochromeParticlePreview({
             { spacing: 8, density: 0.4, layer: 2 },
           ]
 
-    const colorStart = new THREE.Color(resolvedColors.start)
-    const colorMid = new THREE.Color(resolvedColors.mid)
-    const colorEnd = new THREE.Color(resolvedColors.end)
     const particleSystems: { particles: THREE.Points; material: THREE.ShaderMaterial }[] = []
+    const particleTexture = createCircleTexture()
 
-    layers.forEach((config) => {
-      const buffer = edgeBuffer
-      const cols = Math.ceil((w + buffer * 2) / config.spacing)
-      const rows = Math.ceil((h + buffer * 2) / config.spacing)
-      const particleCount = cols * rows
-      const keepProbability = Math.min(1, Math.max(0, config.density * densityMultiplier))
-
-      const positions = new Float32Array(particleCount * 3)
-      const delays = new Float32Array(particleCount)
-      const distances = new Float32Array(particleCount)
-
-      let index = 0
-
-      for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-          if (Math.random() > keepProbability) continue
-
-          const x = i * config.spacing - w / 2 - buffer
-          const y = j * config.spacing - h / 2 - buffer
-          const z = config.layer * -10
-
-          positions[index * 3] = x
-          positions[index * 3 + 1] = y
-          positions[index * 3 + 2] = z
-
-          distances[index] = Math.sqrt(Math.pow(x - originX, 2) + Math.pow(y - originY, 2))
-          delays[index] = Math.random() * Math.PI * 0.5
-          index++
-        }
-      }
-
-      const geometry = new THREE.BufferGeometry()
-      geometry.setAttribute("position", new THREE.BufferAttribute(positions.slice(0, index * 3), 3))
-      geometry.setAttribute("delay", new THREE.BufferAttribute(delays.slice(0, index), 1))
-      geometry.setAttribute("distance", new THREE.BufferAttribute(distances.slice(0, index), 1))
-
-      const material = new THREE.ShaderMaterial({
-        vertexShader,
-        fragmentShader,
-        uniforms: {
-          uTime: { value: 0 },
-          uTexture: { value: createCircleTexture() },
-          uWaveLayer: { value: config.layer },
-          uMaxDistance: { value: maxDistance },
-          uPointSizeMultiplier: { value: pointSizeMultiplier },
-          uOpacityMultiplier: { value: opacityMultiplier },
-          uFlowDirection: { value: new THREE.Vector2(flowDirection.x, flowDirection.y) },
-          uColorStart: { value: colorStart },
-          uColorMid: { value: colorMid },
-          uColorEnd: { value: colorEnd },
-        },
-        transparent: true,
-        blending: THREE.AdditiveBlending,
-        depthTest: false,
-        depthWrite: false,
+    const buildParticleSystems = () => {
+      particleSystems.forEach((system) => {
+        system.particles.geometry.dispose()
+        system.material.dispose()
+        scene.remove(system.particles)
       })
+      particleSystems.length = 0
 
-      const particles = new THREE.Points(geometry, material)
-      particles.frustumCulled = false
-      scene.add(particles)
-      particleSystems.push({ particles, material })
-    })
+      layers.forEach((config) => {
+        const buffer = edgeBuffer
+        const cols = Math.ceil((w + buffer * 2) / config.spacing)
+        const rows = Math.ceil((h + buffer * 2) / config.spacing)
+        const particleCount = cols * rows
+        const keepProbability = Math.min(
+          1,
+          Math.max(0, config.density * runtimeConfigRef.current.density),
+        )
+
+        const positions = new Float32Array(particleCount * 3)
+        const delays = new Float32Array(particleCount)
+        const distances = new Float32Array(particleCount)
+
+        let index = 0
+
+        for (let i = 0; i < cols; i++) {
+          for (let j = 0; j < rows; j++) {
+            if (Math.random() > keepProbability) continue
+
+            const x = i * config.spacing - w / 2 - buffer
+            const y = j * config.spacing - h / 2 - buffer
+            const z = config.layer * -10
+
+            positions[index * 3] = x
+            positions[index * 3 + 1] = y
+            positions[index * 3 + 2] = z
+
+            distances[index] = Math.sqrt(Math.pow(x - originX, 2) + Math.pow(y - originY, 2))
+            delays[index] = Math.random() * Math.PI * 0.5
+            index++
+          }
+        }
+
+        const geometry = new THREE.BufferGeometry()
+        geometry.setAttribute("position", new THREE.BufferAttribute(positions.slice(0, index * 3), 3))
+        geometry.setAttribute("delay", new THREE.BufferAttribute(delays.slice(0, index), 1))
+        geometry.setAttribute("particleDist", new THREE.BufferAttribute(distances.slice(0, index), 1))
+
+        const material = new THREE.ShaderMaterial({
+          vertexShader,
+          fragmentShader,
+          uniforms: {
+            uTime: { value: 0 },
+            uTexture: { value: particleTexture },
+            uWaveLayer: { value: config.layer },
+            uMaxDistance: { value: maxDistance },
+            uPointSizeMultiplier: { value: runtimeConfigRef.current.pointSize },
+            uOpacityMultiplier: { value: runtimeConfigRef.current.opacity },
+            uFlowDirection: {
+              value: new THREE.Vector2(
+                runtimeConfigRef.current.direction.x,
+                runtimeConfigRef.current.direction.y,
+              ),
+            },
+            uColorStart: { value: new THREE.Color(runtimeConfigRef.current.colors.start) },
+            uColorMid: { value: new THREE.Color(runtimeConfigRef.current.colors.mid) },
+            uColorEnd: { value: new THREE.Color(runtimeConfigRef.current.colors.end) },
+          },
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          depthTest: false,
+          depthWrite: false,
+        })
+
+        const particles = new THREE.Points(geometry, material)
+        particles.frustumCulled = false
+        scene.add(particles)
+        particleSystems.push({ particles, material })
+      })
+    }
+
+    buildParticleSystems()
+    rebuildPreviewRef.current = () => {
+      buildParticleSystems()
+      renderPreviewRef.current?.()
+    }
 
     let animationFrameId = 0
     let lastFrameTime = performance.now()
     let isAnimating = true
+    const shouldReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
+    const renderFrame = (deltaTime = 0) => {
+      const runtime = runtimeConfigRef.current
+
+      particleSystems.forEach((system) => {
+        system.material.uniforms.uTime.value += deltaTime * runtime.speed
+        system.material.uniforms.uPointSizeMultiplier.value = runtime.pointSize
+        system.material.uniforms.uOpacityMultiplier.value = runtime.opacity
+        system.material.uniforms.uFlowDirection.value.set(runtime.direction.x, runtime.direction.y)
+        system.material.uniforms.uColorStart.value.set(runtime.colors.start)
+        system.material.uniforms.uColorMid.value.set(runtime.colors.mid)
+        system.material.uniforms.uColorEnd.value.set(runtime.colors.end)
+      })
+
+      applyOrthoZoom()
+      renderer.render(scene, camera)
+    }
+
+    renderPreviewRef.current = () => renderFrame()
 
     function animate(currentTime: number) {
       if (!isAnimating) return
@@ -346,45 +429,34 @@ export function MonochromeParticlePreview({
       lastFrameTime = currentTime
       const cappedDelta = Math.min(deltaTime, 0.1)
 
-      particleSystems.forEach((system) => {
-        system.material.uniforms.uTime.value += cappedDelta * speedMultiplier
-      })
-
-      applyOrthoZoom()
-      renderer.render(scene, camera)
+      renderFrame(cappedDelta)
     }
 
-    animate(performance.now())
+    if (shouldReduceMotion) {
+      renderFrame()
+    } else {
+      animate(performance.now())
+    }
 
     return () => {
       isAnimating = false
       cancelAnimationFrame(animationFrameId)
+      renderPreviewRef.current = null
+      rebuildPreviewRef.current = null
       document.removeEventListener("visibilitychange", handleVisibilityChange)
 
       particleSystems.forEach((system) => {
-        system.material.uniforms.uTexture.value?.dispose()
         system.particles.geometry.dispose()
         system.material.dispose()
         scene.remove(system.particles)
       })
+      particleTexture.dispose()
 
       renderer.renderLists.dispose()
       renderer.dispose()
       scene.clear()
     }
-  }, [
-    dims.w,
-    dims.h,
-    resolvedColors.start,
-    resolvedColors.mid,
-    resolvedColors.end,
-    speed,
-    flowDirection.x,
-    flowDirection.y,
-    density,
-    pointSize,
-    opacity,
-  ])
+  }, [dims.w, dims.h])
 
   return (
     <div
@@ -394,6 +466,7 @@ export function MonochromeParticlePreview({
     >
       <canvas
         ref={canvasRef}
+        aria-hidden
         className="absolute inset-0 block h-full w-full min-w-0 rounded-[inherit]"
         style={{
           willChange: "transform",
@@ -402,6 +475,11 @@ export function MonochromeParticlePreview({
           perspective: 2000,
         }}
       />
+      {webGlFailed ? (
+        <p className="absolute inset-0 grid place-items-center px-6 text-center text-sm text-zinc-400" role="status">
+          WebGL preview unavailable in this browser.
+        </p>
+      ) : null}
     </div>
   )
 }

@@ -5,12 +5,12 @@ A modern, full-stack portfolio website showcasing web development projects, buil
 ## Features
 
 - **Modern Stack**: Next.js 15 with App Router, React 19, TypeScript
-- **Performance Optimized**: Three.js particle effects with mobile optimization
-- **Custom Animations**: GSAP scroll-triggered animations and Framer Motion transitions
+- **Performance Aware**: Deferred Three.js particle effects with bounded mobile and desktop budgets
+- **Custom Animations**: Framer Motion transitions with reduced-motion support
 - **Responsive Design**: Fully responsive with mobile navigation
 - **Dark Theme**: Elegant dark theme with custom color palette
 - **Project Showcase**: Dynamic project pages with image lightboxes and carousels
-- **Contact Form**: Functional contact form with API route and validation
+- **Contact Form**: Validated Resend delivery with honest provider and configuration errors
 - **SEO Optimized**: Page-specific metadata and Open Graph tags
 
 ## Tech Stack
@@ -20,7 +20,7 @@ A modern, full-stack portfolio website showcasing web development projects, buil
 - **Language**: TypeScript 5
 - **Styling**: Tailwind CSS 4.1.9
 - **UI Components**: shadcn/ui (Radix UI primitives)
-- **Animations**: Framer Motion, GSAP 3.12.5
+- **Animations**: Framer Motion
 - **3D Graphics**: Three.js
 - **Fonts**: Geist Sans & Mono
 
@@ -28,7 +28,7 @@ A modern, full-stack portfolio website showcasing web development projects, buil
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 20+
 - pnpm (recommended) or npm/yarn
 
 ### Installation
@@ -44,9 +44,11 @@ cd portfolio
 pnpm install
 ```
 
-3. Create a `.env.local` file (optional, for contact form):
+3. Copy `.env.example` to `.env.local` to enable contact delivery:
 ```env
 RESEND_API_KEY=your_resend_api_key_here
+CONTACT_TO_EMAIL=info@yuvallavi.com
+CONTACT_FROM_EMAIL="Portfolio Contact <info@yuvallavi.com>"
 ```
 
 4. Run the development server:
@@ -87,32 +89,38 @@ portfolio/
 - `pnpm build` - Build for production
 - `pnpm start` - Start production server
 - `pnpm lint` - Run ESLint
+- `pnpm typecheck` - Run the TypeScript compiler without emitting files
+- `pnpm check:content` - Reject known placeholder project URLs
 
 ## Environment Variables
 
-### Optional (for contact form email service)
+### Contact form email service
 
 - `RESEND_API_KEY` - API key for Resend email service
+- `CONTACT_TO_EMAIL` - Verified destination for submissions
+- `CONTACT_FROM_EMAIL` - Sender on a Resend-verified domain
 
 To enable email functionality:
 1. Sign up for [Resend](https://resend.com) (free tier available)
 2. Get your API key
-3. Add it to `.env.local`
-4. Uncomment the email sending code in `app/api/contact/route.ts`
+3. Add and verify `yuvallavi.com` in the same Resend account so the approved sender, `info@yuvallavi.com`, can send
+4. Add all three values to `.env.local`
+5. Restart the development server after saving the values. The deployed Netlify site requires these values in its own environment settings as well.
+
+Without these variables the API returns `503` and the form directs visitors to email instead of claiming delivery.
 
 ## Features Overview
 
 ### Three.js Particle Background
 
 Optimized particle effects with:
-- Mobile performance tuning (30 FPS on mobile, 60 FPS on desktop)
-- Adaptive particle density based on device
+- Deferred WebGL startup after first paint
+- Bounded particle budgets and capped device pixel ratio
 - Visibility detection (pauses when tab is hidden)
 - Custom sandstorm transition effects
 
 ### Custom Animations
 
-- GSAP scroll-triggered animations for project hero images
 - Framer Motion page transitions and component animations
 - Respects `prefers-reduced-motion` preference
 
@@ -131,17 +139,17 @@ Optimized particle effects with:
 
 ## Deployment
 
-This project is configured for deployment on [Vercel](https://vercel.com):
+The live site is deployed on [Netlify](https://www.netlify.com/):
 
 1. Push your code to GitHub
-2. Import project on Vercel
+2. Connect the repository in Netlify
 3. Add environment variables if needed
 4. Deploy!
 
 ### Other Platforms
 
 The project can be deployed to any platform that supports Next.js:
-- Netlify
+- Vercel
 - AWS Amplify
 - Railway
 - Self-hosted with Docker
@@ -179,4 +187,3 @@ Private - All rights reserved
 ---
 
 Built with ❤️ by Yuval Lavi
-

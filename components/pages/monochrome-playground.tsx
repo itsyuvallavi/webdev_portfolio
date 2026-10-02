@@ -20,7 +20,7 @@ const DEFAULT = {
   density: 1,
   pointSize: 1,
   opacity: 1,
-  zoom: 1,
+  zoom: 1.9,
 }
 
 const COLOR_PALETTES: { id: string; label: string; colors: { start: string; mid: string; end: string } }[] = [
@@ -174,7 +174,7 @@ function RangeRow({
         <Label htmlFor={id} className="text-xs font-medium text-zinc-300">
           {label}
         </Label>
-        <span className="font-mono text-[11px] tabular-nums text-zinc-500">
+        <span className="font-mono text-[11px] tabular-nums text-zinc-400">
           {value.toFixed(step < 0.1 ? 2 : 1)}
         </span>
       </div>
@@ -201,7 +201,7 @@ function RangeRow({
           )}
         />
       </Slider.Root>
-      {hint ? <p className="text-[11px] leading-snug text-zinc-500">{hint}</p> : null}
+      {hint ? <p className="text-[11px] leading-snug text-zinc-400">{hint}</p> : null}
     </div>
   )
 }
@@ -216,6 +216,7 @@ export function MonochromePlayground() {
   const [zoom, setZoom] = useState(DEFAULT.zoom)
   const [copiedJson, setCopiedJson] = useState(false)
   const [copiedInstall, setCopiedInstall] = useState(false)
+  const [clipboardStatus, setClipboardStatus] = useState("")
 
   const propsPayload = useMemo(
     () => ({
@@ -234,9 +235,10 @@ export function MonochromePlayground() {
     try {
       await navigator.clipboard.writeText(JSON.stringify(propsPayload, null, 2))
       setCopiedJson(true)
+      setClipboardStatus("Particle configuration copied.")
       setTimeout(() => setCopiedJson(false), 2000)
     } catch {
-      /* ignore */
+      setClipboardStatus("Could not copy the particle configuration. Select and copy it manually.")
     }
   }, [propsPayload])
 
@@ -244,9 +246,10 @@ export function MonochromePlayground() {
     try {
       await navigator.clipboard.writeText(INSTALL_CMD)
       setCopiedInstall(true)
+      setClipboardStatus("Install command copied.")
       setTimeout(() => setCopiedInstall(false), 2000)
     } catch {
-      /* ignore */
+      setClipboardStatus("Could not copy the install command. Select and copy it manually.")
     }
   }, [])
 
@@ -261,9 +264,12 @@ export function MonochromePlayground() {
   }, [])
 
   return (
-    <div className="min-h-[100dvh] pb-12 pt-24 sm:pb-16 sm:pt-28">
+    <main className="min-h-[100dvh] pb-12 pt-24 sm:pb-16 sm:pt-28">
+      <p className="sr-only" aria-live="polite">
+        {clipboardStatus}
+      </p>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.2em] text-zinc-500">Open skill</p>
+        <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.2em] text-zinc-400">Open skill</p>
         <h1 className="max-w-[11ch] text-3xl font-semibold leading-none tracking-tight text-white sm:max-w-none sm:text-3xl">
           Monochrome Particle
         </h1>
@@ -283,9 +289,9 @@ export function MonochromePlayground() {
                 "group flex min-h-12 min-w-0 flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-zinc-950/90 px-4 py-2.5 text-left shadow-[0_18px_44px_-24px_rgba(0,0,0,0.9)] sm:min-h-11",
                 "transition-[border-color,background-color,box-shadow,transform] duration-200 hover:border-white/18 hover:bg-zinc-900/95 hover:shadow-[0_22px_54px_-26px_rgba(20,184,166,0.22)] active:scale-[0.995]",
               )}
-              aria-label="Copy install command"
             >
-              <span className="font-mono text-sm text-zinc-500" aria-hidden>
+              <span className="sr-only">Copy install command: </span>
+              <span className="font-mono text-sm text-zinc-400" aria-hidden>
                 $
               </span>
               <code className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-sm text-zinc-300">
@@ -359,6 +365,9 @@ export function MonochromePlayground() {
                     key={p.id}
                     type="button"
                     title={p.label}
+                    aria-pressed={
+                      colors.start === p.colors.start && colors.mid === p.colors.mid && colors.end === p.colors.end
+                    }
                     onClick={() => setColors({ ...p.colors })}
                     className={cn(
                       "min-h-9 rounded-md border px-2.5 py-1.5 text-[11px] font-medium transition-colors sm:min-h-0 sm:px-2 sm:py-1",
@@ -465,7 +474,11 @@ export function MonochromePlayground() {
                 Reset
               </Button>
               <Button type="button" variant="outline" size="sm" className="h-10 border-white/12 px-2.5 text-xs sm:h-8" onClick={copyJson}>
-                {copiedJson ? <Check className="mr-1 size-3" /> : <Copy className="mr-1 size-3" />}
+                {copiedJson ? (
+                  <Check className="mr-1 size-3" aria-hidden />
+                ) : (
+                  <Copy className="mr-1 size-3" aria-hidden />
+                )}
                 JSON
               </Button>
             </div>
@@ -474,6 +487,6 @@ export function MonochromePlayground() {
         </div>
 
       </div>
-    </div>
+    </main>
   )
 }

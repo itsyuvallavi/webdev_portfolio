@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { Home, FolderOpen, User, Mail, Github, Linkedin, Send, Sparkles } from "lucide-react"
+import { Home, FolderOpen, User, Mail, Github, Linkedin, Send, Sparkles, Wrench } from "lucide-react"
 import {
   CommandDialog,
   CommandEmpty,
@@ -11,6 +11,12 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
+
+declare global {
+  interface Window {
+    __openCommandMenu?: () => void
+  }
+}
 
 export function CommandMenu() {
   const [open, setOpen] = React.useState(false)
@@ -46,11 +52,11 @@ export function CommandMenu() {
   // Expose the setOpen function globally for mobile trigger
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
-      (window as any).__openCommandMenu = () => setOpen(true)
+      window.__openCommandMenu = () => setOpen(true)
     }
     return () => {
       if (typeof window !== 'undefined') {
-        delete (window as any).__openCommandMenu
+        delete window.__openCommandMenu
       }
     }
   }, [])
@@ -79,27 +85,33 @@ export function CommandMenu() {
               </div>
             </CommandEmpty>
             <CommandGroup heading="Navigation">
-          <CommandItem onSelect={() => runCommand(() => router.push("/"))}>
-            <Home className="mr-2 h-4 w-4" />
-            Home
-          </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => router.push("/projects"))}>
-            <FolderOpen className="mr-2 h-4 w-4" />
-            Projects
-          </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => router.push("/about"))}>
-            <User className="mr-2 h-4 w-4" />
-            About
-          </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => router.push("/monochrome"))}>
-            <Sparkles className="mr-2 h-4 w-4" />
-            Monochrome particle
-          </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => router.push("/contact"))}>
-            <Mail className="mr-2 h-4 w-4" />
-            Contact
-          </CommandItem>
-        </CommandGroup>
+              <CommandItem onSelect={() => runCommand(() => router.push("/"))}>
+                <Home className="mr-2 h-4 w-4" />
+                Home
+              </CommandItem>
+              <CommandItem onSelect={() => runCommand(() => router.push("/about"))}>
+                <User className="mr-2 h-4 w-4" />
+                About
+              </CommandItem>
+              <CommandItem keywords={["websites", "automation", "tools", "offers"]} onSelect={() => runCommand(() => router.push("/services"))}>
+                <Wrench className="mr-2 h-4 w-4" />
+                Services
+              </CommandItem>
+              <CommandItem keywords={["projects", "portfolio"]} onSelect={() => runCommand(() => router.push("/projects"))}>
+                <FolderOpen className="mr-2 h-4 w-4" />
+                Work
+              </CommandItem>
+              <CommandItem onSelect={() => runCommand(() => router.push("/contact"))}>
+                <Mail className="mr-2 h-4 w-4" />
+                Contact
+              </CommandItem>
+            </CommandGroup>
+            <CommandGroup heading="Explore">
+              <CommandItem keywords={["monochrome", "particle"]} onSelect={() => runCommand(() => router.push("/monochrome"))}>
+                <Sparkles className="mr-2 h-4 w-4" />
+                Particle playground
+              </CommandItem>
+            </CommandGroup>
         <CommandGroup heading="Social">
           <CommandItem onSelect={() => runCommand(() => window.open("https://github.com/itsyuvallavi", "_blank"))}>
             <Github className="mr-2 h-4 w-4" />

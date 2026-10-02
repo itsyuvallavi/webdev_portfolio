@@ -20,11 +20,22 @@ export function useSandstormTransition({
   onComplete,
 }: UseSandstormTransitionOptions) {
   const router = useRouter()
-  const { setStormControls, stormIntensityRef, stormActiveRef } = useSandstormContext()
+  const { backgroundReady, setStormControls, stormIntensityRef, stormActiveRef } = useSandstormContext()
   const isAnimatingRef = useRef(false)
 
   const triggerStorm = useCallback(() => {
     if (isAnimatingRef.current) return
+
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
+    if (
+      !backgroundReady ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      connection?.saveData
+    ) {
+      router.push(targetPath)
+      onComplete?.()
+      return
+    }
 
     isAnimatingRef.current = true
     stormIntensityRef.current = 0
@@ -73,7 +84,16 @@ export function useSandstormTransition({
     }
 
     requestAnimationFrame(animate)
-  }, [targetPath, duration, router, onComplete, setStormControls, stormIntensityRef, stormActiveRef])
+  }, [
+    backgroundReady,
+    targetPath,
+    duration,
+    router,
+    onComplete,
+    setStormControls,
+    stormIntensityRef,
+    stormActiveRef,
+  ])
 
   return {
     triggerStorm,

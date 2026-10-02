@@ -4,7 +4,13 @@ import { useEffect, useRef } from "react"
 import * as THREE from "three"
 import { useSandstormContext } from "./transitions/sandstorm-provider"
 
-export function MonochromeDotsBackground() {
+export function MonochromeDotsBackground({
+  onReady,
+  onUnavailable,
+}: {
+  onReady?: () => void
+  onUnavailable?: () => void
+} = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const { stormIntensityRef } = useSandstormContext()
 
@@ -31,7 +37,7 @@ export function MonochromeDotsBackground() {
       uniform float uMaxDistance;
       uniform float uStormIntensity;  // 0-1, storm effect intensity
       attribute float delay;
-      attribute float distance;
+      attribute float particleDist;
       varying float vAlpha;
       varying float vDistanceRatio;
 
@@ -46,17 +52,17 @@ export function MonochromeDotsBackground() {
         float storm = smoothstep(0.0, 1.0, uStormIntensity);
         storm = pow(storm, 0.85);
 
-        float wave1 = sin(distance * layerFreq - uTime * layerSpeed + delay);
-        float wave2 = sin(distance * (layerFreq * 1.5) - uTime * (layerSpeed * 1.2) + delay * 0.7);
-        float wave3 = sin(distance * (layerFreq * 0.6) - uTime * (layerSpeed * 0.8) + delay * 1.3);
-        float wave4 = cos(distance * (layerFreq * 1.8) - uTime * (layerSpeed * 0.7) + delay * 0.3);
+        float wave1 = sin(particleDist * layerFreq - uTime * layerSpeed + delay);
+        float wave2 = sin(particleDist * (layerFreq * 1.5) - uTime * (layerSpeed * 1.2) + delay * 0.7);
+        float wave3 = sin(particleDist * (layerFreq * 0.6) - uTime * (layerSpeed * 0.8) + delay * 1.3);
+        float wave4 = cos(particleDist * (layerFreq * 1.8) - uTime * (layerSpeed * 0.7) + delay * 0.3);
 
         float pulse = (wave1 * 0.4 + wave2 * 0.3 + wave3 * 0.2 + wave4 * 0.1);
 
         // Storm effect: add horizontal turbulent movement (sandstorm sweeping horizontally)
         if (storm > 0.001) {
           float turbulence = sin(position.y * 0.004 + uStormTime * 1.65) *
-                             cos(distance * 0.009 + uStormTime * 1.25);
+                             cos(particleDist * 0.009 + uStormTime * 1.25);
 
           float horizontalOffset = storm * turbulence * 170.0;
           mvPosition.x += horizontalOffset;
@@ -75,7 +81,7 @@ export function MonochromeDotsBackground() {
         vAlpha = baseAlpha + (pulse + 1.5) * baseAlpha * 0.55 + stormAlphaBoost;
 
         // Pass normalized distance for color gradient
-        vDistanceRatio = clamp(distance / uMaxDistance, 0.0, 1.0);
+        vDistanceRatio = clamp(particleDist / uMaxDistance, 0.0, 1.0);
 
         gl_Position = projectionMatrix * mvPosition;
       }
@@ -140,17 +146,35 @@ export function MonochromeDotsBackground() {
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000)
     camera.position.z = 500
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: true,
-      powerPreference: "high-performance",
-      alpha: false,
-      stencil: false,
-      depth: false,
-      preserveDrawingBuffer: false
-    })
+    let renderer: THREE.WebGLRenderer
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: false,
+        powerPreference: "high-performance",
+        alpha: false,
+        stencil: false,
+        depth: false,
+        preserveDrawingBuffer: false,
+      })
+    } catch {
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+      return
+    }
     renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2))
+    let hasActiveContext = true
+    const handleContextLost = (event: Event) => {
+      event.preventDefault()
+      hasActiveContext = false
+      onUnavailable?.()
+    }
+    const handleContextRestored = () => {
+      hasActiveContext = true
+      onReady?.()
+    }
+    canvas.addEventListener("webglcontextlost", handleContextLost)
+    canvas.addEventListener("webglcontextrestored", handleContextRestored)
 
     // Calculate max distance for gradient normalization
     const originX = -window.innerWidth / 2
@@ -163,27 +187,31 @@ export function MonochromeDotsBackground() {
     // Reduce layers and increase spacing on mobile for better performance
     const layers = isMobile
       ? [
-          { spacing: 6, density: 0.6, layer: 0 }, // Reduced density on mobile
-          { spacing: 10, density: 0.4, layer: 1 }, // Sparser on mobile
+          { spacing: 6, density: 0.6, layer: 0, budget: 18_000 },
+          { spacing: 10, density: 0.4, layer: 1, budget: 14_000 },
         ]
       : isLowPerformance
         ? [
-            { spacing: 4, density: 0.8, layer: 0 },
-            { spacing: 6, density: 0.6, layer: 1 },
-            { spacing: 8, density: 0.4, layer: 2 },
+            { spacing: 4, density: 0.8, layer: 0, budget: 36_000 },
+            { spacing: 6, density: 0.6, layer: 1, budget: 26_000 },
+            { spacing: 8, density: 0.4, layer: 2, budget: 18_000 },
           ]
         : [
-            { spacing: 4, density: 0.9, layer: 0 }, // Slightly less dense
-            { spacing: 6, density: 0.6, layer: 1 }, // Medium layer
-            { spacing: 8, density: 0.4, layer: 2 }, // Sparse outer layer
+            { spacing: 4, density: 0.9, layer: 0, budget: 42_000 },
+            { spacing: 6, density: 0.6, layer: 1, budget: 30_000 },
+            { spacing: 8, density: 0.4, layer: 2, budget: 22_000 },
           ]
 
     const particleSystems: { particles: THREE.Points; material: THREE.ShaderMaterial }[] = []
+    const particleTexture = createCircleTexture()
 
     layers.forEach((config) => {
-      const spacing = config.spacing
-      // Increase buffer to ensure full screen coverage (especially during storm movement)
-      const buffer = 500 // Larger buffer for storm effect horizontal movement
+      // The storm moves at most 170px horizontally, so 220px preserves coverage
+      // without allocating a second viewport's worth of off-screen points.
+      const buffer = 220
+      const drawableArea = (window.innerWidth + buffer * 2) * (window.innerHeight + buffer * 2)
+      const budgetSpacing = Math.sqrt((drawableArea * config.density) / config.budget)
+      const spacing = Math.max(config.spacing, budgetSpacing)
       const cols = Math.ceil((window.innerWidth + buffer * 2) / spacing)
       const rows = Math.ceil((window.innerHeight + buffer * 2) / spacing)
       const particleCount = cols * rows
@@ -230,7 +258,7 @@ export function MonochromeDotsBackground() {
       const geometry = new THREE.BufferGeometry()
       geometry.setAttribute("position", new THREE.BufferAttribute(actualPositions, 3))
       geometry.setAttribute("delay", new THREE.BufferAttribute(actualDelays, 1))
-      geometry.setAttribute("distance", new THREE.BufferAttribute(actualDistances, 1))
+      geometry.setAttribute("particleDist", new THREE.BufferAttribute(actualDistances, 1))
 
       const material = new THREE.ShaderMaterial({
         vertexShader,
@@ -239,7 +267,7 @@ export function MonochromeDotsBackground() {
         uniforms: {
           uTime: { value: 0 },
           uStormTime: { value: 0 },
-          uTexture: { value: createCircleTexture() },
+          uTexture: { value: particleTexture },
           uWaveLayer: { value: config.layer },
           uMaxDistance: { value: maxDistance },
           uStormIntensity: { value: 0 }, // Storm effect intensity
@@ -279,7 +307,7 @@ export function MonochromeDotsBackground() {
       animationFrameId = requestAnimationFrame(animate)
 
       // Skip frame if not visible (tab is hidden)
-      if (!isVisible) return
+      if (!isVisible || !hasActiveContext) return
 
       // Calculate actual time delta for consistent animation speed
       const deltaTime = (currentTime - lastFrameTime) / 1000 // Convert to seconds
@@ -310,6 +338,8 @@ export function MonochromeDotsBackground() {
       renderer.render(scene, camera)
     }
 
+    renderer.render(scene, camera)
+    onReady?.()
     animate(performance.now())
 
     // Cleanup
@@ -321,31 +351,31 @@ export function MonochromeDotsBackground() {
       // Remove event listeners
       window.removeEventListener("resize", handleResize)
       document.removeEventListener("visibilitychange", handleVisibilityChange)
+      canvas.removeEventListener("webglcontextlost", handleContextLost)
+      canvas.removeEventListener("webglcontextrestored", handleContextRestored)
 
       // Dispose all resources properly
       particleSystems.forEach((system) => {
-        // Dispose texture
-        if (system.material.uniforms.uTexture.value) {
-          system.material.uniforms.uTexture.value.dispose()
-        }
         // Dispose geometry and material
         system.particles.geometry.dispose()
         system.material.dispose()
         // Remove from scene
         scene.remove(system.particles)
       })
+      particleTexture.dispose()
 
       // Clear and dispose renderer
       renderer.renderLists.dispose()
       renderer.dispose()
       scene.clear()
     }
-  }, [])
+  }, [onReady, onUnavailable, stormIntensityRef])
 
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 w-full h-full -z-10"
+      aria-hidden
+      className="absolute inset-0 h-full w-full"
       style={{
         willChange: 'transform',
         transform: 'translateZ(0)',
