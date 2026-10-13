@@ -162,8 +162,8 @@ export function BookingPlate() {
 }
 
 const invoices = [
-  { client: "Atelier Norte", amount: 1250, status: "Paid", tone: "ok", owed: false, overdue: false },
-  { client: "Casa Lima", amount: 980, status: "Paid", tone: "ok", owed: false, overdue: false },
+  { client: "Atelier Orla", amount: 1250, status: "Paid", tone: "ok", owed: false, overdue: false },
+  { client: "Casa Trevo", amount: 980, status: "Paid", tone: "ok", owed: false, overdue: false },
   { client: "Estúdio Vale", amount: 2150, status: "12 days late", tone: "warn", owed: true, overdue: true },
   { client: "Oficina Sete", amount: 1640, status: "Due in 5 days", tone: "none", owed: true, overdue: false },
 ] as const

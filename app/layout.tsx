@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   title: `${site.name} | Software that takes work off your hands`,
   description:
     "Software for small businesses, built in Lisbon: enquiries answered, bookings and reminders, invoices chased, paperwork filed. Tell me the one task that takes too long.",
+  openGraph: { siteName: site.name, type: "website", locale: "en_GB" },
+  twitter: { card: "summary_large_image" },
 }
 
 export const viewport: Viewport = {

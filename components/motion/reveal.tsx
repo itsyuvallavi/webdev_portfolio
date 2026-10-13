@@ -1,8 +1,7 @@
 "use client"
 
 import { useEffect, useRef, type ReactNode } from "react"
-import { motion, useInView, useScroll, useSpring, useTransform } from "framer-motion"
-import { TextReveal } from "@/components/text-reveal"
+import { useInView } from "framer-motion"
 import { useMotionAllowed } from "./use-motion-allowed"
 
 /** Keep the server output readable; motion enhances content after it enters view. */
@@ -30,24 +29,4 @@ export function Reveal({ children, className, delay = 0, line = false }: {
   }, [inView, reduceMotion, delay, line])
 
   return <div ref={ref} className={className} aria-hidden={line || undefined}>{children}</div>
-}
-
-/** TextReveal's initial blur is applied only once JavaScript can animate it. */
-export function ServicesTitle({ text, className, delay = 0 }: { text: string; className?: string; delay?: number }) {
-  const reduceMotion = !useMotionAllowed()
-
-  if (reduceMotion) return <div className={className}>{text}</div>
-  return <TextReveal text={text} className={className} delay={delay} />
-}
-
-function ScrollProgress({ className }: { className?: string }) {
-  const { scrollYProgress } = useScroll()
-  const progress = useSpring(scrollYProgress, { stiffness: 160, damping: 30 })
-  const transform = useTransform(progress, (value) => `scaleX(${value})`)
-  return <motion.div aria-hidden className={className} style={{ transform }} />
-}
-
-export function ServicesProgress({ className }: { className?: string }) {
-  const reduceMotion = !useMotionAllowed()
-  return reduceMotion ? null : <ScrollProgress className={className} />
 }
