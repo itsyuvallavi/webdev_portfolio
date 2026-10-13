@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next"
-import { projects } from "@/lib/data"
+import { projects } from "@/content/projects"
+import { site } from "@/content/site"
 
-const baseUrl = "https://www.yuvallavi.com"
+const baseUrl = site.url
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/services", "/projects", "/about", "/monochrome", "/contact"]
+  const staticRoutes = ["", "/services", "/projects", "/about", "/monochrome", "/contact", "/privacy"]
 
   return [
     ...staticRoutes.map((path) => ({

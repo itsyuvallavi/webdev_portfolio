@@ -1,0 +1,129 @@
+"use client"
+
+import { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { Menu } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
+import { navigation, site } from "@/content/site"
+
+const links = navigation.map((link, index) => ({
+  ...link,
+  label: link.label.toUpperCase(),
+  number: String(index + 1).padStart(2, "0"),
+}))
+
+export function Navigation() {
+  const pathname = usePathname()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const isActive = (path: string) => {
+    if (path === "/" && pathname === "/") return true
+    if (path !== "/" && (pathname === path || pathname?.startsWith(`${path}/`))) return true
+    return false
+  }
+
+  const handleLinkClick = () => {
+    setMobileMenuOpen(false)
+  }
+
+  return (
+    <>
+      {/* Backing for the bar: dark and blurred where the logo and links sit, so page content
+          passing underneath cannot be read through them, then fading out below. */}
+      <div
+        className="pointer-events-none fixed left-0 right-0 top-0 z-40 h-32 backdrop-blur-md"
+        style={{
+          background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.82) 55%, rgba(0, 0, 0, 0.35) 80%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+        }}
+      />
+
+      <nav className="fixed top-0 left-0 right-0 z-50" aria-label="Main navigation">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-20 items-center justify-between">
+          <Link
+            href="/"
+            className="inline-flex min-h-11 shrink-0 items-center rounded-sm text-xl font-bold tracking-wider hover:text-gray-300 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+          >
+            {site.name.toUpperCase()}
+          </Link>
+          <div className="hidden md:flex items-center gap-4 lg:gap-8">
+            {links.map((link) => (
+              <Link
+                key={link.id}
+                href={link.path}
+                aria-current={isActive(link.path) ? "page" : undefined}
+                className={cn(
+                  "inline-flex min-h-11 items-center gap-1 whitespace-nowrap rounded-sm text-[13px] font-mono transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white",
+                  isActive(link.path) ? "text-white" : "text-zinc-300",
+                )}
+              >
+                <span className="text-zinc-400">{link.number} / </span>
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Mobile Navigation Menu */}
+          <div className="md:hidden">
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon-lg"
+                  className="size-11"
+                  aria-label="Open navigation menu"
+                >
+                  <Menu className="size-7" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[250px] border-white/15 bg-zinc-950">
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                <nav className="flex flex-col gap-4 mt-8">
+                  {links.map((link) => (
+                    <Link
+                      key={link.id}
+                      href={link.path}
+                      aria-current={isActive(link.path) ? "page" : undefined}
+                      onClick={handleLinkClick}
+                      className={cn(
+                        "flex min-h-11 items-center gap-1 text-base font-mono transition-colors px-4 py-2 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
+                        isActive(link.path)
+                          ? "bg-teal-500/10 text-teal-100"
+                          : "text-zinc-300 hover:bg-white/5 hover:text-white",
+                      )}
+                      aria-label={`Navigate to ${link.label} page`}
+                    >
+                      <span className="text-zinc-400">{link.number} /</span>
+                      {link.label}
+                    </Link>
+                  ))}
+                  <div className="mt-4 border-t border-white/10 pt-4">
+                    <Link
+                      href="/monochrome"
+                      prefetch={false}
+                      onClick={handleLinkClick}
+                      aria-current={isActive("/monochrome") ? "page" : undefined}
+                      className={cn(
+                        "flex min-h-11 items-center rounded-md px-4 py-2 text-sm font-mono transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
+                        isActive("/monochrome") ? "text-white" : "text-gray-400",
+                      )}
+                    >
+                      Particle playground
+                    </Link>
+                  </div>
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
+          
+        </div>
+      </div>
+    </nav>
+    </>
+  )
+}

@@ -4,16 +4,46 @@
 @custom-variant dark (&:is(.dark *));
 
 @layer components {
-  .reading-surface {
-    border-radius: 1rem;
-    background: rgba(9, 9, 11, 0.72);
+  /* The page's side margins. The left one leaves room for the fixed social sidebar. */
+  .page-gutters {
+    @apply mx-auto max-w-[1400px] px-4 sm:px-6 md:pl-24 md:pr-8 lg:pl-28 lg:pr-10;
   }
 
-  .content-surface {
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 1rem;
-    background: rgba(9, 9, 11, 0.82);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  /* Outlined display type, the pair to the hero's solid word. */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(255, 255, 255, 0.3);
+  }
+
+  .text-outline-strong {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.55);
+  }
+
+  .text-outline-muted {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--sheet-muted);
+  }
+
+  /* The main action on a page, and the quiet link beside or below it. */
+  .action {
+    @apply inline-flex min-h-12 items-center gap-3 rounded-lg border border-teal-500/35 bg-zinc-950/60 px-5 py-3 text-sm font-medium text-teal-100 transition-colors hover:border-teal-400/60 hover:bg-teal-500/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300;
+  }
+
+  .text-link {
+    @apply inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-medium text-[var(--sheet-accent)] transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300;
+  }
+
+  /* A frame for a 16:9 screenshot inside <Held travel={24}>: shorter than the picture by the
+     travel distance, so the picture keeps its full width and only drifts up and down. */
+  .screen-frame {
+    height: 0;
+    padding-bottom: calc(56.25% - 24px);
+  }
+
+  /* Small capital labels above headings. */
+  .eyebrow {
+    @apply font-mono text-xs uppercase tracking-[0.2em] text-[var(--sheet-muted)];
   }
 }
 
@@ -36,7 +66,7 @@
   --destructive-foreground: oklch(0.98 0 0);
   --border: oklch(0.9 0 0);
   --input: oklch(0.9 0 0);
-  --ring: oklch(0.7 0.15 280);
+  --ring: oklch(0.6 0.11 185);
   --radius: 0.5rem;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -55,6 +85,13 @@
 
 /* Updated dark mode to pure black background for particle wave effect */
 .dark {
+  /* The opaque sheet that page content sits on, over the dot field. */
+  --sheet-bg: #0b0b0d;
+  --sheet-fg: #fafafa;
+  --sheet-muted: #a1a1aa;
+  --sheet-line: rgba(255, 255, 255, 0.12);
+  --sheet-accent: #5eead4;
+
   --background: oklch(0.05 0 0);
   --foreground: oklch(0.95 0 0);
   --card: oklch(0.1 0 0);
@@ -73,7 +110,7 @@
   --destructive-foreground: oklch(0.95 0 0);
   --border: oklch(0.2 0 0);
   --input: oklch(0.2 0 0);
-  --ring: oklch(0.65 0.18 280);
+  --ring: oklch(0.855 0.138 181);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -132,7 +169,11 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring;
+  }
+  /* The site is dark only; this also darkens scrollbars and form controls. */
+  html {
+    color-scheme: dark;
   }
   body {
     @apply bg-background text-foreground;
@@ -156,16 +197,3 @@
   }
 }
 
-@keyframes gradient {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient 8s ease infinite;
-}

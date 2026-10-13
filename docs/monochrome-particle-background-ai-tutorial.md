@@ -1,6 +1,10 @@
 # Tutorial: Monochrome particle wave background — context for AI (Cursor & Claude Code)
 
-This document captures **implementation context** for the full-viewport Three.js particle background used in this repo, and explains how to **reuse or regenerate** it with Cursor or Claude Code (skills, prompts, and repo conventions).
+This document captures **implementation context** for the full-viewport Three.js particle field in this repo, and explains how to **reuse or regenerate** it with Cursor or Claude Code (skills, prompts, and repo conventions).
+
+> **Where this lives now (October 2026).** The site no longer uses this field as its page background. A quieter one-tone field (`components/site/quiet-dots.tsx`) took its place, and the "storm" page transition was removed with it. The full-strength field described here lives on at the particle playground (`/monochrome`), in `components/monochrome/particle-preview.tsx`. **That is the file to adapt.** It takes its colours, flow direction, point size and opacity as props and has no storm mode.
+>
+> The storm mode below is kept as a description of the technique. Its last version in this repository is `components/monochrome-dots-background.tsx` and `components/transitions/sandstorm-provider.tsx` at commit `38de6ca`; the skill under `.cursor/skills/monochrome-particle/` carries its own copy.
 
 ---
 
@@ -52,9 +56,11 @@ pnpm add -D @types/three
 
 | File                                            | Purpose                                                                                                                 |
 | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `components/monochrome-dots-background.tsx`     | Full implementation: shaders, grid generation, layers, animation loop, storm uniforms                                   |
-| `components/transitions/sandstorm-provider.tsx` | Context: `stormControls: { isActive, intensity }`                                                                       |
-| `app/layout.tsx`                                | Wraps app with `SandstormProvider`, renders `<MonochromeDotsBackground />` before content; content uses `relative z-10` |
+| `components/monochrome/particle-preview.tsx`    | Full implementation: shaders, grid generation, layers, animation loop; colours, flow direction, size and opacity as props |
+| `components/monochrome/playground.tsx`    | The playground page that mounts it and drives those props                                                               |
+| `components/site/background.tsx`                | How the site mounts a full-screen canvas behind content today (the quiet field); content uses `relative z-10`           |
+
+Removed from the repository, and described below only as technique (see the note at the top for where to find them): `components/monochrome-dots-background.tsx` (the same field with storm uniforms) and `components/transitions/sandstorm-provider.tsx` (context: `stormControls: { isActive, intensity }`).
 
 
 **Layout integration pattern**
@@ -193,7 +199,7 @@ If you want every agent in this repo to remember the pattern, add or extend `.cu
 
 This repo already has `CLAUDE.md`. Add a subsection, for example **“Particle background”**, with:
 
-- File paths: `components/monochrome-dots-background.tsx`, `sandstorm-provider.tsx`.
+- File path: `components/monochrome/particle-preview.tsx`.
 - Non-negotiables: client-only, disposal on unmount, z-index stacking.
 
 Then in Claude Code you can say: “Follow CLAUDE.md particle background section.”
@@ -204,7 +210,7 @@ Claude Code benefits from **file references**. Prefer:
 
 ```text
 Implement the background described in @docs/monochrome-particle-background-ai-tutorial.md
-by adapting @components/monochrome-dots-background.tsx into <target path>.
+by adapting @components/monochrome/particle-preview.tsx into <target path>.
 ```
 
 ### 6.3 Skills / plugins
