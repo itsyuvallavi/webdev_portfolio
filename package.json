@@ -5,6 +5,7 @@
   "scripts": {
     "build": "next build",
     "check:content": "node scripts/check-content.mjs",
+    "check:routes": "node scripts/check-routes.mjs",
     "dev": "next dev",
     "lint": "eslint .",
     "start": "next start",
