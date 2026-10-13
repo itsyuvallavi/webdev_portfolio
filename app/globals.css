@@ -134,6 +134,10 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /* The site is dark only; this also darkens scrollbars and form controls. */
+  html {
+    color-scheme: dark;
+  }
   body {
     @apply bg-background text-foreground;
   }
