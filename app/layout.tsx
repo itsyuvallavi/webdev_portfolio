@@ -8,7 +8,7 @@ import { EdgeLight } from "@/components/site/edge-light"
 import { Navigation } from "@/components/site/navigation"
 import { SmoothScroll } from "@/components/site/smooth-scroll"
 import { SocialSidebar } from "@/components/site/social-sidebar"
-import { site } from "@/content/site"
+import { navigation, site } from "@/content/site"
 import { Suspense } from "react"
 import "./globals.css"
 
@@ -50,6 +50,15 @@ export default function RootLayout({
         <SmoothScroll />
         <EdgeLight />
         <Navigation />
+        <noscript>
+          <nav aria-label="Pages" className="relative z-30 flex flex-wrap gap-x-5 px-4 pt-20 font-mono text-xs text-zinc-300 md:hidden">
+            {navigation.map((link) => (
+              <a key={link.id} href={link.path} className="inline-flex min-h-11 items-center underline underline-offset-4">
+                {link.label}
+              </a>
+            ))}
+          </nav>
+        </noscript>
         <SocialSidebar />
         <div id="main-content" tabIndex={-1} className="relative z-10 outline-none">
           {children}

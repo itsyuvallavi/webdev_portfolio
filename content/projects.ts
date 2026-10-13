@@ -126,7 +126,6 @@ export const projects: Project[] = [
     image: "/nomadai/1.webp",
     tags: ["TypeScript", "Next.js", "Tailwind CSS", "shadcn/ui", "Firebase", "Chat GPT"],
     category: "Full Stack",
-    demoUrl: "https://studio--nomadoldrepair-86680360-86245.us-central1.hosted.app/",
     role: "Full Stack Developer",
     problem:
       "Travelers needed a streamlined way to plan trips with personalized recommendations based on their preferences, budget, and real-time availability.",

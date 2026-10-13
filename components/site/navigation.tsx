@@ -31,11 +31,14 @@ export function Navigation() {
 
   return (
     <>
-      {/* Gradient background that extends below navbar */}
+      {/* Backing for the bar: dark and blurred where the logo and links sit, so page content
+          passing underneath cannot be read through them, then fading out below. */}
       <div
-        className="fixed top-0 left-0 right-0 h-32 pointer-events-none z-40"
+        className="pointer-events-none fixed left-0 right-0 top-0 z-40 h-32 backdrop-blur-md"
         style={{
-          background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.3) 80%, transparent 100%)'
+          background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.82) 55%, rgba(0, 0, 0, 0.35) 80%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
         }}
       />
 
@@ -44,7 +47,7 @@ export function Navigation() {
         <div className="flex h-20 items-center justify-between">
           <Link
             href="/"
-            className="shrink-0 rounded-sm text-xl font-bold tracking-wider hover:text-gray-300 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            className="inline-flex min-h-11 shrink-0 items-center rounded-sm text-xl font-bold tracking-wider hover:text-gray-300 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
           >
             {site.name.toUpperCase()}
           </Link>
@@ -72,6 +75,7 @@ export function Navigation() {
                 <Button
                   variant="ghost"
                   size="icon-lg"
+                  className="size-11"
                   aria-label="Open navigation menu"
                 >
                   <Menu className="size-7" />
@@ -87,14 +91,14 @@ export function Navigation() {
                       aria-current={isActive(link.path) ? "page" : undefined}
                       onClick={handleLinkClick}
                       className={cn(
-                        "text-base font-mono transition-colors px-4 py-2 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
+                        "flex min-h-11 items-center gap-1 text-base font-mono transition-colors px-4 py-2 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
                         isActive(link.path)
                           ? "bg-teal-500/10 text-teal-100"
                           : "text-zinc-300 hover:bg-white/5 hover:text-white",
                       )}
                       aria-label={`Navigate to ${link.label} page`}
                     >
-                      <span className="text-zinc-400">{link.number} / </span>
+                      <span className="text-zinc-400">{link.number} /</span>
                       {link.label}
                     </Link>
                   ))}
@@ -105,7 +109,7 @@ export function Navigation() {
                       onClick={handleLinkClick}
                       aria-current={isActive("/monochrome") ? "page" : undefined}
                       className={cn(
-                        "block rounded-md px-4 py-2 text-sm font-mono transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
+                        "flex min-h-11 items-center rounded-md px-4 py-2 text-sm font-mono transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
                         isActive("/monochrome") ? "text-white" : "text-gray-400",
                       )}
                     >
