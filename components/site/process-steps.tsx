@@ -10,7 +10,7 @@ import { useMotionAllowed } from "@/components/motion/use-motion-allowed"
 const steps = [
   {
     title: "A short conversation",
-    body: "You describe one task that takes too long or goes wrong. I ask questions and look at the tools you use today.",
+    body: "You describe one task that takes too long or goes wrong. I ask questions and look at the tools you use today. We can talk by video call, by phone or in person: you choose.",
     card: { label: "You leave with", lines: ["A clear answer on whether I can help", "What it would involve, in plain words", "No charge and no obligation"] },
   },
   {
@@ -21,7 +21,7 @@ const steps = [
   {
     title: "A working tool, handed over",
     body: "I build it and we test it together on your real cases. Then it is yours to run.",
-    card: { label: "Yours to keep", lines: ["It runs on your own accounts", "A one-page guide for your team", "Your data stays with you"] },
+    card: { label: "Yours to keep", lines: ["It runs on your own accounts wherever possible", "A one-page guide for your team", "We agree in writing where your data is kept"] },
   },
 ]
 

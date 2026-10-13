@@ -14,9 +14,9 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: `${site.name} | Software that takes work off your hands`,
+  title: `${site.name} | Software for small businesses`,
   description:
-    "Software for small businesses, built in Lisbon: enquiries answered, bookings and reminders, invoices chased, paperwork filed. Tell me the one task that takes too long.",
+    "Software for small businesses, built in Lisbon: enquiries answered, bookings and reminders, invoice reminders, paperwork filed. Tell me about one task that takes too long.",
   // Each page names its own address under the one the site is served from.
   alternates: { canonical: "./" },
   openGraph: { siteName: site.name, type: "website", locale: "en_GB" },

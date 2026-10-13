@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import Image from "next/image"
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 import { Held } from "@/components/motion/held"
 import { PageSheet } from "@/components/site/page-sheet"
 import { site } from "@/content/site"
@@ -14,16 +16,16 @@ const skillGroups = [
   { title: "Frontend", skills: ["HTML", "CSS", "JavaScript", "TypeScript", "React", "Next.js", "Vite", "Tailwind CSS", "shadcn/ui", "p5.js"] },
   { title: "Backend & Services", skills: ["Firebase Auth", "Firestore", "Node.js", "REST APIs", "Vercel", "Netlify"] },
   { title: "Tools & Deployment", skills: ["Git", "GitHub", "Version Control", "Claude Code", "Figma UI/UX"] },
-  { title: "Creative Tech", skills: ["React Native", "C++ (HISE/JUCE)", "LUA - KONTAKT DSP"] },
+  { title: "Creative Tech", skills: ["React Native", "C++ (HISE/JUCE)", "Lua (Kontakt DSP)"] },
 ]
 
 const experiences = [
   {
     period: "2023 – Present",
     title: "Independent Software Engineer",
-    company: "Independent | Lisbon",
+    company: "Independent | Lisbon since 2026",
     description:
-      "Client websites, custom tools and my own products. I built professional service websites, extended an aerospace company's Squarespace site with custom JavaScript interactions, and shipped applications including Trackd, a job-application tracker, and NOMADAI, an AI travel itinerary generator. Full-stack work in TypeScript and Next.js, with automations and external APIs.",
+      "Client websites and my own applications. I built professional service websites, extended an aerospace company's Squarespace site with custom JavaScript interactions, and built my own applications, including Trackd, a job-application tracker. Full-stack work in TypeScript and Next.js, with automations and external APIs.",
     technologies: ["TypeScript", "Next.js", "React", "PostgreSQL", "Firebase", "Tailwind CSS", "JavaScript"],
   },
   {
@@ -32,7 +34,7 @@ const experiences = [
     company: "Los Angeles, now Lisbon",
     description:
       "Composing film and media scores, and building audio plugins and virtual instruments. Engineered music at God Knows Studios and Backyard Industries. Studied Film Scoring at UCLA Extension and Music Production at Musicians Institute.",
-    technologies: ["C++", "HISE/JUCE", "LUA", "Kontakt DSP", "Logic Pro", "Pro Tools", "Audio Engineering"],
+    technologies: ["C++", "HISE/JUCE", "Lua", "Kontakt DSP", "Logic Pro", "Pro Tools", "Audio Engineering"],
   },
 ]
 
@@ -52,7 +54,7 @@ export default function AboutPage() {
             <span className="text-outline block">YUVAL.</span>
           </h1>
           <p className="mt-10 max-w-[30ch] text-balance text-2xl font-medium leading-tight tracking-tight text-zinc-100 sm:text-3xl">
-            I build software that takes routine work off small businesses.
+            I build software that does routine work for small businesses.
           </p>
           <p className="mt-6 max-w-[55ch] text-pretty text-lg leading-relaxed text-zinc-300">
             I work with websites, automations, and custom tools for small businesses and independent professionals.
@@ -60,6 +62,9 @@ export default function AboutPage() {
             and how an interface feels.
           </p>
           <p className="mt-6 font-mono text-xs text-zinc-400">Based in {site.location}</p>
+          <Link href="/services" className="action mt-8">
+            What I can build for you <ArrowRight className="size-4" aria-hidden />
+          </Link>
         </div>
         <Held travel={24} className="mx-auto aspect-[3/4] w-full max-w-sm rounded-lg border border-white/10 md:ml-auto md:mr-0">
           <Image
@@ -89,8 +94,9 @@ export default function AboutPage() {
                 deliberate choices, and paying attention to the details.
               </p>
               <p>
-                Today I build with Next.js, React, TypeScript, and Firebase. I bring that same attention to the way
-                a website reads, a tool works, and an interface moves.
+                Today I build with TypeScript, Next.js and React, on PostgreSQL, Supabase or Firebase, and with Rust
+                for developer tools. I bring that same attention to the way a website reads, a tool works, and an
+                interface moves.
               </p>
             </div>
           </section>

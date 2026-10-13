@@ -103,7 +103,8 @@ export function Walkthrough() {
   }, [playing])
 
   return (
-    <figure ref={figureRef} id="demo" className="relative scroll-mt-28">
+    <figure ref={figureRef} id="demo" className="scroll-mt-28">
+      <div className="relative">
       {ready ? (
         <button
           type="button"
@@ -122,7 +123,7 @@ export function Walkthrough() {
         >
           <div aria-hidden data-paused={paused} className={cn(styles.plate, styles.wide, styles.demo)}>
             <div className={cn(styles.scene, styles.dayStage, !job && styles.dayEnd)}>
-              <span className={cn(styles.corner, styles.cornerTop)}>Sample data</span>
+              <span className={cn(styles.corner, styles.cornerTop)}>Illustration · invented data</span>
               {job ? (
                 <>
                   <div key={`caption-${scene}`} className={cn(styles.dayCaption, styles.viewIn)}>
@@ -142,7 +143,7 @@ export function Walkthrough() {
               ) : (
                 <div className={cn(styles.summary, styles.viewIn)}>
                   <p className={styles.bigLabel}>By {jobs[jobs.length - 1].time}</p>
-                  <p className={styles.summaryBig}>{jobs.length} handled.<br />{flagged} {flagged === 1 ? "needs" : "need"} you.</p>
+                  <p className={styles.summaryBig}>{jobs.length} tasks.<br />{jobs.length - flagged} done.<br />{flagged} waiting for you.</p>
                   <div className={styles.notes}>
                     {jobs.filter((entry) => entry.needsYou).map((entry) => (
                       <p key={entry.time} className={styles.note}>{entry.title}: {entry.result.split(" · ")[1]}.</p>
@@ -154,7 +155,10 @@ export function Walkthrough() {
           </div>
         </div>
       </Held>
-
+      </div>
+      <figcaption className="mt-4 font-mono text-xs leading-relaxed text-zinc-400">
+        One day of routine tasks, done by software. Illustration.
+      </figcaption>
     </figure>
   )
 }

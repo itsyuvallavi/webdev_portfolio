@@ -1172,7 +1172,7 @@
   grid-area: 1 / 1 / -1 / -1;
   justify-self: center;
   gap: 1.3em;
-  width: min(29em, 84%);
+  width: min(36em, 88%);
 }
 
 .summaryBig {

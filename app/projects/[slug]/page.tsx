@@ -25,12 +25,12 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
 
   if (!project) {
     return {
-      title: "Project Not Found | Yuval Lavi",
+      title: "Page not found | Yuval Lavi",
     }
   }
 
   return {
-    title: `${project.title} | Projects | Yuval Lavi`,
+    title: `${project.title} | Work | Yuval Lavi`,
     description: project.description,
     openGraph: {
       title: project.title,

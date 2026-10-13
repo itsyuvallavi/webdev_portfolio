@@ -26,7 +26,7 @@ export const projects: Project[] = [
     slug: "cipherquery",
     title: "CipherQuery",
     description:
-      "Encrypted evaluation layer for private structured data, with memory-only processing and one TEE-verified 0G request per evaluation.",
+      "Lets a buyer test a private dataset without seeing the raw data. Samples are processed in memory only, with one verified request per evaluation.",
     longDescription:
       "CipherQuery lets buyers ask plain-language questions about a seller's private structured dataset without receiving the raw records. CSV, JSONL, NDJSON, and flat Parquet samples travel over encrypted transport, are parsed only in memory, and are evaluated through one private 0G request. Eight paid synthetic evaluations matched their known expected scores and returned TEE-verified execution metadata.",
     image: cipherQueryImg(1),
@@ -39,10 +39,10 @@ export const projects: Project[] = [
       "TEE",
       "Vitest",
     ],
-    category: "Full Stack",
+    category: "Full-stack",
     demoUrl: "https://cipherquery.vercel.app",
     githubUrl: "https://github.com/itsyuvallavi/blindsample",
-    role: "Full Stack Developer & Designer",
+    role: "Full-stack Developer & Designer",
     problem:
       "Dataset buyers need evidence that private data can answer their questions, while sellers cannot safely expose the underlying rows. A useful evaluation also has to distinguish protected execution from whether the model's answer is accurate.",
     solution:
@@ -51,14 +51,14 @@ export const projects: Project[] = [
     screenshotCaptions: [
       "CipherQuery's public overview — private dataset questions in, TEE-verified answers out, with zero raw rows exposed to the buyer.",
       "The documentation maps the workflow from plain-language buyer questions to a bounded seller sample and verified question-level results.",
-      "The 0G and TEE boundary is explicit: protected execution is verified separately from the accuracy of a model judgment.",
+      "The 0G and TEE boundary is explicit: protected execution is verified separately from the accuracy of a model judgement.",
     ],
   },
   {
     slug: "elgar",
     title: "Elgar",
     description:
-      "Local-first Rust agent harness with a controller-owned action lifecycle, permissioned shell and file operations, terminal TUI, and no-network regression checks.",
+      "Local-first Rust agent harness with a controller-owned action lifecycle, permissioned shell and file operations, a terminal interface, and no-network regression checks.",
     longDescription:
       "Elgar is a local-first Rust agent harness built around a strict execution boundary: the controller owns truth, the model suggests, the user approves, the filesystem confirms, and the UI reports. The current v0.2 build includes a controller-backed action lifecycle, permissioned file and shell actions, terminal TUI rendering, LM Studio provider support, context accounting, and no-network smoke/performance checks.",
     image: elgarImg(1),
@@ -89,9 +89,9 @@ export const projects: Project[] = [
     slug: "trackd",
     title: "Trackd",
     description:
-      "Job application tracker with pipeline views, AI-assisted search, email sync, resume coaching, and interview practice — Next.js on PostgreSQL with Supabase auth.",
+      "Job application tracker with pipeline views, AI-assisted search, email sync, CV coaching, and interview practice — Next.js on PostgreSQL with Supabase auth.",
     longDescription:
-      "Trackd is a job application tracker that brings roles, status, documents, and follow-ups into one place. It supports manual entry plus optional AI-assisted job search (external APIs, deduplication, OpenAI fit scoring), IMAP email integration with classification and status updates, resume advisor and interview prep sessions, a browser extension to save listings, and admin-style cron routes for sync and bot runs. Built with Next.js 16 App Router, React 19, Tailwind CSS 4, Prisma on PostgreSQL, and Supabase Auth.",
+      "Trackd is a job application tracker that brings roles, status, documents, and follow-ups into one place. It supports manual entry plus optional AI-assisted job search (external APIs, deduplication, OpenAI fit scoring), IMAP email integration with classification and status updates, CV advisor and interview prep sessions, a browser extension to save listings, and admin-style cron routes for sync and bot runs. Built with Next.js 16 App Router, React 19, Tailwind CSS 4, Prisma on PostgreSQL, and Supabase Auth.",
     image: trackdImg(1),
     tags: [
       "TypeScript",
@@ -103,13 +103,13 @@ export const projects: Project[] = [
       "OpenAI",
       "shadcn/ui",
     ],
-    category: "Full Stack",
+    category: "Full-stack",
     demoUrl: "https://trackd-eight.vercel.app/",
-    role: "Full Stack Developer",
+    role: "Full-stack Developer",
     problem:
       "Job seekers juggle spreadsheets, inboxes, and multiple sites — they lose track of where they applied, what stage each role is in, and which follow-ups matter next.",
     solution:
-      "Shipped a unified app with list, Kanban, dashboard, and calendar views; bot-driven discovery with AI scoring; email sync that ties messages to applications; and AI tools for resumes and interviews, all backed by a clear Prisma data model and Supabase-authenticated accounts.",
+      "Shipped a unified app with list, Kanban, dashboard, and calendar views; bot-driven discovery with AI scoring; email sync that ties messages to applications; and AI tools for CVs and interviews, all backed by a clear Prisma data model and Supabase-authenticated accounts.",
     screenshots: [trackdImg(1), trackdImg(2), trackdImg(3)],
     screenshotCaptions: [
       "Pipeline and applications — status, sources, and next actions in one view.",
@@ -120,59 +120,59 @@ export const projects: Project[] = [
   {
     slug: "nomadai",
     title: "NOMADAI",
-    description: "AI-powered travel itinerary generator with real-time data integration and Firebase backend. (Alpha - In Development)",
+    description: "AI travel itinerary generator with live data and a Firebase backend. Alpha, still in development.",
     longDescription:
-      "Full-featured web application that generates personalized travel itineraries using GPT-4o-mini, integrating multiple APIs to import real-time data. Built with modern architecture focusing on clean code organization and optimal performance. Note: This project is currently in alpha development and some features may not work as expected.",
+      "A web application, still in alpha, that generates personalised travel itineraries using GPT-4o-mini and brings in live data from several APIs. Some features may not work as expected.",
     image: "/nomadai/1.webp",
-    tags: ["TypeScript", "Next.js", "Tailwind CSS", "shadcn/ui", "Firebase", "Chat GPT"],
-    category: "Full Stack",
-    role: "Full Stack Developer",
+    tags: ["TypeScript", "Next.js", "Tailwind CSS", "shadcn/ui", "Firebase", "ChatGPT"],
+    category: "Full-stack",
+    role: "Full-stack Developer",
     problem:
-      "Travelers needed a streamlined way to plan trips with personalized recommendations based on their preferences, budget, and real-time availability.",
+      "Travellers needed a simpler way to plan trips, with personalised recommendations based on their preferences, their budget and what is available at the time.",
     solution:
-      "Developed a fully optimized web app with AI-powered itinerary generation, real-time API data integration, Firebase authentication and database, organized component structure with ReadMe documentation for easy maintenance.",
+      "Built a web app with AI itinerary generation, live API data, Firebase authentication and database, and a README so it can be maintained.",
     screenshots: ["/nomadai/1.webp", "/nomadai/2.webp", "/nomadai/3.webp", "/nomadai/4.webp"],
   },
   {
     slug: "eb-and-flow",
     title: "EB & FLOW",
-    description: "Custom-designed static website for marriage therapy practice with seamless EmailJS integration.",
+    description: "A custom-designed website for a marriage therapy practice, with a working contact form.",
     longDescription:
-      "Client website built with React and Vite featuring a cohesive, unique design system across all pages and components. Fully responsive with mobile and tablet optimizations, integrated with EmailJS for easy client contact.",
+      "Client website built with React and Vite, with one design system across every page and component. It works on phones and tablets, and its contact form sends enquiries by email through EmailJS.",
     image: "/ebnflow/1.webp",
     tags: ["JavaScript", "React", "Vite", "Tailwind CSS", "EmailJS", "Netlify"],
     category: "Frontend",
     role: "Frontend Developer & Designer",
     problem: "Marriage therapist needed a professional, calming web presence that reflected their practice's values while making it easy for potential clients to reach out.",
-    solution: "Built a custom static site with Vite for optimal performance, Tailwind for cohesive styling, and EmailJS integration for seamless client communication. Ensured full responsiveness across all devices.",
+    solution: "Built a custom static site with Vite, styled with Tailwind, with a contact form that emails the practice through EmailJS. It works on phones, tablets and desktops.",
     screenshots: ["/ebnflow/1.webp", "/ebnflow/2.webp", "/ebnflow/3.webp", "/ebnflow/4.webp"],
   },
   {
     slug: "film-composer-portfolio",
     title: "Film Composer Portfolio",
-    description: "Cinematic portfolio website showcasing original compositions, film scoring work, and audio plugin development.",
+    description: "My own website as a film composer: original compositions, film scoring work and audio plugins.",
     longDescription:
-      "A professionally designed portfolio website for film composition work, featuring a stunning cinematic aesthetic with forest backdrop. Showcases selected works including experimental compositions, film soundtracks, and solo instrumental pieces. Includes dedicated sections for music compositions (The Duel, En Paix, The Fisherman's Wife, Quality Control, Zagori Imperia, Limbo, From Dust, Backseat Driver) and audio plugins (Hang Dream, FrozenReverb). Built with clean navigation and elegant grid layout for optimal presentation of creative work.",
+      "My own portfolio website for film composition work, with a cinematic look and a forest backdrop. Showcases selected works including experimental compositions, film soundtracks, and solo instrumental pieces. Includes dedicated sections for music compositions (The Duel, En Paix, The Fisherman's Wife, Quality Control, Zagori Imperia, Limbo, From Dust, Backseat Driver) and audio plugins (Hang Dream, FrozenReverb). Built with clean navigation and elegant grid layout for optimal presentation of creative work.",
     image: "/filmcomposer/1.webp",
     tags: ["HTML", "CSS", "JavaScript", "Web Design", "Portfolio", "UX/UI"],
     category: "Frontend",
     role: "Frontend Developer & Designer",
     problem: "Needed a professional online presence to showcase film composition portfolio, selected musical works spanning 2023-2024, and custom audio plugins to attract film directors, producers, and music licensing opportunities.",
-    solution: "Designed and developed an immersive, cinematic portfolio website with atmospheric forest imagery, organized sections for selected works with metadata (year, type, genre), dedicated audio plugins showcase, and clean navigation. Focused on visual storytelling and minimalist design that complements the artistic nature of the work.",
+    solution: "Designed and developed an immersive, cinematic portfolio website with atmospheric forest imagery, organised sections for selected works with metadata (year, type, genre), dedicated audio plugins showcase, and clean navigation. Focused on visual storytelling and minimalist design that complements the artistic nature of the work.",
     screenshots: ["/filmcomposer/1.webp", "/filmcomposer/2.webp", "/filmcomposer/3.webp", "/filmcomposer/4.webp"],
   },
   {
     slug: "frontier-aerospace",
     title: "Frontier Aerospace",
-    description: "Professional aerospace company website built on Squarespace with custom JavaScript enhancements and animations.",
+    description: "An aerospace company's Squarespace website, extended with custom JavaScript and animations.",
     longDescription:
-      "Client website developed for an aerospace company using Squarespace as the foundation, enhanced with custom JavaScript for animations and interactive text elements. Overcame platform limitations through creative coding solutions to deliver polished, professional functionality beyond the standard template capabilities. Focused on clean design and smooth user interactions tailored to the aerospace industry.",
+      "Client website for an aerospace company, built on Squarespace and extended with custom JavaScript for animations and interactive text. The custom code adds interactions the standard templates do not offer, while the client can still edit the content.",
     image: "/frontier/1.webp",
     tags: ["JavaScript", "Squarespace", "CSS", "Custom Animations", "Web Design"],
     category: "Frontend",
     role: "Frontend Developer",
-    problem: "Aerospace client needed a professional website with custom interactive features and animations, but was limited to Squarespace's template-based platform with restrictive customization options.",
-    solution: "Leveraged custom JavaScript to extend Squarespace's capabilities, implementing smooth animations and enhanced text box interactions. Worked within platform constraints to deliver a polished, professional site that exceeded standard template functionality while maintaining ease of client content management.",
+    problem: "Aerospace client needed a professional website with custom interactive features and animations, but was limited to Squarespace's template-based platform with restrictive customisation options.",
+    solution: "Used custom JavaScript to extend Squarespace, adding smooth animations and richer text interactions. The site stays within the platform, so the client can keep editing its content.",
     screenshots: ["/frontier/1.webp", "/frontier/2.webp", "/frontier/3.webp", "/frontier/4.webp"],
   },
   /*
@@ -183,11 +183,11 @@ export const projects: Project[] = [
     longDescription:
       "A beautifully captured digital recreation of the Hang Drum, recorded at God Knows Studios with premium microphones including the Coles 4038 and AKG C414 XLS. Features versatile mic positioning and tonal adjustment controls, perfect for ambient soundscapes and cinematic scores.",
     image: "/hangdrum/1.webp",
-    tags: ["LUA", "Kontakt", "Audio DSP", "VST3", "AU", "AAX"],
+    tags: ["Lua", "Kontakt", "Audio DSP", "VST3", "AU", "AAX"],
     category: "Audio Plugins",
     role: "Audio Plugin Developer",
     problem: "Composers needed a high-quality, playable Hang Drum instrument with studio-quality sound and flexible tonal control.",
-    solution: "Created a detailed Kontakt instrument using LUA scripting with premium studio recordings, versatile mic positioning controls, and tonal adjustments optimized for ambient and cinematic production.",
+    solution: "Created a detailed Kontakt instrument using Lua scripting with premium studio recordings, versatile mic positioning controls, and tonal adjustments optimised for ambient and cinematic production.",
     screenshots: ["/hangdrum/1.webp", "/hangdrum/2.webp", "/hangdrum/3.webp"],
   },
   {

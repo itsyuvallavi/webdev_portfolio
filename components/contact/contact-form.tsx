@@ -54,11 +54,11 @@ export function ContactForm() {
       form.reset()
       toast({
         title: "Message sent",
-        description: "Thanks for the note. I usually reply within a day or two on business days.",
+        description: "Thanks for the note. I usually reply within two working days.",
       })
     } catch (error) {
       toast({
-        title: "Message not confirmed",
+        title: "Message not sent",
         description:
           error instanceof Error
             ? error.message
@@ -122,7 +122,7 @@ export function ContactForm() {
           )}
         </Button>
         <p className="text-pretty text-sm leading-relaxed text-[var(--sheet-muted)]">
-          Your message goes to my inbox and is used only to reply to you.{" "}
+          Your message goes to my inbox. I use it to reply to you.{" "}
           <Link href="/privacy" className="rounded-sm text-[var(--sheet-accent)] underline underline-offset-4 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300">
             Privacy notice
           </Link>
