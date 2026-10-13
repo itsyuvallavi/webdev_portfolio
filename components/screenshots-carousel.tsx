@@ -2,7 +2,8 @@
 
 import { useId, useState } from "react"
 import Image from "next/image"
-import { motion, useReducedMotion } from "framer-motion"
+import { motion } from "framer-motion"
+import { useMotionAllowed } from "@/components/motion/use-motion-allowed"
 import { Maximize2 } from "lucide-react"
 import { ImageLightbox } from "@/components/image-lightbox"
 import { cn } from "@/lib/utils"
@@ -37,7 +38,8 @@ export function ScreenshotsCarousel({
   screenshotCaptions,
 }: ScreenshotsCarouselProps) {
   const id = useId()
-  const prefersReducedMotion = useReducedMotion()
+  // True on the server too, so the screenshots are sent visible and can be seen before scripts run.
+  const prefersReducedMotion = !useMotionAllowed()
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
 
