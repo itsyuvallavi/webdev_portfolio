@@ -156,7 +156,6 @@ export const projects: Project[] = [
     image: "/filmcomposer/1.webp",
     tags: ["HTML", "CSS", "JavaScript", "Web Design", "Portfolio", "UX/UI"],
     category: "Frontend",
-    demoUrl: "https://www.yuvallavi.com",
     role: "Frontend Developer & Designer",
     problem: "Needed a professional online presence to showcase film composition portfolio, selected musical works spanning 2023-2024, and custom audio plugins to attract film directors, producers, and music licensing opportunities.",
     solution: "Designed and developed an immersive, cinematic portfolio website with atmospheric forest imagery, organized sections for selected works with metadata (year, type, genre), dedicated audio plugins showcase, and clean navigation. Focused on visual storytelling and minimalist design that complements the artistic nature of the work.",

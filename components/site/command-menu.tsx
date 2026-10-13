@@ -73,12 +73,11 @@ export function CommandMenu() {
     <CommandDialog
       open={open}
       onOpenChange={setOpen}
-      className="backdrop-blur-xl bg-black/80 border-2 border-purple-500/30 shadow-2xl shadow-purple-500/20"
+      title="Go to"
+      description="Jump to a page or a profile."
+      className="border border-white/15 bg-zinc-950/95 shadow-2xl backdrop-blur-xl"
     >
       <div className="relative">
-        {/* Animated gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 opacity-50 animate-gradient" />
-
         <div className="relative">
           <CommandInput
             placeholder={isMobile ? "Select an option below..." : "Type a command or search..."}
@@ -89,7 +88,7 @@ export function CommandMenu() {
             <CommandEmpty>
               <div className="py-6 text-center">
                 <p className="text-sm text-gray-400">No results found.</p>
-                <p className="text-xs text-gray-600 mt-1">Try searching for navigation or social</p>
+                <p className="mt-1 text-xs text-gray-400">Try a page name or a profile.</p>
               </div>
             </CommandEmpty>
             <CommandGroup heading="Navigation">

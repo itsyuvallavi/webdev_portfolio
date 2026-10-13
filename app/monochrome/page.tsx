@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { MonochromePlayground } from "@/components/pages/monochrome-playground"
+import { MonochromePlayground } from "@/components/monochrome/playground"
 
 export const metadata: Metadata = {
   title: "Monochrome Particle — Yuval Lavi",

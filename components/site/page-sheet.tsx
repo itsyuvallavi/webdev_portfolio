@@ -6,15 +6,32 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import { useMotionAllowed } from "@/components/motion/use-motion-allowed"
 import { site } from "@/content/site"
+import { SiteFooter, SiteLinks } from "./site-links"
+
+const sheet = "relative z-10 border-t border-[var(--sheet-line)] bg-[var(--sheet-bg)] text-[var(--sheet-fg)]"
 
 /**
- * The opaque sheet a page's content sits on, and the closing screen it uncovers at the end.
- * The sheet slides over the dot field; the closing waits underneath and settles as the sheet lifts off it.
+ * The opaque sheet a page's content sits on. It slides over the dot field.
  *
- * It needs room to work: no ancestor may clip or scroll, and the sheet should be at least a screen tall.
- * Short pages use a plain footer instead.
+ * Long pages end with the closing screen, which waits under the sheet and settles as the sheet
+ * lifts off it. Short pages pass `closing={false}` and end with the plain footer instead, because
+ * a full closing screen would be out of proportion there.
  */
-export function PageSheet({ children }: { children: ReactNode }) {
+export function PageSheet({ children, closing = true }: { children: ReactNode; closing?: boolean }) {
+  if (closing) return <SheetWithClosing>{children}</SheetWithClosing>
+  return (
+    <>
+      <div className={sheet}>{children}</div>
+      <SiteFooter />
+    </>
+  )
+}
+
+/**
+ * The uncovering needs room to work: no ancestor may clip or scroll, and the sheet should be at
+ * least a screen tall.
+ */
+function SheetWithClosing({ children }: { children: ReactNode }) {
   const motionAllowed = useMotionAllowed()
   const sheetRef = useRef<HTMLDivElement>(null)
   // 0 when the sheet's bottom edge reaches the bottom of the screen, 1 when it leaves the top.
@@ -32,7 +49,7 @@ export function PageSheet({ children }: { children: ReactNode }) {
 
   return (
     <div className="relative">
-      <div ref={sheetRef} className="relative z-10 border-t border-[var(--sheet-line)] bg-[var(--sheet-bg)] text-[var(--sheet-fg)]">
+      <div ref={sheetRef} className={sheet}>
         {children}
       </div>
 
@@ -52,6 +69,7 @@ export function PageSheet({ children }: { children: ReactNode }) {
             </Link>
             <span className="font-mono text-xs text-zinc-400">{site.name} — {site.location}</span>
           </div>
+          <SiteLinks className="mt-12 border-t border-white/10 pt-4" />
         </motion.div>
       </footer>
     </div>
