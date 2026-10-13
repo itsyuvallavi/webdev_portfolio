@@ -5,8 +5,6 @@ import Link from "next/link"
 import { motion, useReducedMotion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import { TextReveal } from "../text-reveal"
-import { useSandstormTransition } from "../transitions/sandstorm-transition"
-import { useSandstormContext } from "../transitions/sandstorm-provider"
 import { cn } from "@/lib/utils"
 
 const springTransition = { type: "spring" as const, stiffness: 100, damping: 22 }
@@ -28,24 +26,10 @@ export default function HomePage() {
     return () => animations.forEach((animation) => animation.cancel())
   }, [reduceMotion])
 
-  const { stormControls } = useSandstormContext()
-  const { triggerStorm } = useSandstormTransition({
-    targetPath: "/projects",
-    duration: 900,
-  })
-
-  const handleLinkClick = () => {
-    triggerStorm()
-  }
-
   return (
     <section
       ref={sectionRef}
-      className={cn(
-        "relative z-10 mx-auto flex min-h-[100dvh] max-w-[1400px] flex-col justify-between overflow-hidden px-4 py-20 sm:px-6 lg:px-8",
-        "transition-opacity duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none",
-        stormControls.isActive ? "opacity-0" : "opacity-100",
-      )}
+      className="relative z-10 mx-auto flex min-h-[100dvh] max-w-[1400px] flex-col justify-between overflow-hidden px-4 py-20 sm:px-6 lg:px-8"
     >
       {/* Hero Content — title block unchanged */}
       <div className="flex w-full flex-1 flex-col justify-center">
@@ -102,9 +86,8 @@ export default function HomePage() {
           transition={{ ...springTransition, delay: 0.45 }}
           className="mb-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
         >
-          <button
-            type="button"
-            onClick={handleLinkClick}
+          <Link
+            href="/projects"
             className={cn(
               "group inline-flex min-h-14 w-full max-w-[260px] items-center justify-between gap-3 rounded-lg border border-teal-500/35 bg-zinc-950/70 px-4 py-2.5 text-left sm:w-[220px]",
               "font-mono text-xs uppercase tracking-[0.16em] text-teal-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_40px_-24px_rgba(20,184,166,0.45)] backdrop-blur-sm",
@@ -121,7 +104,7 @@ export default function HomePage() {
             <span className="flex size-8 shrink-0 items-center justify-center rounded-full border border-teal-300/20 bg-teal-500/[0.08] text-teal-100 transition-[transform,border-color,background-color] group-hover:translate-x-0.5 group-hover:border-teal-300/40 group-hover:bg-teal-500/15">
               <ArrowRight className="size-4" strokeWidth={1.5} aria-hidden />
             </span>
-          </button>
+          </Link>
 
           <Link
             href="/services"

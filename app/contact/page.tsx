@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import { motion, useReducedMotion } from "framer-motion"
+import { motion } from "framer-motion"
 import { Globe, Linkedin, Mail, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { cn } from "@/lib/utils"
+import { useMotionAllowed } from "@/components/motion/use-motion-allowed"
 
 const springTransition = { type: "spring" as const, stiffness: 100, damping: 22 }
 
@@ -24,7 +25,8 @@ const panelInner = "p-6 sm:p-8"
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
-  const reduceMotion = useReducedMotion()
+  // True on the server too, so the form is sent visible and is usable before scripts run.
+  const reduceMotion = !useMotionAllowed()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -97,7 +99,7 @@ export default function ContactPage() {
       <section className="mx-auto max-w-[1400px] px-4 pb-20 pt-32 sm:px-6 md:pl-24 md:pr-8 lg:pl-28 lg:pr-10">
         <header className="mb-12 max-w-2xl text-left lg:mb-16">
           <motion.span
-            initial={reduceMotion ? undefined : { opacity: 0, y: 12 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...springTransition, delay: 0.05 }}
             className="mb-5 inline-block rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-zinc-300"
@@ -105,7 +107,7 @@ export default function ContactPage() {
             Contact
           </motion.span>
           <motion.h1
-            initial={reduceMotion ? undefined : { opacity: 0, y: 16 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...springTransition, delay: 0.1 }}
             className="text-4xl font-semibold tracking-tighter text-white sm:text-5xl md:text-6xl lg:text-7xl lg:leading-[0.95]"
@@ -113,7 +115,7 @@ export default function ContactPage() {
             Discuss your project
           </motion.h1>
           <motion.p
-            initial={reduceMotion ? undefined : { opacity: 0, y: 16 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...springTransition, delay: 0.16 }}
             className="reading-surface mt-6 max-w-[65ch] p-4 text-pretty text-base leading-relaxed text-zinc-300"
@@ -125,7 +127,7 @@ export default function ContactPage() {
 
         <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-8">
           <motion.div
-            initial={reduceMotion ? undefined : { opacity: 0, y: 20 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...springTransition, delay: 0.2 }}
             className={panelOuter}
@@ -183,7 +185,7 @@ export default function ContactPage() {
           </motion.div>
 
           <motion.div
-            initial={reduceMotion ? undefined : { opacity: 0, y: 20 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...springTransition, delay: 0.26 }}
             className={panelOuter}

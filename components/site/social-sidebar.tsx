@@ -1,57 +1,29 @@
-"use client"
+import { Github, Linkedin, Send, type LucideIcon } from "lucide-react"
+import { socialLinks, type SocialLink } from "@/content/site"
 
-import { Linkedin, Github, Send } from "lucide-react"
-import { motion } from "framer-motion"
-
-const socialLinks = [
-  {
-    name: "LinkedIn",
-    url: "https://www.linkedin.com/in/yuvallavi-dev/",
-    icon: Linkedin,
-  },
-  {
-    name: "GitHub",
-    url: "https://github.com/itsyuvallavi",
-    icon: Github,
-  },
-  {
-    name: "Telegram",
-    url: "https://t.me/itsyuvallavi",
-    icon: Send,
-  },
-]
+const icons: Record<SocialLink["id"], LucideIcon> = { linkedin: Linkedin, github: Github, telegram: Send }
 
 export function SocialSidebar() {
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5, delay: 0.5 }}
-      className="fixed left-8 bottom-0 z-40 hidden md:flex flex-col items-center gap-6"
-    >
-      {/* Social Icons */}
+    <div className="fixed bottom-0 left-8 z-40 hidden flex-col items-center gap-6 md:flex">
       <div className="flex flex-col gap-4">
         {socialLinks.map((link) => {
-          const Icon = link.icon
+          const Icon = icons[link.id]
           return (
-            <motion.a
-              key={link.name}
+            <a
+              key={link.id}
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={link.name}
-              className="text-gray-400 hover:text-white transition-colors duration-300"
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.95 }}
+              className="rounded-sm text-gray-400 transition-[color,transform] duration-300 hover:-translate-y-0.5 hover:scale-110 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white active:scale-95 motion-reduce:transform-none"
             >
-              <Icon className="w-5 h-5" />
-            </motion.a>
+              <Icon className="h-5 w-5" />
+            </a>
           )
         })}
       </div>
-
-      {/* Vertical Line */}
-      <div className="w-[1px] h-24 bg-gradient-to-b from-gray-400 to-transparent" />
-    </motion.div>
+      <div className="h-24 w-[1px] bg-gradient-to-b from-gray-400 to-transparent" />
+    </div>
   )
 }

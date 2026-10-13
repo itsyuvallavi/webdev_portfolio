@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import { usePathname } from "next/navigation"
 import * as THREE from "three"
 
 const SPACING = 16
@@ -57,11 +58,17 @@ const fragmentShader = `
 `
 
 /**
- * Prototype stage for `/lab/scroll`: a one-tone dot grid that is still at rest
- * and only draws while the page is scrolling or the pointer is moving.
+ * The site's stage: a one-tone dot grid that is still at rest and only draws
+ * while the page is scrolling or the pointer is moving.
  */
 export function QuietDotsBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  // A new page starts at the top. Without this the jump would read as a fast scroll and the dots would lurch.
+  const pathname = usePathname()
+  const navigatedRef = useRef(false)
+  useEffect(() => {
+    navigatedRef.current = true
+  }, [pathname])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -153,6 +160,11 @@ export function QuietDotsBackground() {
       last = now
 
       const scrollY = window.scrollY
+      if (navigatedRef.current) {
+        navigatedRef.current = false
+        lastScrollY = scrollY
+        velocity = 0
+      }
       const target = dt > 0 ? Math.max(-1, Math.min(1, (scrollY - lastScrollY) / dt / 2400)) : 0
       lastScrollY = scrollY
       velocity += (target - velocity) * (1 - Math.exp(-dt * 8))

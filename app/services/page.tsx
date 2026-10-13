@@ -3,7 +3,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, ArrowUpRight } from "lucide-react"
 import { services, collaborationSteps } from "@/lib/services"
-import { ServicesProgress, ServicesReveal, ServicesTitle } from "@/components/motion/reveal"
+import { ServicesProgress, Reveal as ServicesReveal, ServicesTitle } from "@/components/motion/reveal"
 import { cn } from "@/lib/utils"
 import styles from "./services.module.css"
 

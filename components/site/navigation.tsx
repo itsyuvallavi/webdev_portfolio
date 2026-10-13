@@ -7,16 +7,15 @@ import { Menu } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
+import { navigation, site } from "@/content/site"
 
-const links = [
-  { id: "home", path: "/", label: "HOME", number: "01" },
-  { id: "about", path: "/about", label: "ABOUT", number: "02" },
-  { id: "services", path: "/services", label: "SERVICES", number: "03" },
-  { id: "projects", path: "/projects", label: "WORK", number: "04" },
-  { id: "contact", path: "/contact", label: "CONTACT", number: "05" },
-]
+const links = navigation.map((link, index) => ({
+  ...link,
+  label: link.label.toUpperCase(),
+  number: String(index + 1).padStart(2, "0"),
+}))
 
-export function RouterNavigation() {
+export function Navigation() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -47,7 +46,7 @@ export function RouterNavigation() {
             href="/"
             className="shrink-0 rounded-sm text-xl font-bold tracking-wider hover:text-gray-300 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
           >
-            YUVAL LAVI
+            {site.name.toUpperCase()}
           </Link>
           <div className="hidden md:flex items-center gap-4 lg:gap-8">
             {links.map((link) => (

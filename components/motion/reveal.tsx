@@ -1,26 +1,12 @@
 "use client"
 
-import { useEffect, useRef, useSyncExternalStore, type ReactNode } from "react"
+import { useEffect, useRef, type ReactNode } from "react"
 import { motion, useInView, useScroll, useSpring, useTransform } from "framer-motion"
 import { TextReveal } from "@/components/text-reveal"
-
-const motionPreference = "(prefers-reduced-motion: reduce)"
-const getMotionPreference = () => window.matchMedia(motionPreference).matches
-const getServerMotionPreference = () => true
-const subscribeToMotionPreference = (notify: () => void) => {
-  const query = window.matchMedia(motionPreference)
-  query.addEventListener("change", notify)
-  return () => query.removeEventListener("change", notify)
-}
-
-// The installed Motion hook snapshots the preference only on mount. Subscribe
-// here so this page also stops its new effects when the preference changes.
-function useServicesReducedMotion() {
-  return useSyncExternalStore(subscribeToMotionPreference, getMotionPreference, getServerMotionPreference)
-}
+import { useMotionAllowed } from "./use-motion-allowed"
 
 /** Keep the server output readable; motion enhances content after it enters view. */
-export function ServicesReveal({ children, className, delay = 0, line = false }: {
+export function Reveal({ children, className, delay = 0, line = false }: {
   children?: ReactNode
   className?: string
   delay?: number
@@ -28,11 +14,11 @@ export function ServicesReveal({ children, className, delay = 0, line = false }:
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: "-40px 0px" })
-  const reduceMotion = useServicesReducedMotion()
+  const reduceMotion = !useMotionAllowed()
 
   useEffect(() => {
     const element = ref.current
-    if (!element || !inView || reduceMotion !== false || !element.animate) return
+    if (!element || !inView || reduceMotion || !element.animate) return
 
     const animation = element.animate(
       line
@@ -48,7 +34,7 @@ export function ServicesReveal({ children, className, delay = 0, line = false }:
 
 /** TextReveal's initial blur is applied only once JavaScript can animate it. */
 export function ServicesTitle({ text, className, delay = 0 }: { text: string; className?: string; delay?: number }) {
-  const reduceMotion = useServicesReducedMotion()
+  const reduceMotion = !useMotionAllowed()
 
   if (reduceMotion) return <div className={className}>{text}</div>
   return <TextReveal text={text} className={className} delay={delay} />
@@ -62,6 +48,6 @@ function ScrollProgress({ className }: { className?: string }) {
 }
 
 export function ServicesProgress({ className }: { className?: string }) {
-  const reduceMotion = useServicesReducedMotion()
+  const reduceMotion = !useMotionAllowed()
   return reduceMotion ? null : <ScrollProgress className={className} />
 }

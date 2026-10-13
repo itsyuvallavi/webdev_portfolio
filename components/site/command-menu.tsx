@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { Home, FolderOpen, User, Mail, Github, Linkedin, Send, Sparkles, Wrench } from "lucide-react"
+import { Home, FolderOpen, User, Mail, Github, Linkedin, Send, Sparkles, Wrench, type LucideIcon } from "lucide-react"
 import {
   CommandDialog,
   CommandEmpty,
@@ -11,6 +11,14 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
+import { navigation, socialLinks, type NavigationLink, type SocialLink } from "@/content/site"
+
+const pageIcons: Record<NavigationLink["id"], LucideIcon> = { home: Home, about: User, services: Wrench, projects: FolderOpen, contact: Mail }
+const pageKeywords: Partial<Record<NavigationLink["id"], string[]>> = {
+  services: ["automation", "bookings", "invoices", "offers"],
+  projects: ["projects", "portfolio"],
+}
+const socialIcons: Record<SocialLink["id"], LucideIcon> = { linkedin: Linkedin, github: Github, telegram: Send }
 
 declare global {
   interface Window {
@@ -85,26 +93,15 @@ export function CommandMenu() {
               </div>
             </CommandEmpty>
             <CommandGroup heading="Navigation">
-              <CommandItem onSelect={() => runCommand(() => router.push("/"))}>
-                <Home className="mr-2 h-4 w-4" />
-                Home
-              </CommandItem>
-              <CommandItem onSelect={() => runCommand(() => router.push("/about"))}>
-                <User className="mr-2 h-4 w-4" />
-                About
-              </CommandItem>
-              <CommandItem keywords={["websites", "automation", "tools", "offers"]} onSelect={() => runCommand(() => router.push("/services"))}>
-                <Wrench className="mr-2 h-4 w-4" />
-                Services
-              </CommandItem>
-              <CommandItem keywords={["projects", "portfolio"]} onSelect={() => runCommand(() => router.push("/projects"))}>
-                <FolderOpen className="mr-2 h-4 w-4" />
-                Work
-              </CommandItem>
-              <CommandItem onSelect={() => runCommand(() => router.push("/contact"))}>
-                <Mail className="mr-2 h-4 w-4" />
-                Contact
-              </CommandItem>
+              {navigation.map((link) => {
+                const Icon = pageIcons[link.id]
+                return (
+                  <CommandItem key={link.id} keywords={pageKeywords[link.id]} onSelect={() => runCommand(() => router.push(link.path))}>
+                    <Icon className="mr-2 h-4 w-4" />
+                    {link.label}
+                  </CommandItem>
+                )
+              })}
             </CommandGroup>
             <CommandGroup heading="Explore">
               <CommandItem keywords={["monochrome", "particle"]} onSelect={() => runCommand(() => router.push("/monochrome"))}>
@@ -112,20 +109,17 @@ export function CommandMenu() {
                 Particle playground
               </CommandItem>
             </CommandGroup>
-        <CommandGroup heading="Social">
-          <CommandItem onSelect={() => runCommand(() => window.open("https://github.com/itsyuvallavi", "_blank"))}>
-            <Github className="mr-2 h-4 w-4" />
-            GitHub
-          </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => window.open("https://www.linkedin.com/in/yuvallavi-dev/", "_blank"))}>
-            <Linkedin className="mr-2 h-4 w-4" />
-            LinkedIn
-          </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => window.open("https://t.me/itsyuvallavi", "_blank"))}>
-            <Send className="mr-2 h-4 w-4" />
-            Telegram
-          </CommandItem>
-        </CommandGroup>
+            <CommandGroup heading="Social">
+              {socialLinks.map((link) => {
+                const Icon = socialIcons[link.id]
+                return (
+                  <CommandItem key={link.id} onSelect={() => runCommand(() => window.open(link.url, "_blank"))}>
+                    <Icon className="mr-2 h-4 w-4" />
+                    {link.name}
+                  </CommandItem>
+                )
+              })}
+            </CommandGroup>
           </CommandList>
         </div>
       </div>

@@ -5,8 +5,7 @@ import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import { ProjectCard } from "@/components/project-card"
 import { projects } from "@/content/projects"
-import { TextReveal } from "../text-reveal"
-import { useSandstormContext } from "../transitions/sandstorm-provider"
+import { useMotionAllowed } from "@/components/motion/use-motion-allowed"
 import { cn } from "@/lib/utils"
 
 const springTransition = { type: "spring" as const, stiffness: 100, damping: 22 }
@@ -50,21 +49,14 @@ const itemVariants = {
 }
 
 export default function ProjectsContent() {
-  const { stormControls } = useSandstormContext()
-
-  const shouldShow = !stormControls.isActive || stormControls.intensity < 0.3
+  // Entrances start from the settled state on the server, so the page is readable before scripts run.
+  const entrance = useMotionAllowed() ? undefined : false
 
   return (
-    <section
-      className={cn(
-        "relative z-10 mx-auto min-h-[100dvh] max-w-[1400px] px-4 pb-20 pt-32 sm:px-6 md:pl-24 md:pr-8 lg:pl-28 lg:pr-10",
-        "transition-opacity duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none",
-        shouldShow ? "opacity-100" : "opacity-0",
-      )}
-    >
+    <section className="relative z-10 mx-auto min-h-[100dvh] max-w-[1400px] px-4 pb-20 pt-32 sm:px-6 md:pl-24 md:pr-8 lg:pl-28 lg:pr-10">
       <header className="mb-14 max-w-3xl text-left lg:mb-20">
         <motion.span
-          initial={{ opacity: 0, y: 12 }}
+          initial={entrance ?? { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...springTransition, delay: 0.05 }}
           className="mb-5 inline-block rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-zinc-300"
@@ -73,11 +65,11 @@ export default function ProjectsContent() {
         </motion.span>
 
         <h1 className="text-4xl font-semibold tracking-tighter text-white sm:text-5xl md:text-6xl lg:text-7xl lg:leading-[0.95]">
-          <TextReveal text="Selected projects" className="block text-white" delay={0} />
+          Selected projects
         </h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 16 }}
+          initial={entrance ?? { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...springTransition, delay: 0.2 }}
           className="reading-surface mt-6 max-w-[65ch] p-4 text-pretty text-base leading-relaxed text-zinc-300"
@@ -97,7 +89,7 @@ export default function ProjectsContent() {
 
       <motion.div
         variants={listVariants}
-        initial="hidden"
+        initial={entrance ?? "hidden"}
         animate="visible"
         className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-3 lg:gap-5"
       >

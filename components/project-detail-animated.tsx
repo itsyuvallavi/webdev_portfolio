@@ -1,13 +1,14 @@
 "use client"
 
-import { useMemo, useEffect } from "react"
-import { motion, useReducedMotion } from "framer-motion"
+import { useMemo } from "react"
+import { motion } from "framer-motion"
 import Link from "next/link"
 import { AlertTriangle, ArrowLeft, ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ProjectHeroScroll } from "@/components/project-hero-scroll"
 import { ScreenshotsCarousel } from "@/components/screenshots-carousel"
+import { useMotionAllowed } from "@/components/motion/use-motion-allowed"
 import type { Project } from "@/content/projects"
 
 interface ProjectDetailAnimatedProps {
@@ -17,7 +18,8 @@ interface ProjectDetailAnimatedProps {
 }
 
 export function ProjectDetailAnimated({ project, prevProject, nextProject }: ProjectDetailAnimatedProps) {
-  const shouldReduceMotion = useReducedMotion()
+  // True on the server too, so the page is sent in its settled state and is readable before scripts run.
+  const shouldReduceMotion = !useMotionAllowed()
 
   const baseTransition = useMemo(
     () => ({
@@ -26,11 +28,6 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
     }),
     [],
   )
-
-  // Scroll to top when project changes
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }, [project.slug])
 
   const fadeUpProps = (delay = 0) =>
     shouldReduceMotion
@@ -60,7 +57,7 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
         }
 
   return (
-    <motion.main
+    <motion.div
       className="space-y-4"
       {...(shouldReduceMotion
         ? {}
@@ -229,6 +226,6 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
           <span />
         )}
       </motion.nav>
-    </motion.main>
+    </motion.div>
   )
 }

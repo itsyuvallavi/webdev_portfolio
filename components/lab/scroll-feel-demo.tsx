@@ -1,10 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState, type ReactNode } from "react"
-import dynamic from "next/dynamic"
 import Link from "next/link"
-import Lenis from "lenis"
-import "lenis/dist/lenis.css"
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -13,12 +10,6 @@ import { DayDemoFigure } from "@/components/samples/walkthrough"
 import { ProcessSection } from "@/components/site/process-steps"
 import { BookingPlate, EnquiryPlate, PaidPlate, PaperPlate } from "@/components/samples/service-plates"
 import styles from "./scroll-feel.module.css"
-
-const QuietDots = dynamic(() => import("@/components/site/quiet-dots").then((m) => m.QuietDotsBackground), { ssr: false })
-const TodayDots = dynamic(
-  () => import("@/components/monochrome-dots-background").then((m) => m.MonochromeDotsBackground),
-  { ssr: false },
-)
 
 // Speed against scroll: 1 moves with the page, lower values hold back.
 const SPEED = { creative: 0.85, developer: 0.65 }
@@ -63,35 +54,6 @@ const features: { label: string; title: string; body: string; plate: ReactNode }
   },
 ]
 
-/** A light that travels down the right screen edge, beside the scrollbar, with scroll position, then fades. */
-function EdgeLight({ enabled, viewportHeight }: { enabled: boolean; viewportHeight: number }) {
-  const edgeRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll()
-  const y = useTransform(scrollYProgress, (progress) => (0.1 + progress * 0.8) * viewportHeight - 150)
-
-  useEffect(() => {
-    if (!enabled) return
-    const setOpacity = (value: string) => edgeRef.current?.style.setProperty("opacity", value)
-    let timer: ReturnType<typeof setTimeout> | undefined
-    const unsubscribe = scrollYProgress.on("change", () => {
-      setOpacity("1")
-      clearTimeout(timer)
-      timer = setTimeout(() => setOpacity("0"), 180)
-    })
-    return () => {
-      unsubscribe()
-      clearTimeout(timer)
-      setOpacity("0")
-    }
-  }, [enabled, scrollYProgress])
-
-  return (
-    <div ref={edgeRef} aria-hidden className={styles.edge}>
-      <motion.div className={styles.light} style={{ y }} />
-    </div>
-  )
-}
-
 function Toggle<T extends string>({ label, value, options, onChange }: {
   label: string
   value: T
@@ -124,8 +86,6 @@ function Toggle<T extends string>({ label, value, options, onChange }: {
 const onOff = [{ value: "on", label: "On" }, { value: "off", label: "Off" }] as const
 
 export function ScrollFeelDemo() {
-  const [dots, setDots] = useState<"quiet" | "today">("quiet")
-  const [weighted, setWeighted] = useState<"on" | "off">("on")
   const [speeds, setSpeeds] = useState<"on" | "off">("on")
   const [sheet, setSheet] = useState<"dark" | "paper">("dark")
   const [viewportHeight, setViewportHeight] = useState(800)
@@ -139,13 +99,6 @@ export function ScrollFeelDemo() {
     window.addEventListener("resize", measure)
     return () => window.removeEventListener("resize", measure)
   }, [])
-
-  // Weighted scrolling for mouse and trackpad; touch keeps native scrolling.
-  useEffect(() => {
-    if (weighted === "off" || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return
-    const lenis = new Lenis({ autoRaf: true, lerp: 0.085, wheelMultiplier: 0.9 })
-    return () => lenis.destroy()
-  }, [weighted])
 
   const { scrollY } = useScroll()
   const heldBy = (speed: number) => (scroll: number) => (mapOn ? Math.min(scroll, viewportHeight) * (1 - speed) : 0)
@@ -164,11 +117,6 @@ export function ScrollFeelDemo() {
 
   return (
     <div className={styles.root} data-sheet={sheet}>
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-black">
-        {dots === "quiet" ? <QuietDots /> : <TodayDots />}
-      </div>
-      <EdgeLight enabled={mapOn} viewportHeight={viewportHeight} />
-
       <section className="relative z-0 mx-auto flex min-h-[100dvh] max-w-[1400px] flex-col justify-between px-4 py-20 sm:px-6 lg:px-8">
         <div className="flex w-full flex-1 flex-col justify-center">
           <span className="mb-4 inline-block self-center rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-zinc-300 md:self-start">
@@ -252,13 +200,6 @@ export function ScrollFeelDemo() {
         </button>
         <div className={cn("mt-2 space-y-2", !controlsOpen && "hidden")}>
           <Toggle label="Speed map" value={speeds} options={onOff} onChange={setSpeeds} />
-          <Toggle label="Weighted scroll" value={weighted} options={onOff} onChange={setWeighted} />
-          <Toggle
-            label="Dots"
-            value={dots}
-            options={[{ value: "quiet", label: "Quiet" }, { value: "today", label: "Today" }]}
-            onChange={setDots}
-          />
           <Toggle
             label="Sheet"
             value={sheet}

@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, ArrowUpRight } from "lucide-react"
-import { ServicesReveal as AboutReveal } from "@/components/motion/reveal"
+import { Reveal as AboutReveal } from "@/components/motion/reveal"
 
 const skillGroups = [
   { title: "Frontend", skills: ["HTML", "CSS", "JavaScript", "TypeScript", "React", "Next.js", "Vite", "Tailwind CSS", "shadcn/ui", "p5.js"] },
