@@ -2,7 +2,7 @@
 
 import { useRef } from "react"
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion"
-import styles from "./scroll-feel.module.css"
+import styles from "@/components/lab/scroll-feel.module.css"
 
 // Draft copy, written to plain-language rules: titles say what happens, sentences stay under
 // twenty words, and there are no idioms, because many readers here have English as a second language.

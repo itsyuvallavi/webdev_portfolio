@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { projects } from "@/lib/data"
+import { projects } from "@/content/projects"
 import { ProjectDetailAnimated } from "@/components/project-detail-animated"
 
 interface ProjectPageProps {

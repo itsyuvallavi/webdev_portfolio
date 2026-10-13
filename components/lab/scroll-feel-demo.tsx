@@ -8,13 +8,13 @@ import "lenis/dist/lenis.css"
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Held } from "./held"
-import { DayDemoFigure } from "./day-demo"
-import { ProcessSection } from "./process"
-import { BookingPlate, EnquiryPlate, PaidPlate, PaperPlate } from "./service-plates"
+import { Held } from "@/components/motion/held"
+import { DayDemoFigure } from "@/components/samples/walkthrough"
+import { ProcessSection } from "@/components/site/process-steps"
+import { BookingPlate, EnquiryPlate, PaidPlate, PaperPlate } from "@/components/samples/service-plates"
 import styles from "./scroll-feel.module.css"
 
-const QuietDots = dynamic(() => import("./quiet-dots-background").then((m) => m.QuietDotsBackground), { ssr: false })
+const QuietDots = dynamic(() => import("@/components/site/quiet-dots").then((m) => m.QuietDotsBackground), { ssr: false })
 const TodayDots = dynamic(
   () => import("@/components/monochrome-dots-background").then((m) => m.MonochromeDotsBackground),
   { ssr: false },

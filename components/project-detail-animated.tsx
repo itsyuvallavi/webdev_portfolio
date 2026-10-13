@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ProjectHeroScroll } from "@/components/project-hero-scroll"
 import { ScreenshotsCarousel } from "@/components/screenshots-carousel"
-import type { Project } from "@/lib/data"
+import type { Project } from "@/content/projects"
 
 interface ProjectDetailAnimatedProps {
   project: Project

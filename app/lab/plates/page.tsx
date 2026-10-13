@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { BookingPlate, EnquiryPlate, PaidPlate, PaperPlate, ReviewsPlate, ShopPlate } from "@/components/lab/service-plates"
+import { BookingPlate, EnquiryPlate, PaidPlate, PaperPlate, ReviewsPlate, ShopPlate } from "@/components/samples/service-plates"
 
 export const metadata: Metadata = {
   title: "Picture reference",

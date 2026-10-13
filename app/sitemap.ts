@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next"
-import { projects } from "@/lib/data"
+import { projects } from "@/content/projects"
 
 const baseUrl = "https://www.yuvallavi.com"
 

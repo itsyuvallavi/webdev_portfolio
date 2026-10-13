@@ -2,7 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowUpRight } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import type { Project } from "@/lib/data"
+import type { Project } from "@/content/projects"
 import { cn } from "@/lib/utils"
 
 interface ProjectCardProps {

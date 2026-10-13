@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises"
 
-const projectData = await readFile(new URL("../lib/data.ts", import.meta.url), "utf8")
+const projectData = await readFile(new URL("../content/projects.ts", import.meta.url), "utf8")
 const forbiddenPatterns = [
   { label: "example-domain URL", pattern: /https?:\/\/[^\s"'`]*\.example\.(?:com|net|org)\b/i },
   { label: "placeholder GitHub account", pattern: /github\.com\/(?:yourusername|username)\b/i },

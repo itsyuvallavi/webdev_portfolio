@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type ComponentType } from "react"
 import { useReducedMotion } from "framer-motion"
 import { Pause, Play } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Held } from "./held"
+import { Held } from "@/components/motion/held"
 import { BookingObject, EnquiryObject, PaidObject, PaperObject, ReviewsObject, ShopObject } from "./service-plates"
 import styles from "./plates.module.css"
 
