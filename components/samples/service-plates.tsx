@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from "react"
 import { cn } from "@/lib/utils"
-import { Phone } from "./plates"
+import { Phone } from "./phone"
 import styles from "./plates.module.css"
 
 // Six services chosen from demand research, one mockup each. Every business,
