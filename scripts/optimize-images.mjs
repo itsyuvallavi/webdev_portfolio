@@ -1,5 +1,5 @@
 import sharp from 'sharp';
-import { readdir, stat, mkdir } from 'fs/promises';
+import { readdir, stat } from 'fs/promises';
 import { join, dirname, extname, basename } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -69,7 +69,7 @@ async function main() {
       grandTotal.totalOptimized += stats.totalOptimized;
       grandTotal.count += stats.count;
 
-    } catch (error) {
+    } catch {
       console.log(`⊘  Skipping ${dir}/ (not found)\n`);
     }
   }
@@ -85,7 +85,7 @@ async function main() {
       grandTotal.totalOptimized += result.optimized;
       grandTotal.count++;
     }
-  } catch (error) {
+  } catch {
     console.log('⊘  No portrait.jpg found\n');
   }
 
