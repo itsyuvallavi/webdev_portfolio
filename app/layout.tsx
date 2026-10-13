@@ -14,8 +14,9 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: "Yuval Lavi | Websites & Business Tools",
-  description: "Websites, automations, integrations, and custom tracking tools for small businesses and independent professionals. Explore my services and discuss your project.",
+  title: `${site.name} | Software that takes work off your hands`,
+  description:
+    "Software for small businesses, built in Lisbon: enquiries answered, bookings and reminders, invoices chased, paperwork filed. Tell me the one task that takes too long.",
 }
 
 export const viewport: Viewport = {

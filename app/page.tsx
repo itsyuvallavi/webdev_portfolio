@@ -1,3 +1,5 @@
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 import { Hero } from "@/components/home/hero"
 import { Held } from "@/components/motion/held"
 import { ServicePicture } from "@/components/samples/service-picture"
@@ -15,6 +17,9 @@ const stagger = [
   "md:mr-auto xl:col-start-1 xl:row-start-3",
   "md:ml-auto xl:col-start-2 xl:row-start-4",
 ].map((placement) => `${placement} xl:mx-0`)
+
+const textLink =
+  "inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-medium text-[var(--sheet-accent)] transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300"
 
 export default function Home() {
   return (
@@ -40,12 +45,21 @@ export default function Home() {
                 </p>
                 <h3 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">{service.title}</h3>
                 <p className="mt-3 max-w-[46ch] text-pretty leading-relaxed text-[var(--sheet-muted)]">{service.summary}</p>
+                <Link href={`/services#${service.id}`} className={cn(textLink, "mt-4")}>
+                  How it works<span className="sr-only">: {service.name}</span> <ArrowRight className="size-4" aria-hidden />
+                </Link>
                 <Held className="mt-8 aspect-[4/5] rounded-lg border border-[var(--sheet-line)] sm:aspect-[16/10]">
                   <ServicePicture id={service.id} />
                 </Held>
               </article>
             ))}
           </div>
+
+          <p className="mt-20 border-t border-[var(--sheet-line)] pt-8 lg:mt-28">
+            <Link href="/services" className={textLink}>
+              All six services, in detail <ArrowRight className="size-4" aria-hidden />
+            </Link>
+          </p>
 
           <ProcessSteps />
         </div>
