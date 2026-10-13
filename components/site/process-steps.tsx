@@ -21,7 +21,7 @@ const steps = [
   {
     title: "A working tool, handed over",
     body: "I build it and we test it together on your real cases. Then it is yours to run.",
-    card: { label: "Yours to keep", lines: ["It runs on your own accounts", "A one-page guide for your team", "Your data stays with you"] },
+    card: { label: "Yours to keep", lines: ["It runs on your own accounts wherever possible", "A one-page guide for your team", "We agree in writing where your data is kept"] },
   },
 ]
 

@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     // Check rate limit
     if (!checkRateLimit(ip)) {
       return NextResponse.json(
-        { error: 'Too many requests. Please try again later.' },
+        { error: 'Too many messages from this connection. Please try again later, or email info@yuvallavi.com directly.' },
         { status: 429 }
       )
     }
@@ -131,14 +131,14 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Validation failed', details: error.errors },
+        { error: 'Please check your name, email address and message, then try again.', details: error.errors },
         { status: 400 }
       )
     }
 
     console.error('Contact form request failed')
     return NextResponse.json(
-      { error: 'Failed to send message. Please try again later.' },
+      { error: 'Your message could not be sent. Please try again or email info@yuvallavi.com directly.' },
       { status: 500 }
     )
   }

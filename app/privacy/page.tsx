@@ -54,8 +54,8 @@ export default function PrivacyPage() {
             </p>
             <p>
               <strong className="font-medium text-[var(--sheet-fg)]">To stop abuse of the form:</strong> the server notes the network
-              address a message came from and counts messages from it. That note is held in memory for up to 15 minutes and is
-              not written to a database.
+              address a message came from and counts messages from it. The count resets after 15 minutes. It is kept only in
+              the server&apos;s memory and is not written to a database.
             </p>
             <p>
               <strong className="font-medium text-[var(--sheet-fg)]">When you visit any page:</strong> the hosting company processes
@@ -70,16 +70,17 @@ export default function PrivacyPage() {
 
           <Part title="Who receives it">
             <p>
-              Your message is delivered to my inbox by an email delivery service, Resend. The site is hosted by Netlify. Both are
-              companies based in the United States and may process data there. Your message is not stored in a database on this site.
+              Your message is delivered by an email delivery service, Resend, to my mailbox, which is provided by Zoho. The site
+              is hosted by Netlify. Resend and Netlify are companies based in the United States and may process data there. Your
+              message is not stored in a database on this site.
             </p>
-            <p>I do not sell your details or pass them to anyone else.</p>
+            <p>I do not sell your details or pass them to anyone other than the companies named here.</p>
           </Part>
 
           <Part title="How long it is kept">
             <p>
-              I keep an enquiry for as long as it takes to deal with it and with any work that follows, and delete it when it is no
-              longer needed. You can ask me to delete yours sooner.
+              I keep an enquiry for twelve months after our last message, or for as long as any work that follows needs it, and
+              then delete it. You can ask me to delete yours sooner.
             </p>
           </Part>
 

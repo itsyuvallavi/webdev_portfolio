@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils"
 export const metadata: Metadata = {
   title: `Services | ${site.name}`,
   description:
-    "Six pieces of software for small businesses: enquiries answered, bookings and reminders, invoices chased, paperwork filed, an online shop, and reviews. One task at a time, at a fixed price.",
+    "Six pieces of software for small businesses: enquiries answered, bookings and reminders, invoice reminders, paperwork filed, an online shop, and reviews. One task at a time, at a fixed price.",
 }
 
 const number = (index: number) => String(index + 1).padStart(2, "0")
@@ -55,16 +55,16 @@ export default function ServicesPage() {
         </h1>
         <div className="mt-10 flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
           <p className="max-w-[56ch] text-pretty text-lg leading-relaxed text-zinc-300">
-            I am a software engineer in {site.location}. I build small tools that take one repetitive task off you and
-            your team: answering enquiries, filling the diary, chasing invoices, filing paperwork. Each project starts
-            with one task and a fixed price.
+            I am a software engineer in {site.location}. I build small tools that do one repetitive task for you and
+            your team: answering enquiries, taking bookings, sending invoice reminders, filing paperwork. Each project
+            starts with one task and a fixed price.
           </p>
           <div className="flex shrink-0 flex-wrap items-center gap-x-6 gap-y-3">
             <Link
               href="/contact"
               className="action"
             >
-              Tell me the one task <ArrowRight className="size-4" aria-hidden />
+              Tell me about one task <ArrowRight className="size-4" aria-hidden />
             </Link>
             <Link href="#process" className={cn("inline-flex min-h-11 items-center gap-2 rounded-sm text-sm text-zinc-300 transition-colors hover:text-white", focusRing)}>
               How a project runs
@@ -86,6 +86,9 @@ export default function ServicesPage() {
 
       <PageSheet>
         <div className="page-gutters py-24 lg:py-32">
+          <p className="mb-16 max-w-[62ch] border-l border-[var(--sheet-line)] pl-4 text-pretty text-sm leading-relaxed text-[var(--sheet-muted)] lg:mb-24">
+            The pictures on this page are illustrations with invented data. Each tool is built around the programs you already use.
+          </p>
           {services.map((service, index) => (
             <section
               key={service.id}
@@ -109,7 +112,7 @@ export default function ServicesPage() {
                 <Details label="What it does"><List items={service.does} /></Details>
                 <Details label="What I need from you"><List items={service.needs} /></Details>
                 <Details label="Works with">{service.worksWith}</Details>
-                <Details label="What it will not do">
+                <Details label="Limits and safeguards">
                   <span className="block border-l border-[var(--sheet-accent)] pl-4 text-[var(--sheet-muted)]">{service.limit}</span>
                 </Details>
               </dl>
@@ -160,7 +163,7 @@ export default function ServicesPage() {
                 <p className="eyebrow">Also</p>
                 <h2 id="websites-title" className="mt-5 text-2xl font-semibold tracking-tight sm:text-3xl">Need a website as well?</h2>
                 <p className="mt-4 max-w-[52ch] text-pretty leading-relaxed text-[var(--sheet-muted)]">
-                  I build those too, usually alongside one of the tools above. Two I made for clients:
+                  I build websites too. Two I made for clients:
                 </p>
               </div>
               <ul className="flex shrink-0 flex-wrap gap-x-8 gap-y-1">

@@ -38,9 +38,9 @@ function Scene({ description, time, figure, facts, layout = "phone", children }:
                 </p>
               ))}
             </div>
-            <p className={styles.sampleNote}>Sample data</p>
+            <p className={styles.sampleNote}>Illustration · invented data</p>
           </div>
-          <span className={cn(styles.corner, styles.cornerNarrow)}>Sample data</span>
+          <span className={cn(styles.corner, styles.cornerNarrow)}>Illustration · invented data</span>
         </div>
       </div>
     </div>
@@ -56,7 +56,7 @@ export function EnquiryObject() {
           <span className={styles.appMark} />
           <span>Bairro Physio<span className={styles.appSub}>Automatic assistant</span></span>
         </p>
-        <p className={cn(styles.bubble, styles.bubbleOut)}>Hi, anything Thursday after 6? First visit, lower back.</p>
+        <p className={cn(styles.bubble, styles.bubbleOut)}>Hi, anything Thursday after 6? It is my first visit.</p>
         <p className={cn(styles.bubble, styles.bubbleIn)}>Thursday 18:30 or 19:15 with Sofia. First visit €45. Book one?</p>
         <p className={cn(styles.bubble, styles.bubbleOut, styles.inA)}>18:30 please</p>
         <div className={styles.swap}>
@@ -65,7 +65,7 @@ export function EnquiryObject() {
         </div>
       </Phone>
       <div className={cn(styles.float, styles.floatDiary)}>
-        <p className={styles.floatTitle}><span>Diary</span><span>Thu 15 Oct</span></p>
+        <p className={styles.floatTitle}><span>Calendar</span><span>Thu 15 Oct</span></p>
         <p className={cn(styles.slot, styles.slotNew, styles.inC)}><span>18:30</span><span>New · first visit</span></p>
         <p className={styles.slot}><span>19:15</span><span className={styles.floatMuted}>Free</span></p>
       </div>
@@ -73,11 +73,11 @@ export function EnquiryObject() {
   )
 }
 
-/** An enquiry that arrives after closing is answered and booked, and the slot fills in the diary. */
+/** An enquiry that arrives after closing is answered and booked, and the slot fills in the calendar. */
 export function EnquiryPlate() {
   return (
     <Scene
-      description="a late-evening message to a clinic answered by an automatic assistant, which offers two times and books one into the diary"
+      description="a late-evening message to a clinic answered by an automatic assistant, which offers two times and books one into the calendar"
       time="Tuesday · 22:47"
       figure={{ value: "22:47", label: "Asked after closing" }}
       facts={[
@@ -147,7 +147,7 @@ export function BookingPlate() {
   return (
     <Scene
       layout="panel"
-      description="a salon's diary for the day in which a cancelled appointment is offered to the waiting list by message and refilled"
+      description="a salon's calendar for the day in which a cancelled appointment is offered to the waiting list by message and refilled"
       time="Thursday · 08:30"
       figure={{ value: `${confirmed} of ${kept.length}`, label: "Confirmed by reply" }}
       facts={[
@@ -199,7 +199,7 @@ export function PaidObject() {
   )
 }
 
-/** What is owed, what is late, and reminders that go out on schedule and stop when a client pays. */
+/** What is owed, what is late, and reminders that go out on schedule and stop when the invoice is paid. */
 export function PaidPlate() {
   return (
     <Scene
@@ -223,10 +223,12 @@ const lines = [
   { item: "Tomatoes, 15 kg", net: 41.25 },
   { item: "Mixed leaves, 12 boxes", net: 86.4 },
   { item: "Lemons, 10 kg", net: 22.5 },
-  { item: "Herbs and delivery", net: 126.0 },
+  { item: "Fresh herbs, 60 bunches", net: 126.0 },
 ]
 const net = lines.reduce((sum, line) => sum + line.net, 0)
-const vat = Math.round(net * 23) / 100
+// Fresh produce carries the reduced rate in mainland Portugal.
+const VAT_RATE = 6
+const vat = Math.round(net * VAT_RATE) / 100
 const gross = net + vat
 
 /** The paper mockup itself, without the notes: shared by its picture and the day walkthrough. */
@@ -248,7 +250,7 @@ export function PaperObject() {
             ))}
             <p className={styles.paperTotal}>
               <span>Net</span><span>{net.toFixed(2)}</span>
-              <span>VAT 23%</span><span>{vat.toFixed(2)}</span>
+              <span>VAT {VAT_RATE}%</span><span>{vat.toFixed(2)}</span>
               <span><strong>Total</strong></span><span className={cn(styles.found, styles.markC)}><strong>{gross.toFixed(2)}</strong></span>
             </p>
           </div>
@@ -273,7 +275,7 @@ export function PaperPlate() {
       figure={{ value: euro(gross), label: "Read from the photo" }}
       facts={[
         ["Supplier", "Frutas do Cais, 9 October"],
-        ["VAT", `${euro(vat)} at 23%`],
+        ["VAT", `${euro(vat)} at ${VAT_RATE}%`],
         ["Check", "Due date unreadable"],
       ]}
     >
@@ -380,7 +382,7 @@ export function ShopPlate() {
       figure={{ value: euro(mug.price * mug.quantity), label: "Paid before they arrive" }}
       facts={[
         ["Pay with", "MB WAY or card"],
-        ["Stock", `${mug.stock} to ${mug.stock - mug.quantity}, by itself`],
+        ["Stock", `${mug.stock} to ${mug.stock - mug.quantity}, automatically`],
         ["You hear", "By message"],
       ]}
     >

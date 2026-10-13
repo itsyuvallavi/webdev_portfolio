@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 export const metadata: Metadata = {
   title: `Work | ${site.name}`,
   description:
-    "Client websites and custom tools by Yuval Lavi. Each project says what the problem was, what I did, and what was built.",
+    "Client websites and my own applications, by Yuval Lavi. Each project says what the problem was, what I did, and what was built.",
 }
 
 // The three shown first, with wording for a prospective client. Case-study data and addresses are unchanged.
@@ -23,7 +23,7 @@ const lead: { slug: string; label: string; summary: string }[] = [
   },
   {
     slug: "trackd",
-    label: "Application project · job tracking",
+    label: "My own product · job-application tracker",
     summary: "Applications, statuses, and follow-ups in one place. I built the tracker with list, board, dashboard, and calendar views.",
   },
   {
@@ -67,8 +67,8 @@ export default function ProjectsPage() {
         </h1>
         <div className="mt-10 flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
           <p className="max-w-[56ch] text-pretty text-lg leading-relaxed text-zinc-300">
-            Business websites, custom applications, and independent tools. Each project explains the problem,
-            my contribution, and what was built.
+            Client websites and my own applications. Each project explains the problem, my contribution,
+            and what was built.
           </p>
           <div className="flex shrink-0 flex-wrap items-center gap-x-6 gap-y-3">
             <Link href="/services" className="action">

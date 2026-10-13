@@ -31,7 +31,7 @@ export default function Home() {
         <div className="page-gutters py-24 lg:py-32">
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-[var(--sheet-muted)]">What I do</p>
           <h2 className="mt-5 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-tighter sm:text-5xl lg:text-6xl">
-            Software that takes work off your hands.
+            Software that does your routine work.
           </h2>
 
           <div className="mt-16 grid gap-x-16 gap-y-20 lg:mt-24 lg:gap-y-28 xl:grid-cols-2">
