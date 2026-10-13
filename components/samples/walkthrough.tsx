@@ -1,10 +1,10 @@
 "use client"
 
 import { useEffect, useRef, useState, type ComponentType } from "react"
-import { useReducedMotion } from "framer-motion"
 import { Pause, Play } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Held } from "@/components/motion/held"
+import { useMotionAllowed } from "@/components/motion/use-motion-allowed"
 import { BookingObject, EnquiryObject, PaidObject, PaperObject, ReviewsObject, ShopObject } from "./service-plates"
 import styles from "./plates.module.css"
 
@@ -44,8 +44,8 @@ const stepAt = (time: number) =>
  * a run of jobs that arrive and are dealt with, ending on what was
  * handled and what still needs a person. One clock drives it, so it can pause.
  */
-export function DayDemoFigure({ holdEnabled }: { holdEnabled: boolean }) {
-  const reduceMotion = useReducedMotion()
+export function Walkthrough() {
+  const motionAllowed = useMotionAllowed()
   const figureRef = useRef<HTMLElement>(null)
   const timeRef = useRef(0)
   const rewindRef = useRef(false)
@@ -60,12 +60,12 @@ export function DayDemoFigure({ holdEnabled }: { holdEnabled: boolean }) {
   const job = jobs[scene]
   const flagged = jobs.filter((entry) => entry.needsYou).length
 
-  // Move to the first frame while the figure is still off screen.
+  // Move to the first frame while the figure is still off screen. With motion off it stays on the finished day.
   useEffect(() => {
-    if (reduceMotion !== false) return
-    setReady(true)
-    setStep(0)
-  }, [reduceMotion])
+    setReady(motionAllowed)
+    setStep(motionAllowed ? 0 : LAST_STEP)
+    timeRef.current = 0
+  }, [motionAllowed])
 
   useEffect(() => {
     const figure = figureRef.current
@@ -114,7 +114,7 @@ export function DayDemoFigure({ holdEnabled }: { holdEnabled: boolean }) {
           {paused ? <Play className="size-3.5" aria-hidden /> : <Pause className="size-3.5" aria-hidden />}
         </button>
       ) : null}
-      <Held enabled={holdEnabled} className="aspect-[4/5] w-full rounded-xl border border-white/10 sm:aspect-[16/9]">
+      <Held className="aspect-[4/5] w-full rounded-xl border border-white/10 sm:aspect-[16/9]">
         <div
           role="img"
           aria-label={`Illustration with sample data: ${jobs.length} jobs dealt with automatically, in time order. ${jobs.map((entry) => `${entry.time}, ${entry.title.toLowerCase()}: ${entry.result.toLowerCase()}`).join(". ")}.`}

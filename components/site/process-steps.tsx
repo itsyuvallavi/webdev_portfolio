@@ -2,7 +2,7 @@
 
 import { useRef } from "react"
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion"
-import styles from "@/components/lab/scroll-feel.module.css"
+import { useMotionAllowed } from "@/components/motion/use-motion-allowed"
 
 // Draft copy, written to plain-language rules: titles say what happens, sentences stay under
 // twenty words, and there are no idioms, because many readers here have English as a second language.
@@ -40,7 +40,7 @@ function Step({ index, progress, enabled }: { index: number; progress: MotionVal
           <motion.span className="block h-px origin-left bg-[var(--sheet-accent)]" style={{ scaleX: reach }} />
         </span>
         <p className="relative mt-6 text-7xl font-black leading-none tracking-tighter sm:text-8xl" aria-hidden>
-          <span className={styles.numeral}>0{index + 1}</span>
+          <span className="text-outline-muted">0{index + 1}</span>
           <motion.span className="absolute inset-0" style={{ opacity: reach }}>0{index + 1}</motion.span>
         </p>
       </div>
@@ -62,7 +62,8 @@ function Step({ index, progress, enabled }: { index: number; progress: MotionVal
 }
 
 /** How a project runs, as three steps that respond to the scroll passing through them. */
-export function ProcessSection({ enabled }: { enabled: boolean }) {
+export function ProcessSteps() {
+  const enabled = useMotionAllowed()
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 85%", "end 70%"] })
 

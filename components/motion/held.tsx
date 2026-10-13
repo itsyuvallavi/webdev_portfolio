@@ -3,6 +3,7 @@
 import { useRef, type ReactNode } from "react"
 import { motion, useInView, useScroll, useTransform } from "framer-motion"
 import { cn } from "@/lib/utils"
+import { useMotionAllowed } from "./use-motion-allowed"
 
 /** Contents travel this many pixels across their clipped frame while it crosses the screen. */
 const TRAVEL = 64
@@ -11,7 +12,8 @@ const TRAVEL = 64
  * A clipped frame whose contents travel slower than the frame itself.
  * `data-live` is true while the frame is on screen, so pictures only animate when they can be seen.
  */
-export function Held({ enabled, className, children }: { enabled: boolean; className?: string; children: ReactNode }) {
+export function Held({ className, children }: { className?: string; children: ReactNode }) {
+  const enabled = useMotionAllowed()
   const ref = useRef<HTMLDivElement>(null)
   const live = useInView(ref, { amount: 0.45 })
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] })
