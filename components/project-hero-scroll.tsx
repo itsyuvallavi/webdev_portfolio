@@ -6,12 +6,11 @@ import { ImageLightbox } from "@/components/image-lightbox"
 
 interface ProjectHeroScrollProps {
   image: string
-  title: string
   description: string
   alt: string
 }
 
-export function ProjectHeroScroll({ image, title, description, alt }: ProjectHeroScrollProps) {
+export function ProjectHeroScroll({ image, description, alt }: ProjectHeroScrollProps) {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
 
   return (

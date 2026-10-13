@@ -6,7 +6,6 @@ import Link from "next/link"
 import { AlertTriangle, ArrowLeft, ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
 import { ProjectHeroScroll } from "@/components/project-hero-scroll"
 import { ScreenshotsCarousel } from "@/components/screenshots-carousel"
 import type { Project } from "@/lib/data"
@@ -142,7 +141,6 @@ export function ProjectDetailAnimated({ project, prevProject, nextProject }: Pro
       {/* Hero Image with GSAP Scroll Effect */}
       <ProjectHeroScroll
         image={project.image || "/placeholder.svg"}
-        title={project.title}
         description={project.longDescription}
         alt={project.title}
       />
