@@ -19,35 +19,19 @@ const skillGroups = [
 
 const experiences = [
   {
-    period: "2024 - Present",
-    title: "Freelance Web Developer",
+    period: "2023 – Present",
+    title: "Independent Software Engineer",
     company: "Independent | Lisbon",
     description:
-      "Built professional service websites and enhanced an aerospace company's Squarespace site with custom JavaScript interactions. Developed web applications using Next.js, React, TypeScript, and Firebase.",
-    technologies: ["Next.js", "React", "TypeScript", "Firebase", "Tailwind CSS", "JavaScript", "Squarespace"],
+      "Client websites, custom tools and my own products. I built professional service websites, extended an aerospace company's Squarespace site with custom JavaScript interactions, and shipped applications including Trackd, a job-application tracker, and NOMADAI, an AI travel itinerary generator. Full-stack work in TypeScript and Next.js, with automations and external APIs.",
+    technologies: ["TypeScript", "Next.js", "React", "PostgreSQL", "Firebase", "Tailwind CSS", "JavaScript"],
   },
   {
-    period: "November 2024 - Present",
-    title: "Web Developer & Technical Operations",
-    company: "Sense & Sound",
-    description:
-      "Developed frontend and backend website features, built scripts for workflow automation, and updated design systems and interfaces.",
-    technologies: ["JavaScript", "HTML", "CSS", "Web Development", "UI/UX Design"],
-  },
-  {
-    period: "2023 - 2024",
-    title: "Full-Stack Development Projects",
-    company: "Personal Portfolio | Los Angeles, CA",
-    description:
-      "Built and deployed personal applications including NOMADAI, an AI travel itinerary generator with GPT-4 integration, alongside portfolio websites and responsive client sites.",
-    technologies: ["Next.js", "React", "TypeScript", "Firebase", "Vite", "shadcn/ui", "GPT-4"],
-  },
-  {
-    period: "2019 - 2024",
+    period: "2019 – Present",
     title: "Film Composer & Audio Developer",
-    company: "Creative Background | Los Angeles, CA",
+    company: "Los Angeles, now Lisbon",
     description:
-      "Composed film and media scores, built audio plugins and virtual instruments, and engineered music at God Knows Studios and Backyard Industries. Studied Film Scoring at UCLA Extension and Music Production at Musicians Institute.",
+      "Composing film and media scores, and building audio plugins and virtual instruments. Engineered music at God Knows Studios and Backyard Industries. Studied Film Scoring at UCLA Extension and Music Production at Musicians Institute.",
     technologies: ["C++", "HISE/JUCE", "LUA", "Kontakt DSP", "Logic Pro", "Pro Tools", "Audio Engineering"],
   },
 ]
