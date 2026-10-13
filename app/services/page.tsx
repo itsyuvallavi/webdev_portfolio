@@ -17,14 +17,12 @@ export const metadata: Metadata = {
 }
 
 const number = (index: number) => String(index + 1).padStart(2, "0")
-const eyebrow = "font-mono text-xs uppercase tracking-[0.2em] text-[var(--sheet-muted)]"
 const focusRing = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300"
-const textLink = cn("inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-medium text-[var(--sheet-accent)] transition-colors hover:text-white", focusRing)
 
 function Details({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <dt className={eyebrow}>{label}</dt>
+      <dt className="eyebrow">{label}</dt>
       <dd className="mt-3 text-pretty text-[0.95rem] leading-relaxed">{children}</dd>
     </div>
   )
@@ -64,7 +62,7 @@ export default function ServicesPage() {
           <div className="flex shrink-0 flex-wrap items-center gap-x-6 gap-y-3">
             <Link
               href="/contact"
-              className={cn("inline-flex min-h-12 items-center gap-3 rounded-lg border border-teal-500/35 bg-zinc-950/60 px-5 py-3 text-sm font-medium text-teal-100 transition-colors hover:border-teal-400/60 hover:bg-teal-500/10", focusRing)}
+              className="action"
             >
               Tell me the one task <ArrowRight className="size-4" aria-hidden />
             </Link>
@@ -124,7 +122,7 @@ export default function ServicesPage() {
 
           <div className="mt-24 grid gap-x-16 gap-y-16 border-t border-[var(--sheet-line)] pt-20 lg:mt-36 lg:grid-cols-2 lg:pt-28">
             <section aria-labelledby="data-title">
-              <p className={eyebrow}>Your data</p>
+              <p className="eyebrow">Your data</p>
               <h2 id="data-title" className="mt-5 text-3xl font-semibold leading-[1.05] tracking-tighter sm:text-4xl">
                 Your customers&apos; details stay yours.
               </h2>
@@ -136,7 +134,7 @@ export default function ServicesPage() {
             </section>
 
             <section aria-labelledby="who-title">
-              <p className={eyebrow}>Who you would work with</p>
+              <p className="eyebrow">Who you would work with</p>
               <div className="mt-5 flex items-start gap-6">
                 <div className="relative size-24 shrink-0 overflow-hidden rounded-lg border border-[var(--sheet-line)] bg-zinc-900 sm:size-28">
                   <Image src="/portrait.webp" alt={`Portrait of ${site.name}`} fill sizes="112px" className="object-cover" />
@@ -150,7 +148,7 @@ export default function ServicesPage() {
                 <p>You deal with me from the first conversation to the hand-over. Nothing is passed on to someone else.</p>
                 <p>I usually reply within two working days.</p>
               </div>
-              <Link href="/about" className={cn(textLink, "mt-4")}>
+              <Link href="/about" className="text-link mt-4">
                 More about me <ArrowRight className="size-4" aria-hidden />
               </Link>
             </section>
@@ -159,7 +157,7 @@ export default function ServicesPage() {
           <section aria-labelledby="websites-title" className="mt-20 border-t border-[var(--sheet-line)] pt-12 lg:mt-28">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
               <div>
-                <p className={eyebrow}>Also</p>
+                <p className="eyebrow">Also</p>
                 <h2 id="websites-title" className="mt-5 text-2xl font-semibold tracking-tight sm:text-3xl">Need a website as well?</h2>
                 <p className="mt-4 max-w-[52ch] text-pretty leading-relaxed text-[var(--sheet-muted)]">
                   I build those too, usually alongside one of the tools above. Two I made for clients:
@@ -167,13 +165,13 @@ export default function ServicesPage() {
               </div>
               <ul className="flex shrink-0 flex-wrap gap-x-8 gap-y-1">
                 <li>
-                  <Link href="/projects/eb-and-flow" className={textLink}>EB &amp; FLOW <ArrowUpRight className="size-4" aria-hidden /></Link>
+                  <Link href="/projects/eb-and-flow" className="text-link">EB &amp; FLOW <ArrowUpRight className="size-4" aria-hidden /></Link>
                 </li>
                 <li>
-                  <Link href="/projects/frontier-aerospace" className={textLink}>Frontier Aerospace <ArrowUpRight className="size-4" aria-hidden /></Link>
+                  <Link href="/projects/frontier-aerospace" className="text-link">Frontier Aerospace <ArrowUpRight className="size-4" aria-hidden /></Link>
                 </li>
                 <li>
-                  <Link href="/projects" className={textLink}>All work <ArrowUpRight className="size-4" aria-hidden /></Link>
+                  <Link href="/projects" className="text-link">All work <ArrowUpRight className="size-4" aria-hidden /></Link>
                 </li>
               </ul>
             </div>

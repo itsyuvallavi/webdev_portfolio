@@ -15,6 +15,8 @@ interface ImageLightboxProps {
   onPrev?: () => void
   currentIndex?: number
   totalImages?: number
+  /** Called when the lightbox has closed, to hand focus back to whatever opened it. */
+  onClosed?: () => void
 }
 
 export function ImageLightbox({
@@ -25,7 +27,8 @@ export function ImageLightbox({
   onNext,
   onPrev,
   currentIndex,
-  totalImages
+  totalImages,
+  onClosed,
 }: ImageLightboxProps) {
   // Keyboard navigation
   useEffect(() => {
@@ -45,14 +48,23 @@ export function ImageLightbox({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[98vw] max-h-[98vh] w-[98vw] h-[98vh] p-0 overflow-hidden bg-black/95 border-none" showCloseButton={false}>
+      <DialogContent
+        className="max-w-[98vw] max-h-[98vh] w-[98vw] h-[98vh] p-0 overflow-hidden bg-black/95 border-none"
+        showCloseButton={false}
+        aria-describedby={undefined}
+        onCloseAutoFocus={(event) => {
+          if (!onClosed) return
+          event.preventDefault()
+          onClosed()
+        }}
+      >
         <DialogTitle className="sr-only">{alt}</DialogTitle>
 
         {/* Close Button */}
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-4 right-4 z-50 text-white hover:bg-white/20"
+          className="absolute top-4 right-4 z-50 size-11 text-white hover:bg-white/20"
           onClick={onClose}
           aria-label="Close lightbox"
         >

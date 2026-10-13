@@ -46,7 +46,7 @@ export function PageSheet({ children }: { children: ReactNode }) {
             <Link
               href="/contact"
               onFocus={reveal}
-              className="inline-flex min-h-12 items-center gap-3 rounded-lg border border-teal-500/35 bg-zinc-950/60 px-5 py-3 text-sm font-medium text-teal-100 transition-colors hover:border-teal-400/60 hover:bg-teal-500/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300"
+              className="action"
             >
               Tell me what you need <ArrowRight className="size-4" aria-hidden />
             </Link>

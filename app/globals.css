@@ -25,6 +25,27 @@
     -webkit-text-stroke: 1.5px var(--sheet-muted);
   }
 
+  /* The main action on a page, and the quiet link beside or below it. */
+  .action {
+    @apply inline-flex min-h-12 items-center gap-3 rounded-lg border border-teal-500/35 bg-zinc-950/60 px-5 py-3 text-sm font-medium text-teal-100 transition-colors hover:border-teal-400/60 hover:bg-teal-500/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300;
+  }
+
+  .text-link {
+    @apply inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-medium text-[var(--sheet-accent)] transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300;
+  }
+
+  /* A frame for a 16:9 screenshot inside <Held travel={24}>: shorter than the picture by the
+     travel distance, so the picture keeps its full width and only drifts up and down. */
+  .screen-frame {
+    height: 0;
+    padding-bottom: calc(56.25% - 24px);
+  }
+
+  /* Small capital labels above headings. */
+  .eyebrow {
+    @apply font-mono text-xs uppercase tracking-[0.2em] text-[var(--sheet-muted)];
+  }
+
   .reading-surface {
     border-radius: 1rem;
     background: rgba(9, 9, 11, 0.72);
