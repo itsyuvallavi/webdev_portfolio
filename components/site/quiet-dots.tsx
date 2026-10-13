@@ -40,15 +40,19 @@ const vertexShader = `
     float lift = uPointerStrength * smoothstep(180.0, 0.0, dist);
     p.xy += (away / max(dist, 0.001)) * lift * 6.0;
 
-    // At rest: wide bands of light cross the field slowly and each dot breathes at its own pace,
-    // so the stage is never quite still. Both are small enough to stay behind the content.
-    float band = 0.5 + 0.5 * sin(p.x * 0.0035 + p.y * 0.0055 - uIdle * 0.32);
-    float breath = 0.5 + 0.5 * sin(uIdle * (0.35 + seed * 0.5) + seed * 6.2832);
-    p.y += (breath - 0.5) * 1.2;
+    // At rest: two wide waves of light cross the field in different directions, so brighter
+    // patches form, drift and fade, and each dot breathes at its own pace. The stage is never
+    // quite still, but it stays behind the content.
+    float waveA = sin(p.x * 0.0035 + p.y * 0.0055 - uIdle * 0.5);
+    float waveB = sin(p.x * 0.0052 - p.y * 0.0031 + uIdle * 0.34);
+    float band = 0.5 + 0.25 * (waveA + waveB);
+    float breath = 0.5 + 0.5 * sin(uIdle * (0.5 + seed * 0.7) + seed * 6.2832);
+    p.y += (breath - 0.5) * 2.2;
+    p.x += waveB * 1.2;
 
     float energy = abs(uVelocity);
-    gl_PointSize = (1.7 + lift * 1.6 + energy * 0.9 + band * band * 0.35) * uPixelRatio;
-    vAlpha = 0.5 * (0.4 + 0.6 * seed) * (0.7 + 0.5 * band * band + 0.16 * breath) + lift * 0.4 + energy * 0.18;
+    gl_PointSize = (1.7 + lift * 1.6 + energy * 0.9 + band * band * 0.7) * uPixelRatio;
+    vAlpha = 0.5 * (0.4 + 0.6 * seed) * (0.5 + 1.0 * band * band + 0.28 * breath) + lift * 0.4 + energy * 0.18;
     vTint = band * band;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
   }
@@ -65,7 +69,7 @@ const fragmentShader = `
     float a = smoothstep(0.5, 0.3, d) * vAlpha;
     if (a < 0.01) discard;
     // The passing bands carry a faint teal, the site's accent.
-    gl_FragColor = vec4(mix(uColor, uTintColor, vTint * 0.45), a);
+    gl_FragColor = vec4(mix(uColor, uTintColor, vTint * 0.65), a);
   }
 `
 
