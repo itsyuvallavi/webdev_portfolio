@@ -5,9 +5,10 @@ import { usePathname } from "next/navigation"
 import { MonochromeDotsBackground } from "@/components/monochrome-dots-background"
 import { useSandstormContext } from "@/components/transitions/sandstorm-provider"
 
-/** Full-site particle layer is disabled on `/monochrome` so the playground owns the canvas. */
+/** Full-site particle layer is disabled on `/monochrome` and `/lab/*`, which own their canvas. */
 export function ConditionalSiteBackground() {
   const pathname = usePathname()
+  const ownsCanvas = pathname === "/monochrome" || pathname.startsWith("/lab/")
   const [enableWebGl, setEnableWebGl] = useState(false)
   const [backgroundVersion, setBackgroundVersion] = useState(0)
   const { setBackgroundReady } = useSandstormContext()
@@ -46,7 +47,7 @@ export function ConditionalSiteBackground() {
   }, [])
 
   useEffect(() => {
-    if (!enableWebGl || pathname === "/monochrome") {
+    if (!enableWebGl || ownsCanvas) {
       setBackgroundReady(false)
       return
     }
@@ -66,9 +67,9 @@ export function ConditionalSiteBackground() {
       window.removeEventListener("resize", rebuildAfterResize)
       setBackgroundReady(false)
     }
-  }, [enableWebGl, pathname, setBackgroundReady])
+  }, [enableWebGl, ownsCanvas, pathname, setBackgroundReady])
 
-  if (pathname === "/monochrome") return null
+  if (ownsCanvas) return null
 
   return (
     <div
