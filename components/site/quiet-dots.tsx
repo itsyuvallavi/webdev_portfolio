@@ -13,11 +13,13 @@ const vertexShader = `
   uniform float uRowShift;
   uniform float uVelocity;
   uniform float uTime;
+  uniform float uIdle;
   uniform vec2 uPointer;
   uniform float uPointerStrength;
   uniform float uPixelRatio;
   attribute vec2 cell;
   varying float vAlpha;
+  varying float vTint;
 
   float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
@@ -38,28 +40,41 @@ const vertexShader = `
     float lift = uPointerStrength * smoothstep(180.0, 0.0, dist);
     p.xy += (away / max(dist, 0.001)) * lift * 6.0;
 
+    // At rest: wide bands of light cross the field slowly and each dot breathes at its own pace,
+    // so the stage is never quite still. Both are small enough to stay behind the content.
+    float band = 0.5 + 0.5 * sin(p.x * 0.0035 + p.y * 0.0055 - uIdle * 0.32);
+    float breath = 0.5 + 0.5 * sin(uIdle * (0.35 + seed * 0.5) + seed * 6.2832);
+    p.y += (breath - 0.5) * 1.2;
+
     float energy = abs(uVelocity);
-    gl_PointSize = (1.7 + lift * 1.6 + energy * 0.9) * uPixelRatio;
-    vAlpha = 0.5 * (0.4 + 0.6 * seed) + lift * 0.4 + energy * 0.18;
+    gl_PointSize = (1.7 + lift * 1.6 + energy * 0.9 + band * band * 0.35) * uPixelRatio;
+    vAlpha = 0.5 * (0.4 + 0.6 * seed) * (0.7 + 0.5 * band * band + 0.16 * breath) + lift * 0.4 + energy * 0.18;
+    vTint = band * band;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
   }
 `
 
 const fragmentShader = `
   uniform vec3 uColor;
+  uniform vec3 uTintColor;
   varying float vAlpha;
+  varying float vTint;
 
   void main() {
     float d = length(gl_PointCoord - 0.5);
     float a = smoothstep(0.5, 0.3, d) * vAlpha;
     if (a < 0.01) discard;
-    gl_FragColor = vec4(uColor, a);
+    // The passing bands carry a faint teal, the site's accent.
+    gl_FragColor = vec4(mix(uColor, uTintColor, vTint * 0.45), a);
   }
 `
 
 /**
- * The site's stage: a one-tone dot grid that is still at rest and only draws
- * while the page is scrolling or the pointer is moving.
+ * The site's stage: a quiet dot grid. At rest, slow bands of light drift across it and each dot
+ * breathes slightly; it leans with the scroll and ripples under the pointer.
+ *
+ * Idle frames are drawn at a low rate and not at all while the tab is hidden. With reduced motion
+ * it is drawn once and stays still.
  */
 export function QuietDotsBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -99,10 +114,12 @@ export function QuietDotsBackground() {
         uRowShift: { value: 0 },
         uVelocity: { value: 0 },
         uTime: { value: 0 },
+        uIdle: { value: 0 },
         uPointer: { value: new THREE.Vector2(1e5, 1e5) },
         uPointerStrength: { value: 0 },
         uPixelRatio: { value: pixelRatio },
         uColor: { value: new THREE.Color(0.72, 0.84, 0.86) },
+        uTintColor: { value: new THREE.Color(0.37, 0.92, 0.83) },
       },
       transparent: true,
       depthTest: false,
@@ -153,11 +170,16 @@ export function QuietDotsBackground() {
     let lastScrollY = window.scrollY
     let last = performance.now()
     let frame = 0
+    let idleTimer: ReturnType<typeof setTimeout> | undefined
+    /** Milliseconds between frames when only the idle drift is moving: about 20 a second. */
+    const IDLE_INTERVAL = 50
 
     const draw = (now: number) => {
       frame = 0
-      const dt = Math.min((now - last) / 1000, 0.05)
+      const elapsed = (now - last) / 1000
+      const dt = Math.min(elapsed, 0.05)
       last = now
+      uniforms.uIdle.value += Math.min(elapsed, 0.25)
 
       const scrollY = window.scrollY
       if (navigatedRef.current) {
@@ -185,13 +207,37 @@ export function QuietDotsBackground() {
         target === 0 &&
         Math.abs(pointerTarget - uniforms.uPointerStrength.value) < 0.01 &&
         pointer.distanceTo(pointerGoal) < 0.5
-      if (!settled) frame = requestAnimationFrame(draw)
+      if (!settled) {
+        frame = requestAnimationFrame(draw)
+      } else if (!reducedMotion && !document.hidden) {
+        // Nothing but the idle drift is moving: a slow change needs few frames.
+        idleTimer = setTimeout(() => {
+          idleTimer = undefined
+          frame = requestAnimationFrame(draw)
+        }, IDLE_INTERVAL)
+      }
     }
-    // Drawing stops once everything has settled; any input starts it again.
+    // Any input brings the field back to full rate at once.
     const wake = () => {
       if (frame) return
-      last = performance.now() - 16
+      if (idleTimer !== undefined) {
+        clearTimeout(idleTimer)
+        idleTimer = undefined
+      } else {
+        last = performance.now() - 16
+      }
       frame = requestAnimationFrame(draw)
+    }
+    const handleVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(frame)
+        frame = 0
+        clearTimeout(idleTimer)
+        idleTimer = undefined
+      } else {
+        last = performance.now() - 16
+        wake()
+      }
     }
 
     const handlePointerMove = (event: PointerEvent) => {
@@ -213,6 +259,7 @@ export function QuietDotsBackground() {
 
     window.addEventListener("resize", handleResize)
     if (!reducedMotion) {
+      document.addEventListener("visibilitychange", handleVisibility)
       window.addEventListener("scroll", wake, { passive: true })
       if (finePointer) {
         window.addEventListener("pointermove", handlePointerMove, { passive: true })
@@ -222,6 +269,8 @@ export function QuietDotsBackground() {
 
     return () => {
       cancelAnimationFrame(frame)
+      clearTimeout(idleTimer)
+      document.removeEventListener("visibilitychange", handleVisibility)
       window.removeEventListener("resize", handleResize)
       window.removeEventListener("scroll", wake)
       window.removeEventListener("pointermove", handlePointerMove)

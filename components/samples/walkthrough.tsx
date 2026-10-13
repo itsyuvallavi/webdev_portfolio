@@ -109,7 +109,7 @@ export function Walkthrough() {
           type="button"
           onClick={() => setPaused((value) => !value)}
           aria-label={paused ? "Play walkthrough" : "Pause walkthrough"}
-          className="absolute bottom-3 right-3 z-10 flex size-8 items-center justify-center rounded-full border border-white/15 bg-black/50 text-zinc-300 backdrop-blur-sm transition-colors hover:border-white/40 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300"
+          className="absolute bottom-2 right-2 z-10 flex size-11 items-center justify-center rounded-full border border-white/15 bg-black/50 text-zinc-300 backdrop-blur-sm transition-colors hover:border-white/40 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300"
         >
           {paused ? <Play className="size-3.5" aria-hidden /> : <Pause className="size-3.5" aria-hidden />}
         </button>
