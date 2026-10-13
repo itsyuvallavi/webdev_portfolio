@@ -10,7 +10,7 @@ import { useMotionAllowed } from "@/components/motion/use-motion-allowed"
 const steps = [
   {
     title: "A short conversation",
-    body: "You describe one task that takes too long or goes wrong. I ask questions and look at the tools you use today.",
+    body: "You describe one task that takes too long or goes wrong. I ask questions and look at the tools you use today. We can talk by video call, by phone or in person: you choose.",
     card: { label: "You leave with", lines: ["A clear answer on whether I can help", "What it would involve, in plain words", "No charge and no obligation"] },
   },
   {

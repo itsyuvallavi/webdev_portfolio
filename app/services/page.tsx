@@ -150,6 +150,7 @@ export default function ServicesPage() {
               <div className="mt-6 max-w-[52ch] space-y-4 text-pretty leading-relaxed text-[var(--sheet-muted)]">
                 <p>You deal with me from the first conversation to the hand-over. Nothing is passed on to someone else.</p>
                 <p>I usually reply within two working days.</p>
+                <p>I work in English, and the tools I build are in English.</p>
               </div>
               <Link href="/about" className="text-link mt-4">
                 More about me <ArrowRight className="size-4" aria-hidden />
