@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -19,6 +19,21 @@ const fieldClass =
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
+  // A signed note of when the form opened. The server refuses messages that arrive without one.
+  const tokenRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    fetch("/api/contact/token", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((result) => {
+        if (!cancelled && typeof result?.token === "string") tokenRef.current = result.token
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -30,6 +45,8 @@ export function ContactForm() {
       name: formData.get("name"),
       email: formData.get("email"),
       message: formData.get("message"),
+      website: formData.get("website"),
+      token: tokenRef.current,
     }
 
     try {
@@ -73,6 +90,11 @@ export function ContactForm() {
   return (
     <>
       <form onSubmit={handleSubmit} className="space-y-5">
+        {/* People never see or reach this field; automated senders fill it in, and the server drops what they send. */}
+        <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+          <label htmlFor="website">Leave this field empty</label>
+          <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+        </div>
         <div className="space-y-2">
           <Label htmlFor="name" className="text-zinc-300">
             Name

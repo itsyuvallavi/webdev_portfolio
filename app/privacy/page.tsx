@@ -55,7 +55,8 @@ export default function PrivacyPage() {
             <p>
               <strong className="font-medium text-[var(--sheet-fg)]">To stop abuse of the form:</strong> the server notes the network
               address a message came from and counts messages from it. The count resets after 15 minutes. It is kept only in
-              the server&apos;s memory and is not written to a database.
+              the server&apos;s memory and is not written to a database. The form also carries a signed note of the time
+              it was opened, and a hidden field that must stay empty. Neither holds anything about you.
             </p>
             <p>
               <strong className="font-medium text-[var(--sheet-fg)]">When you visit any page:</strong> the hosting company processes

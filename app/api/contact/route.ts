@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { checkFormToken } from '@/lib/form-token'
 
 // Contact form validation schema
 const contactSchema = z.object({
@@ -51,6 +52,28 @@ export async function POST(request: NextRequest) {
     } catch {
       return NextResponse.json({ error: 'Invalid JSON request body.' }, { status: 400 })
     }
+
+    // Invisible checks against automated spam. A field people never see must stay empty, and the
+    // message must carry the signed token the page fetched when it opened, at least a few seconds old.
+    const guard = typeof body === 'object' && body !== null ? (body as Record<string, unknown>) : {}
+    if (typeof guard.website === 'string' && guard.website.trim() !== '') {
+      // Only automated senders fill that field. Answer as if it worked, so they learn nothing.
+      return NextResponse.json({ success: true, message: 'Message sent successfully!' }, { status: 200 })
+    }
+    const tokenCheck = checkFormToken(guard.token)
+    if (tokenCheck === 'too-fast') {
+      return NextResponse.json(
+        { error: 'That was very quick. Please wait a few seconds and send again.' },
+        { status: 400 }
+      )
+    }
+    if (tokenCheck !== 'ok') {
+      return NextResponse.json(
+        { error: 'Please reload the page and send your message again, or email info@yuvallavi.com directly.' },
+        { status: 400 }
+      )
+    }
+
     const validatedData = contactSchema.parse(body)
 
     const apiKey = process.env.RESEND_API_KEY?.trim()
